@@ -1,0 +1,34 @@
+spring:
+    datasource:
+        name: coach_view
+        url: jdbc:mysql://127.0.0.1:3306/coach_view
+        username: coach_view
+        password: coach_view123!@#
+        driver-class-name: com.mysql.jdbc.Driver
+
+mybatis: 
+    mapper-locations: classpath:mapper/*.xml
+    type-aliases-package: indi.xp.coachview.model
+ 
+#\u5141\u8bb8\u8de8\u57dfdomain
+cros:
+    allow-domain: 
+
+#swaggerpeiz
+swagger:
+    base-package: indi.xp.coachview.controller
+
+
+---
+
+spring:
+    profiles: develop
+
+
+---
+
+spring:
+    profiles: product
+
+
+ 
