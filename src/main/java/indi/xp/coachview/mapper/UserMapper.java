@@ -18,4 +18,8 @@ public interface UserMapper {
 
     public List<User> findUserList();
 
+    public void addUser(@Param("user") User user);
+
+    public void updateUser(@Param("user") User user);
+
 }

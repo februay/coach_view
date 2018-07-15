@@ -14,4 +14,8 @@ public interface UserDao {
 
     public List<User> findUserList();
 
+    public User addUser(User user);
+
+    public User update(User user);
+
 }

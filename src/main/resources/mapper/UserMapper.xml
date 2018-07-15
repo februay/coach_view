@@ -64,4 +64,35 @@
         <include refid="common_where" />
     </select>
 
+    <insert id="addUser">
+        insert into user(uid, user_name, user_email,
+        user_password, name, phone, company, department, title, status,
+        active_time, create_time, delete_status)
+        values(#{user.uid},
+        #{user.userName}, #{user.userEmail}, #{user.userPassword},
+        #{user.name}, #{user.phone}, #{user.company},
+        #{user.department}, #{user.title}, #{user.status},
+        #{user.activeTime}, #{user.createTime}, #{user.deleteStatus})
+    </insert>
+
+    <insert id="updateUser">
+        update user set 
+        user_name = #{user.userName},
+        user_email = #{user.userEmail},
+        user_password =
+        #{user.userPassword},
+        name = #{user.name},
+        phone = #{user.phone},
+        company = #{user.company},
+        department = #{user.department},
+        title
+        = #{user.title},
+        status = #{user.status},
+        active_time =
+        #{user.activeTime},
+        create_time = #{user.createTime},
+        delete_status = #{user.deleteStatus}
+        where uid = #{user.uid}
+    </insert>
+
 </mapper>

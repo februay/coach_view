@@ -58,5 +58,25 @@ public class UuidUtils {
         }
         return stringBuffer.toString();
     }
+    
+    /**
+     * 随机获取字符串
+     *
+     * @param length
+     *            随机字符串长度
+     * @return 随机字符串
+     */
+    public static String generateRandomNumber(int length) {
+        if (length <= 0) {
+            return "";
+        }
+        char[] randomChar = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        Random random = new Random();
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < length; i++) {
+            stringBuffer.append(randomChar[Math.abs(random.nextInt()) % randomChar.length]);
+        }
+        return stringBuffer.toString();
+    }
 
 }

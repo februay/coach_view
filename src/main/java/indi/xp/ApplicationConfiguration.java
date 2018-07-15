@@ -48,6 +48,7 @@ public class ApplicationConfiguration {
 
     @Bean
     public Docket createSwaggerApi() {
+        // http://ip:port/swagger-ui.html
         ApiInfo apiInfo = new ApiInfoBuilder().title("Api文档").description("").termsOfServiceUrl("").version("1.0.0")
             .build();
 
