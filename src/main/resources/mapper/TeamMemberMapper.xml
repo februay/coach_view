@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="indi.xp.coachview.mapper.TeamMemberMapper">
+
+    <resultMap id="teamMemberResultMap" type="indi.xp.coachview.model.TeamMember">
+        <id column="member_id" property="memberId" />
+        <result column="number" property="number" />
+        <result column="name" property="name" />
+        <result column="id_number" property="idNumber" />
+        <result column="age" property="age" />
+        <result column="height" property="height" />
+        <result column="weight" property="weight" />
+        <result column="photo" property="photo" />
+        <result column="first_position" property="firstPosition" />
+        <result column="second_position" property="secondPosition" />
+        <result column="team_id" property="teamId" />
+        <result column="team_name" property="teamName" />
+        <result column="create_time" property="createTime" />
+        <result column="delete_status" property="deleteStatus" />
+    </resultMap>
+
+    <sql id="common_where">
+        where delete_status = 0
+    </sql>
+
+    <sql id="id_in">
+        <if test="idList != null and idList.size() > 0">
+            and team_member.member_id in
+            <foreach collection="idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="getTeamMemberById" parameterType="java.lang.String" resultMap="teamMemberResultMap">
+        select *
+        from team_member
+        <include refid="common_where" />
+        and member_id = #{teamMemberId}
+    </select>
+
+    <select id="getTeamMemberByIdList" parameterType="java.util.List" resultMap="teamMemberResultMap">
+        select *
+        from team_member
+        <include refid="common_where" />
+        <include refid="id_in" />
+    </select>
+
+    <select id="findTeamMemberList" parameterType="java.util.List" resultMap="teamMemberResultMap">
+        select *
+        from team_member
+        <include refid="common_where" />
+    </select>
+
+    <insert id="addTeamMember">
+        insert into team_member(member_id, number, name,
+        id_number, age, height, weight, photo,
+        first_position,
+        second_position, team_id, team_name, create_time, delete_status)
+        values(#{teamMember.memberId},
+        #{teamMember.number},
+        #{teamMember.name}, #{teamMember.idNumber}, #{teamMember.age},
+        #{teamMember.height},
+        #{teamMember.weight}, #{teamMember.photo},
+        #{teamMember.firstPosition}, #{teamMember.secondPosition},
+        #{teamMember.teamId}, #{teamMember.teamName},
+        #{teamMember.createTime}, #{teamMember.deleteStatus})
+    </insert>
+
+    <insert id="updateTeamMember">
+        update team_member set
+        number = #{teamMember.number},
+        name = #{teamMember.name},
+        id_number =
+        #{teamMember.idNumber},
+        age = #{teamMember.age},
+        height = #{teamMember.height},
+        weight = #{teamMember.weight},
+        photo = #{teamMember.photo},
+        first_position = #{teamMember.firstPosition},
+        second_position =
+        #{teamMember.secondPosition},
+        team_id = #{teamMember.teamId},
+        team_name = #{teamMember.teamName},
+        create_time =
+        #{teamMember.createTime},
+        delete_status = #{teamMember.deleteStatus}
+        where member_id = #{teamMember.memberId}
+    </insert>
+
+</mapper>

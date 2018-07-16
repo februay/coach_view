@@ -17,7 +17,7 @@ import indi.xp.common.constants.MediaType;
 import indi.xp.common.restful.ResponseResult;
 
 @RestController("userController")
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired

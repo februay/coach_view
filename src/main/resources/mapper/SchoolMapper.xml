@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="indi.xp.coachview.mapper.SchoolMapper">
+
+    <resultMap id="schoolResultMap" type="indi.xp.coachview.model.School">
+        <id column="school_id" property="schoolId" />
+        <result column="school_name" property="schoolName" />
+        <result column="club_id" property="clubId" />
+        <result column="club_name" property="clubName" />
+        <result column="admin_id" property="adminId" />
+        <result column="admin_name" property="adminName" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="region" property="region" />
+        <result column="county" property="county" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="active_time" property="activeTime" />
+        <result column="delete_status" property="deleteStatus" />
+    </resultMap>
+
+    <sql id="common_where">
+        where delete_status = 0
+    </sql>
+
+    <sql id="id_in">
+        <if test="idList != null and idList.size() > 0">
+            and school.school_id in
+            <foreach collection="idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="getSchoolById" parameterType="java.lang.String" resultMap="schoolResultMap">
+        select *
+        from school
+        <include refid="common_where" />
+        and school_id = #{schoolId}
+    </select>
+
+    <select id="getSchoolByIdList" parameterType="java.util.List" resultMap="schoolResultMap">
+        select *
+        from school
+        <include refid="common_where" />
+        <include refid="id_in" />
+    </select>
+
+    <select id="findSchoolList" parameterType="java.util.List" resultMap="schoolResultMap">
+        select *
+        from school
+        <include refid="common_where" />
+    </select>
+
+    <insert id="addSchool">
+        insert into school(school_id, school_name,
+        club_id, club_name, admin_id, admin_name, province,
+        city,
+        region, county, status, create_time, active_time, delete_status)
+        values(#{school.schoolId},
+        #{school.schoolName},
+        #{school.clubId}, #{school.clubName}, #{school.adminId},
+        #{school.adminName},
+        #{school.province}, #{school.city},
+        #{school.region}, #{school.county}, #{school.status},
+        #{school.createTime},
+        #{school.activeTime},
+        #{school.deleteStatus})
+    </insert>
+
+    <insert id="updateSchool">
+        update school set
+        school_name = #{school.schoolName},
+        club_id = #{school.clubId},
+        club_name =
+        #{school.clubName},
+        admin_id = #{school.adminId},
+        admin_name = #{school.adminName},
+        province = #{school.province},
+        city = #{school.city},
+        region = #{school.region},
+        county = #{school.county},
+        status = #{school.status},
+        create_time
+        = #{school.createTime},
+        active_time = #{school.activeTime},
+        delete_status = #{school.deleteStatus}
+        where school_id
+        = #{school.schoolId}
+    </insert>
+
+</mapper>

@@ -1,11 +1,12 @@
 package indi.xp.coachview.model.vo;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class UserSignUpVo implements Serializable {
 
     private static final long serialVersionUID = 7318789932910212804L;
-    
+
     private String uid;
     private String userName;
     private String userEmail;
@@ -15,6 +16,7 @@ public class UserSignUpVo implements Serializable {
     private String company; // 公司
     private String department; // 部门
     private String title; // 职位
+    private List<String> roles;
 
     public String getUid() {
         return uid;
@@ -88,11 +90,19 @@ public class UserSignUpVo implements Serializable {
         this.title = title;
     }
 
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
     @Override
     public String toString() {
-        return "UserSignVo [uid=" + uid + ", userName=" + userName + ", userEmail=" + userEmail + ", userPassword="
+        return "UserSignUpVo [uid=" + uid + ", userName=" + userName + ", userEmail=" + userEmail + ", userPassword="
             + userPassword + ", name=" + name + ", phone=" + phone + ", company=" + company + ", department="
-            + department + ", title=" + title + "]";
+            + department + ", title=" + title + ", roles=" + roles + "]";
     }
 
 }

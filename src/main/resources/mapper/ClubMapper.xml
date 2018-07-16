@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="indi.xp.coachview.mapper.ClubMapper">
+
+    <resultMap id="clubResultMap" type="indi.xp.coachview.model.Club">
+        <id column="club_id" property="clubId" />
+        <result column="club_name" property="clubName" />
+        <result column="admin_id" property="adminId" />
+        <result column="admin_name" property="adminName" />
+        <result column="province" property="province" />
+        <result column="city" property="city" />
+        <result column="region" property="region" />
+        <result column="county" property="county" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="active_time" property="activeTime" />
+        <result column="delete_status" property="deleteStatus" />
+    </resultMap>
+
+    <sql id="common_where">
+        where delete_status = 0
+    </sql>
+
+    <sql id="id_in">
+        <if test="idList != null and idList.size() > 0">
+            and club.club_id in
+            <foreach collection="idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="getClubById" parameterType="java.lang.String" resultMap="clubResultMap">
+        select *
+        from club
+        <include refid="common_where" />
+        and club_id = #{clubId}
+    </select>
+
+    <select id="getClubByIdList" parameterType="java.util.List" resultMap="clubResultMap">
+        select *
+        from club
+        <include refid="common_where" />
+        <include refid="id_in" />
+    </select>
+
+    <select id="findClubList" parameterType="java.util.List" resultMap="clubResultMap">
+        select *
+        from club
+        <include refid="common_where" />
+    </select>
+
+    <insert id="addClub">
+        insert into club(club_id, club_name, admin_id,
+        admin_name, province, city, region, county, status,
+        create_time, active_time, delete_status)
+        values(#{club.clubId}, #{club.clubName}, #{club.adminId},
+        #{club.adminName}, #{club.province}, #{club.city}, #{club.region}, #{club.county},
+        #{club.status},
+        #{club.createTime}, #{club.activeTime}, #{club.deleteStatus})
+    </insert>
+
+    <insert id="updateClub">
+        update club set
+        club_name = #{club.clubName},
+        admin_id = #{club.adminId},
+        admin_name =
+        #{club.adminName},
+        province = #{club.province},
+        city = #{club.city},
+        region = #{club.region},
+        county =
+        #{club.county},
+        status = #{club.status},
+        create_time = #{club.createTime},
+        active_time = #{club.activeTime},
+        delete_status =
+        #{club.deleteStatus}
+        where club_id = #{club.clubId}
+    </insert>
+
+</mapper>

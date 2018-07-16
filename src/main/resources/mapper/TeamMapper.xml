@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="indi.xp.coachview.mapper.TeamMapper">
+
+    <resultMap id="teamResultMap" type="indi.xp.coachview.model.Team">
+        <id column="team_id" property="teamId" />
+        <result column="team_name" property="teamName" />
+        <result column="school_id" property="schoolId" />
+        <result column="school_name" property="schoolName" />
+        <result column="admin_id" property="adminId" />
+        <result column="admin_name" property="adminName" />
+        <result column="status" property="status" />
+        <result column="create_time" property="createTime" />
+        <result column="active_time" property="activeTime" />
+        <result column="delete_status" property="deleteStatus" />
+    </resultMap>
+
+    <sql id="common_where">
+        where delete_status = 0
+    </sql>
+
+    <sql id="id_in">
+        <if test="idList != null and idList.size() > 0">
+            and team.team_id in
+            <foreach collection="idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="getTeamById" parameterType="java.lang.String" resultMap="teamResultMap">
+        select *
+        from team
+        <include refid="common_where" />
+        and team_id = #{teamId}
+    </select>
+
+    <select id="getTeamByIdList" parameterType="java.util.List" resultMap="teamResultMap">
+        select *
+        from team
+        <include refid="common_where" />
+        <include refid="id_in" />
+    </select>
+
+    <select id="findTeamList" parameterType="java.util.List" resultMap="teamResultMap">
+        select *
+        from team
+        <include refid="common_where" />
+    </select>
+
+    <insert id="addTeam">
+        insert into team(team_id, team_name, school_id,
+        school_name, admin_id, admin_name, status,
+        create_time,
+        active_time, delete_status)
+        values(#{team.teamId},
+        #{team.teamName}, #{team.schoolId},
+        #{team.schoolName},
+        #{team.adminId}, #{team.adminName}, #{team.status},
+        #{team.createTime}, #{team.activeTime},
+        #{team.deleteStatus})
+    </insert>
+
+    <insert id="updateTeam">
+        update team set
+        team_name = #{team.teamName},
+        school_id = #{team.schoolId},
+        school_name =
+        #{team.schoolName},
+        admin_id = #{team.adminId},
+        admin_name = #{team.adminName},
+        status = #{team.status},
+        create_time = #{team.createTime},
+        active_time = #{team.activeTime},
+        delete_status = #{team.deleteStatus}
+        where
+        team_id = #{team.teamId}
+    </insert>
+
+</mapper>
