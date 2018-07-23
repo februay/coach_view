@@ -14,7 +14,7 @@ mybatis:
 cros:
     allow-domain: 
 
-#swaggerpeiz
+#swagger config
 swagger:
     base-package: indi.xp.coachview.controller
 
@@ -24,7 +24,12 @@ swagger:
 spring:
     profiles: develop
 
-
+    datasource:
+        name: coach_view
+        url: jdbc:mysql://207.148.82.48:3306/coach_view
+        username: coach_view
+        password: coach_view123!@#
+        driver-class-name: com.mysql.jdbc.Driver
 ---
 
 spring:

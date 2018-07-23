@@ -1,0 +1,1 @@
+nohup java -jar coach-view-1.0.0.jar --spring.profiles.active=develop > nohup.out  &
