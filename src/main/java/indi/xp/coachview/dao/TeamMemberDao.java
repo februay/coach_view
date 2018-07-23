@@ -16,4 +16,10 @@ public interface TeamMemberDao {
 
     public TeamMember updateTeamMember(TeamMember teamMember);
 
+    public void delete(String id);
+
+    public void batchDelete(List<String> idList);
+
+    public List<TeamMember> findListByTeamId(String teamId);
+
 }

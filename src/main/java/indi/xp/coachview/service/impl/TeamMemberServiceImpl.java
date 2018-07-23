@@ -9,6 +9,7 @@ import indi.xp.coachview.dao.TeamMemberDao;
 import indi.xp.coachview.model.TeamMember;
 import indi.xp.coachview.service.TeamMemberService;
 import indi.xp.common.utils.DateUtils;
+import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
 
 @Service
@@ -45,9 +46,55 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     public TeamMember update(TeamMember teamMember) {
         TeamMember dbTeamMember = teamMember != null ? this.getById(teamMember.getMemberId()) : null;
         if (dbTeamMember != null) {
-            return teamMemberDao.updateTeamMember(teamMember);
+            if (StringUtils.isNotBlank(teamMember.getNumber())) {
+                dbTeamMember.setNumber(teamMember.getNumber());
+            }
+            if (StringUtils.isNotBlank(teamMember.getName())) {
+                dbTeamMember.setName(teamMember.getName());
+            }
+            if (StringUtils.isNotBlank(teamMember.getIdNumber())) {
+                dbTeamMember.setIdNumber(teamMember.getIdNumber());
+            }
+            if (StringUtils.isNotBlank(teamMember.getAge())) {
+                dbTeamMember.setAge(teamMember.getAge());
+            }
+            if (StringUtils.isNotBlank(teamMember.getHeight())) {
+                dbTeamMember.setHeight(teamMember.getHeight());
+            }
+            if (StringUtils.isNotBlank(teamMember.getWeight())) {
+                dbTeamMember.setWeight(teamMember.getWeight());
+            }
+            if (StringUtils.isNotBlank(teamMember.getPhoto())) {
+                dbTeamMember.setPhoto(teamMember.getPhoto());
+            }
+            if (StringUtils.isNotBlank(teamMember.getFirstPosition())) {
+                dbTeamMember.setFirstPosition(teamMember.getFirstPosition());
+            }
+            if (StringUtils.isNotBlank(teamMember.getSecondPosition())) {
+                dbTeamMember.setSecondPosition(teamMember.getSecondPosition());
+            }
+            if (StringUtils.isNotBlank(teamMember.getTeamId())) {
+                dbTeamMember.setTeamId(teamMember.getTeamId());
+            }
+            if (StringUtils.isNotBlank(teamMember.getTeamName())) {
+                dbTeamMember.setTeamName(teamMember.getTeamName());
+            }
+            return teamMemberDao.updateTeamMember(dbTeamMember);
         }
         return dbTeamMember;
+    }
+
+    @Override
+    public void delete(String id) {
+        TeamMember dbTeamMember = this.getById(id);
+        if (dbTeamMember != null) {
+            teamMemberDao.delete(id);
+        }
+    }
+
+    @Override
+    public List<TeamMember> findTeamMemberListByTeamId(String teamId) {
+        return teamMemberDao.findListByTeamId(teamId);
     }
 
 }

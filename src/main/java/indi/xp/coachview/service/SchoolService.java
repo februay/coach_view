@@ -16,4 +16,8 @@ public interface SchoolService {
 
     public School update(School school);
 
+    public void delete(String id);
+
+    public List<School> findListByClubId(String clubId);
+
 }

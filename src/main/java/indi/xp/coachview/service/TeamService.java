@@ -15,5 +15,9 @@ public interface TeamService {
     public Team add(Team team);
 
     public Team update(Team team);
+    
+    public void delete(String id);
+
+    public List<Team> findTeamListBySchoolId(String schoolId);
 
 }

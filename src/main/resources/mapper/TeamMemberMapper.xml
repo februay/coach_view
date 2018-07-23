@@ -19,6 +19,10 @@
         <result column="delete_status" property="deleteStatus" />
     </resultMap>
 
+    <sql id="table_name">
+        team_member
+    </sql>
+
     <sql id="common_where">
         where delete_status = 0
     </sql>
@@ -36,7 +40,7 @@
         select *
         from team_member
         <include refid="common_where" />
-        and member_id = #{teamMemberId}
+        and member_id = #{id}
     </select>
 
     <select id="getTeamMemberByIdList" parameterType="java.util.List" resultMap="teamMemberResultMap">
@@ -67,7 +71,7 @@
         #{teamMember.createTime}, #{teamMember.deleteStatus})
     </insert>
 
-    <insert id="updateTeamMember">
+    <update id="updateTeamMember">
         update team_member set
         number = #{teamMember.number},
         name = #{teamMember.name},
@@ -86,6 +90,76 @@
         #{teamMember.createTime},
         delete_status = #{teamMember.deleteStatus}
         where member_id = #{teamMember.memberId}
-    </insert>
+    </update>
+    
+    <update id="delete">
+        update <include refid="table_name" /> set
+            delete_status = 1
+        <include refid="common_where" />
+        and member_id = #{id}
+    </update>
+    
+    <update id="batchDelete" parameterType="java.util.List" >
+        update <include refid="table_name" /> set
+            delete_status = 1
+        <include refid="common_where" />
+        <include refid="id_in" />
+    </update>
+    
+    <select id="getByWhere" parameterType="java.util.Map" resultMap="teamMemberResultMap">
+        select * from <include refid="table_name" />
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+        limit 1
+    </select>
+
+    <select id="findByWhere" parameterType="java.util.Map" resultMap="teamMemberResultMap">
+        select * from <include refid="table_name" />
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+    </select>
+    
+    <select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from <include refid="table_name" />
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+    </select>
+    
+    <update id="updateByWhere" parameterType="java.util.Map">
+        update <include refid="table_name" /> set
+        <foreach collection="updateMap" item="value" index="key" separator=",">
+            ${key} = #{value}
+        </foreach>
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+    </update>
 
 </mapper>

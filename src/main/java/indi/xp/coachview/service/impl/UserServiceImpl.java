@@ -1,5 +1,6 @@
 package indi.xp.coachview.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -8,8 +9,9 @@ import org.springframework.stereotype.Service;
 
 import indi.xp.coachview.dao.UserDao;
 import indi.xp.coachview.model.User;
-import indi.xp.coachview.model.vo.UserSignUpVo;
+import indi.xp.coachview.model.vo.UserVo;
 import indi.xp.coachview.service.UserService;
+import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
@@ -21,69 +23,108 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public User getUserByUid(String uid) {
-        return userDao.getUserByUid(uid);
+    public UserVo getUserByUid(String uid) {
+        User user = userDao.getUserByUid(uid);
+        return this.parseToUserVo(user);
     }
 
     @Override
-    public User getUserByPhone(String phone) {
-        return userDao.getUserByPhone(phone);
+    public UserVo getUserByPhone(String phone) {
+        User user = userDao.getUserByPhone(phone);
+        return this.parseToUserVo(user);
     }
 
     @Override
-    public List<User> findUserListByUidList(List<String> uidList) {
-        return userDao.findUserListByUidList(uidList);
+    public List<UserVo> findUserListByUidList(List<String> uidList) {
+        List<User> userList = userDao.findUserListByUidList(uidList);
+        return this.parseToUserVoList(userList);
     }
 
     @Override
-    public List<User> findUserList() {
-        return userDao.findUserList();
+    public List<UserVo> findUserList() {
+        List<User> userList = userDao.findUserList();
+        return this.parseToUserVoList(userList);
     }
 
     @Override
-    public User addUser(UserSignUpVo userSignUpVo) {
+    public UserVo addUser(UserVo userVo) {
         String currentTime = DateUtils.getDateTime();
+
+        userVo.setUid(UuidUtils.generateUUID());
+        userVo.setCreateTime(currentTime);
+        userVo.setActiveTime(currentTime);
+
         User user = new User();
-        BeanUtils.copyProperties(userSignUpVo, user);
-        user.setUid(UuidUtils.generateUUID());
+        BeanUtils.copyProperties(userVo, user);
         user.setDeleteStatus(false);
         user.setStatus("1");
-        user.setCreateTime(currentTime);
-        user.setActiveTime(currentTime);
-        return userDao.addUser(user);
+        userDao.addUser(user);
+        
+        return userVo;
     }
 
     @Override
-    public User updateUser(UserSignUpVo userSignUpVo) {
-        User user = userSignUpVo!=null ? this.getUserByUid(userSignUpVo.getUid()) : null;
-        if(user != null) {
-            if(StringUtils.isNotBlank(userSignUpVo.getUserName())) {
-                user.setUserName(userSignUpVo.getUserName());
+    public UserVo updateUser(UserVo userVo) {
+        User user = userVo != null ? userDao.getUserByUid(userVo.getUid()) : null;
+        if (user != null) {
+            if (StringUtils.isNotBlank(userVo.getUserName())) {
+                user.setUserName(userVo.getUserName());
             }
-            if(StringUtils.isNotBlank(userSignUpVo.getUserEmail())) {
-                user.setUserEmail(userSignUpVo.getUserEmail());
+            if (StringUtils.isNotBlank(userVo.getUserEmail())) {
+                user.setUserEmail(userVo.getUserEmail());
             }
-            if(StringUtils.isNotBlank(userSignUpVo.getUserPassword())) {
-                user.setUserPassword(userSignUpVo.getUserPassword());
+            if (StringUtils.isNotBlank(userVo.getUserPassword())) {
+                user.setUserPassword(userVo.getUserPassword());
             }
-            if(StringUtils.isNotBlank(userSignUpVo.getName())) {
-                user.setName(userSignUpVo.getName());
+            if (StringUtils.isNotBlank(userVo.getName())) {
+                user.setName(userVo.getName());
             }
-            if(StringUtils.isNotBlank(userSignUpVo.getPhone())) {
-                user.setPhone(userSignUpVo.getPhone());
+            if (StringUtils.isNotBlank(userVo.getPhone())) {
+                user.setPhone(userVo.getPhone());
             }
-            if(StringUtils.isNotBlank(userSignUpVo.getCompany())) {
-                user.setCompany(userSignUpVo.getCompany());
+            if (StringUtils.isNotBlank(userVo.getCompany())) {
+                user.setCompany(userVo.getCompany());
             }
-            if(StringUtils.isNotBlank(userSignUpVo.getDepartment())) {
-                user.setDepartment(userSignUpVo.getDepartment());
+            if (StringUtils.isNotBlank(userVo.getDepartment())) {
+                user.setDepartment(userVo.getDepartment());
             }
-            if(StringUtils.isNotBlank(userSignUpVo.getTitle())) {
-                user.setTitle(userSignUpVo.getTitle());
+            if (StringUtils.isNotBlank(userVo.getTitle())) {
+                user.setTitle(userVo.getTitle());
             }
-            return userDao.update(user);
+            userDao.update(user);
         }
-        return user;
+        return userVo;
+    }
+
+    @Override
+    public void deleteByUid(String uid) {
+        User user = StringUtils.isNotBlank(uid) ? userDao.getUserByUid(uid) : null;
+        if (user != null) {
+            user.setDeleteStatus(true);
+            userDao.update(user);
+        }
+    }
+
+    private UserVo parseToUserVo(User user) {
+        if (user != null) {
+            UserVo userVo = new UserVo();
+            BeanUtils.copyProperties(user, userVo);
+
+            // TODO： 处理roles
+            
+            return userVo;
+        }
+        return null;
+    }
+
+    private List<UserVo> parseToUserVoList(List<User> userList) {
+        List<UserVo> userVoList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(userList)) {
+            for (User user : userList) {
+                userVoList.add(this.parseToUserVo(user));
+            }
+        }
+        return userVoList;
     }
 
 }

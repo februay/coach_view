@@ -3,7 +3,7 @@ package indi.xp.coachview.model.vo;
 import java.io.Serializable;
 import java.util.List;
 
-public class UserSignUpVo implements Serializable {
+public class UserVo implements Serializable {
 
     private static final long serialVersionUID = 7318789932910212804L;
 
@@ -16,6 +16,9 @@ public class UserSignUpVo implements Serializable {
     private String company; // 公司
     private String department; // 部门
     private String title; // 职位
+    private String activeTime;
+    private String createTime;
+
     private List<String> roles;
 
     public String getUid() {
@@ -88,6 +91,22 @@ public class UserSignUpVo implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getActiveTime() {
+        return activeTime;
+    }
+
+    public void setActiveTime(String activeTime) {
+        this.activeTime = activeTime;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 
     public List<String> getRoles() {

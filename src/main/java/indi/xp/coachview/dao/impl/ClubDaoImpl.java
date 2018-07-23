@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import indi.xp.coachview.dao.ClubDao;
 import indi.xp.coachview.mapper.ClubMapper;
 import indi.xp.coachview.model.Club;
+import indi.xp.common.utils.CollectionUtils;
+import indi.xp.common.utils.StringUtils;
 
 @Repository
 public class ClubDaoImpl implements ClubDao {
@@ -40,6 +42,20 @@ public class ClubDaoImpl implements ClubDao {
     public Club updateClub(Club club) {
         clubMapper.updateClub(club);
         return club;
+    }
+
+    @Override
+    public void delete(String id) {
+        if (StringUtils.isNotBlank(id)) {
+            clubMapper.delete(id);
+        }
+    }
+
+    @Override
+    public void batchDelete(List<String> idList) {
+        if (CollectionUtils.isNotEmpty(idList)) {
+            clubMapper.batchDelete(idList);
+        }
     }
 
 }

@@ -16,4 +16,8 @@ public interface ClubDao {
 
     public Club updateClub(Club club);
 
+    public void delete(String id);
+
+    public void batchDelete(List<String> idList);
+
 }

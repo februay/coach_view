@@ -9,6 +9,7 @@ import indi.xp.coachview.dao.ClubDao;
 import indi.xp.coachview.model.Club;
 import indi.xp.coachview.service.ClubService;
 import indi.xp.common.utils.DateUtils;
+import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
 
 @Service
@@ -47,9 +48,38 @@ public class ClubServiceImpl implements ClubService {
     public Club update(Club club) {
         Club dbClub = club != null ? this.getById(club.getClubId()) : null;
         if (dbClub != null) {
-            return clubDao.updateClub(club);
+            if (StringUtils.isNotBlank(club.getClubName())) {
+                dbClub.setClubName(club.getClubName());
+            }
+            if (StringUtils.isNotBlank(club.getCounty())) {
+                dbClub.setCounty(club.getCounty());
+            }
+            if (StringUtils.isNotBlank(club.getProvince())) {
+                dbClub.setProvince(club.getProvince());
+            }
+            if (StringUtils.isNotBlank(club.getCity())) {
+                dbClub.setCity(club.getCity());
+            }
+            if (StringUtils.isNotBlank(club.getRegion())) {
+                dbClub.setRegion(club.getRegion());
+            }
+            if (StringUtils.isNotBlank(club.getAdminId())) {
+                dbClub.setAdminId(club.getAdminId());
+            }
+            if (StringUtils.isNotBlank(club.getAdminName())) {
+                dbClub.setAdminName(club.getAdminName());
+            }
+            return clubDao.updateClub(dbClub);
         }
         return dbClub;
+    }
+
+    @Override
+    public void delete(String id) {
+        Club dbClub = this.getById(id);
+        if (dbClub != null) {
+            clubDao.delete(id);
+        }
     }
 
 }

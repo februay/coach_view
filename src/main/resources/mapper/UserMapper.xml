@@ -18,11 +18,15 @@
         <result column="delete_status" property="deleteStatus" />
     </resultMap>
 
+    <sql id="table_name">
+        user
+    </sql>
+
     <sql id="common_where">
         where delete_status = 0
     </sql>
 
-    <sql id="uid_in">
+    <sql id="id_in">
         <if test="uidList != null and uidList.size() > 0">
             and user.uid in
             <foreach collection="uidList" item="uid" open="(" separator="," close=")">
@@ -35,7 +39,7 @@
         select *
         from user
         <include refid="common_where" />
-        and uid = #{uid}
+        and uid = #{id}
     </select>
 
     <select id="getUserByPhone" parameterType="java.lang.String" resultMap="userResultMap">
@@ -49,7 +53,7 @@
         select *
         from user
         <include refid="common_where" />
-        <include refid="uid_in" />
+        <include refid="id_in" />
     </select>
 
     <select id="findUserList" parameterType="java.util.List" resultMap="userResultMap">
@@ -72,7 +76,7 @@
         #{user.activeTime}, #{user.createTime}, #{user.deleteStatus})
     </insert>
 
-    <insert id="updateUser">
+    <update id="updateUser">
         update user set
         user_name = #{user.userName},
         user_email = #{user.userEmail},
@@ -93,6 +97,76 @@
         delete_status =
         #{user.deleteStatus}
         where uid = #{user.uid}
-    </insert>
+    </update>
+    
+    <update id="delete">
+        update <include refid="table_name" /> set
+            delete_status = 1
+        <include refid="common_where" />
+        and club_id = #{id}
+    </update>
+    
+    <update id="batchDelete" parameterType="java.util.List" >
+        update <include refid="table_name" /> set
+            delete_status = 1
+        <include refid="common_where" />
+        <include refid="id_in" />
+    </update>
+    
+    <select id="getByWhere" parameterType="java.util.Map" resultMap="userResultMap">
+        select * from <include refid="table_name" />
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+        limit 1
+    </select>
+
+    <select id="findByWhere" parameterType="java.util.Map" resultMap="userResultMap">
+        select * from <include refid="table_name" />
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+    </select>
+    
+    <select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from <include refid="table_name" />
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+    </select>
+    
+    <update id="updateByWhere" parameterType="java.util.Map">
+        update <include refid="table_name" /> set
+        <foreach collection="updateMap" item="value" index="key" separator=",">
+            ${key} = #{value}
+        </foreach>
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+    </update>
 
 </mapper>

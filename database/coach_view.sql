@@ -15,6 +15,11 @@ Date: 2018-07-10 14:57:23
 
 SET FOREIGN_KEY_CHECKS=0;
 
+
+CREATE DATABASE IF NOT EXISTS coach_view
+default charset utf8mb4 
+collate utf8mb4_general_ci;
+
 -- ----------------------------
 -- Table structure for `club`
 -- ----------------------------

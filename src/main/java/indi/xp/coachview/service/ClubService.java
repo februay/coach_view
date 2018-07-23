@@ -16,4 +16,6 @@ public interface ClubService {
 
     public Club update(Club club);
 
+    public void delete(String id);
+
 }

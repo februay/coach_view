@@ -16,4 +16,8 @@ public interface TeamMemberService {
 
     public TeamMember update(TeamMember teamMember);
 
+    public void delete(String id);
+
+    public List<TeamMember> findTeamMemberListByTeamId(String teamId);
+
 }

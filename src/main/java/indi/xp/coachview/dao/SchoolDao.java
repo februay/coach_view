@@ -16,4 +16,10 @@ public interface SchoolDao {
 
     public School updateSchool(School school);
 
+    public void delete(String id);
+    
+    public void batchDelete(List<String> idList);
+
+    public List<School> findListByClubId(String clubId);
+
 }

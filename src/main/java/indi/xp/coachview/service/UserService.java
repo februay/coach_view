@@ -2,21 +2,22 @@ package indi.xp.coachview.service;
 
 import java.util.List;
 
-import indi.xp.coachview.model.User;
-import indi.xp.coachview.model.vo.UserSignUpVo;
+import indi.xp.coachview.model.vo.UserVo;
 
 public interface UserService {
 
-    public User getUserByUid(String uid);
+    public UserVo getUserByUid(String uid);
 
-    public User getUserByPhone(String phone);
+    public UserVo getUserByPhone(String phone);
 
-    public List<User> findUserListByUidList(List<String> uidList);
+    public List<UserVo> findUserListByUidList(List<String> uidList);
 
-    public List<User> findUserList();
+    public List<UserVo> findUserList();
 
-    public User addUser(UserSignUpVo userSignUpVo);
+    public UserVo addUser(UserVo userVo);
 
-    public User updateUser(UserSignUpVo userSignUpVo);
+    public UserVo updateUser(UserVo userVo);
+
+    public void deleteByUid(String uid);
 
 }
