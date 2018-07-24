@@ -2,14 +2,20 @@ package indi.xp.coachview.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import indi.xp.coachview.dao.UserDao;
+import indi.xp.coachview.model.SysRole;
+import indi.xp.coachview.model.SysUserRole;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.UserVo;
+import indi.xp.coachview.service.SysRoleService;
+import indi.xp.coachview.service.SysUserRoleService;
 import indi.xp.coachview.service.UserService;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
@@ -21,6 +27,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private SysRoleService sysRoleService;
+
+    @Autowired
+    private SysUserRoleService sysUserRoleService;
 
     @Override
     public UserVo getUserByUid(String uid) {
@@ -47,6 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserVo addUser(UserVo userVo) {
         String currentTime = DateUtils.getDateTime();
 
@@ -59,11 +72,28 @@ public class UserServiceImpl implements UserService {
         user.setDeleteStatus(false);
         user.setStatus("1");
         userDao.addUser(user);
-        
+
+        // 处理roles
+        String uid = user.getUid();
+        List<String> roleCodeList = userVo.getRoles();
+        if (CollectionUtils.isNotEmpty(roleCodeList)) {
+            List<SysRole> roleList = sysRoleService.findListByCodeList(roleCodeList);
+            if (CollectionUtils.isNotEmpty(roleList)) {
+                roleList.forEach(role -> {
+                    SysUserRole sysUserRole = new SysUserRole();
+                    sysUserRole.setRoleId(role.getRoleId());
+                    sysUserRole.setUid(uid);
+                    sysUserRole.setDeleteStatus(false);
+                    sysUserRoleService.add(sysUserRole);
+                });
+            }
+        }
+
         return userVo;
     }
 
     @Override
+    @Transactional
     public UserVo updateUser(UserVo userVo) {
         User user = userVo != null ? userDao.getUserByUid(userVo.getUid()) : null;
         if (user != null) {
@@ -92,6 +122,58 @@ public class UserServiceImpl implements UserService {
                 user.setTitle(userVo.getTitle());
             }
             userDao.update(user);
+
+            // 处理roles
+            String uid = user.getUid();
+            List<String> newRoles = userVo.getRoles();
+            if (newRoles != null) {
+                List<SysRole> dbRoleList = new ArrayList<SysRole>();
+                List<SysUserRole> userRoleList = sysUserRoleService.findListByUid(uid);
+                if (CollectionUtils.isNotEmpty(userRoleList)) {
+                    List<String> roleIdList = userRoleList.stream().map(userRole -> userRole.getRoleId())
+                        .collect(Collectors.toList());
+                    dbRoleList = sysRoleService.findListByIdList(roleIdList);
+                }
+
+                List<String> addRoleCodeList = new ArrayList<String>();
+                List<String> deleteRoleIdList = new ArrayList<String>();
+                for (String newRole : newRoles) {
+                    boolean isNew = true;
+                    if(CollectionUtils.isNotEmpty(dbRoleList)) {
+                        for (SysRole role : dbRoleList) {
+                            if (role.getCode().equals(newRole)) {
+                                isNew = false;
+                            }
+                        }
+                    }
+                    if (isNew) {
+                        addRoleCodeList.add(newRole);
+                    }
+                }
+                if(CollectionUtils.isNotEmpty(dbRoleList)) {
+                    for (SysRole role : dbRoleList) {
+                        if(!newRoles.contains(role.getCode())) {
+                            deleteRoleIdList.add(role.getRoleId());
+                        }
+                    }
+                }
+                
+                if(CollectionUtils.isNotEmpty(addRoleCodeList)) {
+                    List<SysRole> addRoleList = sysRoleService.findListByCodeList(addRoleCodeList);
+                    if (CollectionUtils.isNotEmpty(addRoleList)) {
+                        addRoleList.forEach(role -> {
+                            SysUserRole sysUserRole = new SysUserRole();
+                            sysUserRole.setRoleId(role.getRoleId());
+                            sysUserRole.setUid(uid);
+                            sysUserRole.setDeleteStatus(false);
+                            sysUserRoleService.add(sysUserRole);
+                        });
+                    }
+                }
+                if (CollectionUtils.isNotEmpty(deleteRoleIdList)) {
+                    sysUserRoleService.deleteUserRole(uid, deleteRoleIdList);
+                }
+            }
         }
         return userVo;
     }
@@ -110,8 +192,19 @@ public class UserServiceImpl implements UserService {
             UserVo userVo = new UserVo();
             BeanUtils.copyProperties(user, userVo);
 
-            // TODO： 处理roles
-            
+            String uid = user.getUid();
+            List<SysUserRole> userRoleList = sysUserRoleService.findListByUid(uid);
+            if (CollectionUtils.isNotEmpty(userRoleList)) {
+                List<String> roleIdList = userRoleList.stream().map(userRole -> userRole.getRoleId())
+                    .collect(Collectors.toList());
+                List<SysRole> roleList = sysRoleService.findListByIdList(roleIdList);
+                if (CollectionUtils.isNotEmpty(roleList)) {
+                    List<String> roleCodeList = roleList.stream().map(role -> role.getCode())
+                        .collect(Collectors.toList());
+                    userVo.setRoles(roleCodeList);
+                }
+            }
+
             return userVo;
         }
         return null;

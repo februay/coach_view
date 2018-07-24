@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="indi.xp.coachview.mapper.SysUserRoleMapper">
+
+    <resultMap id="sysUserRoleResultMap" type="indi.xp.coachview.model.SysUserRole">
+        <result column="uid" property="uid" />
+        <result column="role_id" property="roleId" />
+        <result column="delete_status" property="deleteStatus" />
+    </resultMap>
+
+    <sql id="table_name">
+        sys_user_role
+    </sql>
+
+    <sql id="common_where">
+        where delete_status = 0
+    </sql>
+
+    <select id="findListByRoleId" parameterType="java.util.List" resultMap="sysUserRoleResultMap">
+        select * from <include refid="table_name" />
+        <include refid="common_where" />
+        and role_id = #{roleId}
+    </select>
+
+    <select id="findListByUid" parameterType="java.util.List" resultMap="sysUserRoleResultMap">
+        select * from <include refid="table_name" />
+        <include refid="common_where" />
+        and uid = #{uid}
+    </select>
+
+    <insert id="add">
+        insert into sys_user_role (uid, role_id, delete_status)
+        values(#{entity.uid}, #{entity.roleId}, #{entity.deleteStatus})
+    </insert>
+    
+    <select id="findByWhere" parameterType="java.util.Map" resultMap="sysUserRoleResultMap">
+        select * from <include refid="table_name" />
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+    </select>
+    
+    <update id="updateByWhere" parameterType="java.util.Map">
+        update <include refid="table_name" /> set
+        <foreach collection="updateMap" item="value" index="key" separator=",">
+            ${key} = #{value}
+        </foreach>
+        <include refid="common_where" />
+        <foreach collection="paramMap" item="valueList" index="key" >
+            <if test="valueList != null and valueList.length > 0">
+                and ${key} in
+                <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                    #{value}
+                </foreach>
+            </if>
+        </foreach>
+    </update>
+
+</mapper>

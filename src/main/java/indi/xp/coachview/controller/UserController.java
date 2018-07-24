@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import indi.xp.coachview.common.BusinessErrorCodeEnum;
 import indi.xp.coachview.common.Constants;
+import indi.xp.coachview.model.SysRole;
 import indi.xp.coachview.model.vo.UserSignInVo;
 import indi.xp.coachview.model.vo.UserVo;
+import indi.xp.coachview.service.SysRoleService;
 import indi.xp.coachview.service.UserService;
 import indi.xp.coachview.session.Session;
 import indi.xp.coachview.session.SessionContext;
@@ -29,6 +31,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private SysRoleService sysRoleService;
 
     @Autowired
     private SessionContext sessionContext;
@@ -103,6 +108,13 @@ public class UserController {
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
 
         sessionContext.clearSession(token);
+    }
+    
+    @RequestMapping(value = "roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public ResponseResult<List<SysRole>> findSysRoleList(
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
+        return ResponseResult.buildResult(sysRoleService.findList());
     }
 
 }

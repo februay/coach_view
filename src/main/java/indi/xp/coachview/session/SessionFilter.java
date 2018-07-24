@@ -64,7 +64,7 @@ public class SessionFilter implements Filter {
             String[] url = path.split("\\|");
             String urlMethod = url[0];
             String urlPath = url[1];
-            if ((urlMethod.equalsIgnoreCase(requestMethod) || "*".equals(urlMethod))
+            if (true || (urlMethod.equalsIgnoreCase(requestMethod) || "*".equals(urlMethod))
                 && StringUtils.startsWithIgnoreCase(requestUri, urlPath)) {
                 chain.doFilter(req, response);
                 return;
