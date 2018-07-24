@@ -15,4 +15,11 @@ public class Constants {
         public static final String TRACE_ID = "TraceId";
     }
 
+    public static class Session {
+    }
+
+    public static class Cookie {
+        public static final String USER_NAME = "userName";
+        public static final String USER_PASSWORD = "userPassword";
+    }
 }

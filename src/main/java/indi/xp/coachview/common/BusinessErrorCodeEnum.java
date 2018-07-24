@@ -2,9 +2,13 @@ package indi.xp.coachview.common;
 
 public enum BusinessErrorCodeEnum {
 
-    USER_EXISTS("USER_EXISTS", "用户已存在");
+    USER_EXISTS("USER_EXISTS", "用户已存在"), 
+    USER_NOT_EXISTS("USER_NOT_EXISTS", "用户不存在"), 
+    USER_VERIFICATION_CODE_ERROR("USER_VERIFICATION_CODE_ERROR", "用户验证码错误"),
+    NO_SESSION("NO_SESSION", "用户未登录"), 
+    USER_AND_SESSION_NOT_MATCH("USER_AND_SESSION_NOT_MATCH", "用户和session不匹配");
 
-    BusinessErrorCodeEnum(String code, String message) {
+    private BusinessErrorCodeEnum(String code, String message) {
         this.code = code;
         this.message = message;
     }

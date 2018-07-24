@@ -4,6 +4,8 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
 
+import indi.xp.coachview.common.BusinessErrorCodeEnum;
+
 /**
  * 业务异常
  */
@@ -38,6 +40,17 @@ public class BusinessException extends RuntimeException {
         this.params = params;
     }
 
+    public BusinessException(BusinessErrorCodeEnum errorCodeEnum) {
+        this.errorCode = errorCodeEnum.getCode();
+        this.errorMsg = errorCodeEnum.getMessage();
+    }
+
+    public BusinessException(BusinessErrorCodeEnum errorCodeEnum, Map<String, Object> params) {
+        this.errorCode = errorCodeEnum.getCode();
+        this.errorMsg = errorCodeEnum.getMessage();
+        this.params = params;
+    }
+
     public String getErrorCode() {
         return errorCode;
     }
@@ -65,13 +78,6 @@ public class BusinessException extends RuntimeException {
     @Override
     public String getMessage() {
         return this.errorCode + " ==> " + this.errorMsg + " ==> " + JSON.toJSONString(this.params);
-    }
-
-    public static BusinessException buildBusinessException(String errorCode, String errorMsg) {
-        BusinessException businessException = new BusinessException();
-        businessException.setErrorCode(errorCode);
-        businessException.setErrorMsg(errorMsg);
-        return businessException;
     }
 
 }

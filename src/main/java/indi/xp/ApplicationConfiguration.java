@@ -1,12 +1,16 @@
 package indi.xp;
 
+import javax.servlet.Filter;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+import indi.xp.coachview.session.SessionFilter;
 import indi.xp.common.utils.StringUtils;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
@@ -44,6 +48,27 @@ public class ApplicationConfiguration {
         config.addAllowedMethod("*");// 允许提交请求的方法，*表示全部允许，也可以单独设置GET、PUT等
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
+    }
+    
+    /**
+     * 创建一个Filter
+     */
+    @Bean(name = "sessionFilter")
+    public Filter sessionFilter() {
+        return new SessionFilter();
+    }
+
+    /**
+     * 配置过滤器
+     */
+    @Bean
+    public FilterRegistrationBean someFilterRegistration() {
+        FilterRegistrationBean registration = new FilterRegistrationBean();
+        registration.setFilter(sessionFilter());
+        registration.addUrlPatterns("/*");
+        registration.addInitParameter("paramName", "paramValue");
+        registration.setName("sessionFilter");
+        return registration;
     }
 
     @Bean
