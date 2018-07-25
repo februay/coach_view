@@ -29,12 +29,16 @@ public class SchoolController {
     private TeamService teamService;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<School>> findSchoolList() {
+    public ResponseResult<List<School>> findSchoolList(
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(schoolService.findList());
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<School> getSchoolById(@PathVariable(value = "id") String id) {
+    public ResponseResult<School> getSchoolById(@PathVariable(value = "id") String id,
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(schoolService.getById(id));
     }
 
@@ -46,12 +50,16 @@ public class SchoolController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<School> addSchool(@RequestBody School school) {
+    public ResponseResult<School> addSchool(@RequestBody School school,
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(schoolService.add(school));
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<School> updateSchool(@RequestBody School school) {
+    public ResponseResult<School> updateSchool(@RequestBody School school,
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(schoolService.update(school));
     }
 
