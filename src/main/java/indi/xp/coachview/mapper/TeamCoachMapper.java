@@ -6,31 +6,32 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.TeamCoach;
 
 @Mapper
-public interface ClubMapper {
+public interface TeamCoachMapper {
 
-    public Club getClubById(@Param("id") String clubId, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
+    public TeamCoach getById(@Param("id") String id, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<Club> getClubByIdList(@Param("idList") List<String> idList,
+    public List<TeamCoach> findByIdList(@Param("idList") List<String> idList,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<Club> findClubList(@Param("authFilterMap") Map<String, Object[]> authFilterMap);
+    public List<TeamCoach> findList(@Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public void addClub(@Param("club") Club club);
+    public void add(@Param("teamCoach") TeamCoach teamCoach);
 
-    public void updateClub(@Param("club") Club club, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
+    public void update(@Param("teamCoach") TeamCoach teamCoach,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public void delete(@Param("id") String id, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public void batchDelete(@Param("idList") List<String> idList,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public Club getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+    public TeamCoach getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<Club> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+    public List<TeamCoach> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public Integer queryCount(@Param("paramMap") Map<String, Object[]> paramMap,

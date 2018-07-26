@@ -14,10 +14,10 @@ import indi.xp.coachview.model.vo.UserVo;
 import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
 
-@Component("sessionContext")
-public class SessionContext {
+@Component("sessionManager")
+public class SessionManager {
 
-    private Logger logger = LoggerFactory.getLogger(SessionContext.class);
+    private Logger logger = LoggerFactory.getLogger(SessionManager.class);
 
     private long defaultSessionValidateTime = 24 * 60 * 60 * 1000; // 毫秒(24小时)
     private long rememberMeSessionValidateTime = 7 * 24 * 60 * 60 * 1000; // 毫秒(7天)
@@ -29,35 +29,20 @@ public class SessionContext {
     }
 
     public Session addSession(UserVo user, boolean rememberMe) {
-        Session session = buildSession(user.getUid(), rememberMe);
-        session.setSessionUser(user);
-        this.saveSession(session);
-        return session;
-    }
-
-    public void saveSession(Session session) {
-        sessionMap.put(session.getSessionId(), session);
-    }
-
-    // 创建新session
-    public Session buildSession(String uid, boolean rememberMe) {
-        String sessionId = uid + ":" + UuidUtils.generateUUID();
-        Session session = new Session(sessionId);
-        if (rememberMe) {
-            session.setSessionValidateTime(rememberMeSessionValidateTime + System.currentTimeMillis());
-        } else {
-            session.setSessionValidateTime(defaultSessionValidateTime + System.currentTimeMillis());
+        Session session = this.buildSession(user, rememberMe);
+        if (session != null) {
+            sessionMap.put(session.getSessionId(), session);
         }
         return session;
     }
 
     public Session getSession(String sessionId) {
-        if (!StringUtils.isNotBlank(sessionId) || sessionId.equals("undefined") || !sessionId.contains("-")) {
+        if (StringUtils.isBlank(sessionId)) {
             return null;
         }
         Session session = sessionMap.get(sessionId);
         if (session != null && session.getSessionValidateTime() < System.currentTimeMillis()) {
-            sessionMap.remove(sessionId);
+            this.clearSession(sessionId);
             return null;
         }
         return session;
@@ -74,6 +59,26 @@ public class SessionContext {
         // TODO: 清空当前uid登录的所有session.
     }
 
+    // 创建新session
+    public Session buildSession(UserVo user, boolean rememberMe) {
+        if (user != null) {
+            String uid = user.getUid();
+            String sessionId = uid + ":" + UuidUtils.generateUUID();
+            Session session = new Session(sessionId);
+            session.setSessionUser(user);
+            session.setSessionConext(SessionConext.build(sessionId, user));
+            if (rememberMe) {
+                session.setSessionValidateTime(rememberMeSessionValidateTime + System.currentTimeMillis());
+            } else {
+                session.setSessionValidateTime(defaultSessionValidateTime + System.currentTimeMillis());
+            }
+            logger.info(sessionId + ": build remember<{}> session time to " + session.getSessionValidateTime(),
+                rememberMe);
+            return session;
+        }
+        return null;
+    }
+
     public UserVo getSessionUser(String sessionId) {
         if (StringUtils.isNotBlank(sessionId)) {
             Session session = this.getSession(sessionId);
@@ -88,10 +93,10 @@ public class SessionContext {
 
     public synchronized void updateSessionTime(String sessionId) {
         if (StringUtils.isNotBlank(sessionId)) {
-            Session session = getSession(sessionId);
+            Session session = this.getSession(sessionId);
             if (session != null) {
                 session.setSessionValidateTime(session.getSessionValidateTime() + defaultSessionValidateTime);
-                logger.info(sessionId + ": update session time.");
+                logger.info(sessionId + ": update session time to " + session.getSessionValidateTime());
             }
         }
     }

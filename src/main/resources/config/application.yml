@@ -10,7 +10,7 @@ mybatis:
     mapper-locations: classpath:mapper/*.xml
     type-aliases-package: indi.xp.coachview.model
  
-#\u5141\u8bb8\u8de8\u57dfdomain
+#允许跨域domain
 cros:
     allow-domain: 
 

@@ -32,7 +32,7 @@ public class SessionFilter implements Filter {
 
     // 不进行拦截的URL
     private String[] skipPaths = { "*|/swagger-ui.html", "*|/webjars", "*|/swagger", "*|/v2/api-docs",
-        "GET|/public/verification-code/", "POST|/user/sign-in" };
+        "*|/hello", "GET|/public/verification-code/", "POST|/user/sign-in" };
 
     public SessionFilter() {
     }
@@ -53,7 +53,7 @@ public class SessionFilter implements Filter {
         throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        SessionContext sessionContext = SpringContextUtil.getBean("sessionContext");
+        SessionManager sessionManager = SpringContextUtil.getBean("sessionManager");
 
         String requestMethod = req.getMethod();
         String requestUri = req.getRequestURI();
@@ -75,7 +75,7 @@ public class SessionFilter implements Filter {
         if (StringUtils.isBlank(token)) {
             token = request.getParameter(Constants.Header.TOKEN);
         }
-        Session session = sessionContext.getSession(token);
+        Session session = sessionManager.getSession(token);
         if (session != null) {
             UserVo sessionUser = session.getSessionUser();
             if (sessionUser != null) {
@@ -84,7 +84,10 @@ public class SessionFilter implements Filter {
                 if (StringUtils.isNotBlank(uid) && !uid.equals(sessionUser.getUid())) {
                     goNotMatchUserSessionURL(resp, uid, sessionUser.getUid());
                 } else {
-                    sessionContext.updateSessionTime(token);
+                    // 将SessionContext设置到ThreadLocal
+                    SessionConext.setThreadLocalSessionContext(session.getSessionConext());
+                    // 更新session时间
+                    sessionManager.updateSessionTime(token);
                     chain.doFilter(req, response);
                     return;
                 }
@@ -101,7 +104,7 @@ public class SessionFilter implements Filter {
      * 返回no-session信息
      */
     private void goNoSessionURL(HttpServletResponse response) {
-        logger.info("noSession, login again.---------------------------------------------");
+        logger.info("NO_SESSION, 用户未登录 --------------------------------------------------");
 
         /**
          * 440 (Unofficial codes) : Login Timeout ,The client's session has

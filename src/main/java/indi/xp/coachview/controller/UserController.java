@@ -20,7 +20,7 @@ import indi.xp.coachview.model.vo.UserVo;
 import indi.xp.coachview.service.SysRoleService;
 import indi.xp.coachview.service.UserService;
 import indi.xp.coachview.session.Session;
-import indi.xp.coachview.session.SessionContext;
+import indi.xp.coachview.session.SessionManager;
 import indi.xp.common.constants.MediaType;
 import indi.xp.common.exception.BusinessException;
 import indi.xp.common.restful.ResponseResult;
@@ -36,7 +36,7 @@ public class UserController {
     private SysRoleService sysRoleService;
 
     @Autowired
-    private SessionContext sessionContext;
+    private SessionManager sessionManager;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<UserVo>> findUserList(
@@ -97,7 +97,7 @@ public class UserController {
             throw new BusinessException(BusinessErrorCodeEnum.USER_NOT_EXISTS);
         } else {
             // 登录成功返回session
-            session = sessionContext.addSession(user);
+            session = sessionManager.addSession(user);
         }
         return ResponseResult.buildResult(session);
     }
@@ -107,7 +107,7 @@ public class UserController {
     public void signOut(@RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
 
-        sessionContext.clearSession(token);
+        sessionManager.clearSession(token);
     }
     
     @RequestMapping(value = "roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)

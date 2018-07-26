@@ -1,10 +1,6 @@
 package indi.xp.coachview.session;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.alibaba.fastjson.JSON;
 
 import indi.xp.coachview.model.vo.UserVo;
 
@@ -17,9 +13,8 @@ public class Session implements Serializable {
     private Long createTime = System.currentTimeMillis();
     private Long updateSessionTime;
     private Long sessionValidateTime;
-    private Map<String, Object> attributeMap = new HashMap<>();
-    private Map<String, String> clazzMap = new HashMap<>();
     private Boolean loginBySuperKey; // 是否使用superKey登录产品
+    private SessionConext sessionConext ;
 
     public Session() {
     }
@@ -52,47 +47,12 @@ public class Session implements Serializable {
         this.createTime = createTime;
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T getAttribute(String key) throws ClassNotFoundException {
-        if (clazzMap.containsKey(key) && attributeMap.containsKey(key)) {
-            return (T) JSON.parseObject(JSON.toJSONString(attributeMap.get(key)), bulidClass(clazzMap.get(key)));
-        } else {
-            return null;
-        }
-    }
-
-    @SuppressWarnings("rawtypes")
-    public Class bulidClass(String className) throws ClassNotFoundException {
-        return Class.forName(className);
-    }
-
-    public void setAttribute(String key, Object object) {
-        attributeMap.put(key, object);
-        clazzMap.put(key, object.getClass().getName());
-    }
-
     public String getSessionId() {
         return sessionId;
     }
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
-    }
-
-    public Map<String, Object> getAttributeMap() {
-        return attributeMap;
-    }
-
-    public void setAttributeMap(Map<String, Object> attributeMap) {
-        this.attributeMap = attributeMap;
-    }
-
-    public Map<String, String> getClazzMap() {
-        return clazzMap;
-    }
-
-    public void setClazzMap(Map<String, String> clazzMap) {
-        this.clazzMap = clazzMap;
     }
 
     public Long getUpdateSessionTime() {
@@ -109,6 +69,14 @@ public class Session implements Serializable {
 
     public void setLoginBySuperKey(Boolean loginBySuperKey) {
         this.loginBySuperKey = loginBySuperKey;
+    }
+
+    public SessionConext getSessionConext() {
+        return sessionConext;
+    }
+
+    public void setSessionConext(SessionConext sessionConext) {
+        this.sessionConext = sessionConext;
     }
 
 }

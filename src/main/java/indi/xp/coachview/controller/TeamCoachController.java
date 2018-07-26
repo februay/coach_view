@@ -11,76 +11,51 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import indi.xp.coachview.common.Constants;
-import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.TeamCoach;
-import indi.xp.coachview.model.TeamMember;
 import indi.xp.coachview.service.TeamCoachService;
-import indi.xp.coachview.service.TeamMemberService;
-import indi.xp.coachview.service.TeamService;
 import indi.xp.common.constants.MediaType;
 import indi.xp.common.restful.ResponseResult;
 
-@RestController("teamController")
-@RequestMapping("/team")
-public class TeamController {
-
-    @Autowired
-    private TeamService teamService;
-
-    @Autowired
-    private TeamMemberService teamMemberService;
+@RestController("teamCoachController")
+@RequestMapping("/team-coach")
+public class TeamCoachController {
 
     @Autowired
     private TeamCoachService teamCoachService;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<Team>> findTeamList(
+    public ResponseResult<List<TeamCoach>> findTeamCoachList(
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(teamService.findList());
+        return ResponseResult.buildResult(teamCoachService.findList());
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<Team> getTeamById(@PathVariable(value = "id") String id,
+    public ResponseResult<TeamCoach> getTeamCoachById(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(teamService.getById(id));
-    }
-
-    @RequestMapping(value = "{id}/team-member", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<TeamMember>> findTeamMemberListByTeamId(@PathVariable(value = "id") String id,
-        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
-        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(teamMemberService.findTeamMemberListByTeamId(id));
-    }
-
-    @RequestMapping(value = "{id}/team-coach", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<TeamCoach>> findTeamCoachListByTeamId(@PathVariable(value = "id") String id,
-        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
-        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(teamCoachService.findTeamCoachListByTeamId(id));
+        return ResponseResult.buildResult(teamCoachService.getById(id));
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<Team> addTeam(@RequestBody Team team,
+    public ResponseResult<TeamCoach> addTeamCoach(@RequestBody TeamCoach teamCoach,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(teamService.add(team));
+        return ResponseResult.buildResult(teamCoachService.add(teamCoach));
     }
 
     @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<Team> updateTeam(@RequestBody Team team,
+    public ResponseResult<TeamCoach> updateTeamCoach(@RequestBody TeamCoach teamCoach,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(teamService.update(team));
+        return ResponseResult.buildResult(teamCoachService.update(teamCoach));
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON)
-    public void deleteTeam(@PathVariable(value = "id") String id,
+    public void deleteTeamCoach(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
 
-        teamService.delete(id);
+        teamCoachService.delete(id);
     }
-
 }
