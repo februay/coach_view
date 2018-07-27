@@ -29,7 +29,7 @@ public class PublicController {
         String verificationCode = UuidUtils.generateRandomNumber(4);
         verificationCodeMap.put(phoneNumber, verificationCode);
         this.sendLoginVerificationCode(phoneNumber, verificationCode);
-        return ResponseResult.buildResult();
+        return ResponseResult.buildResult(verificationCode);
     }
 
     private void sendLoginVerificationCode(String phoneNumber, String verificationCode) {
