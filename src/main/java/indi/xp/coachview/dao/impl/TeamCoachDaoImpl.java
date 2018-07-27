@@ -1,5 +1,6 @@
 package indi.xp.coachview.dao.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
 
+import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.TeamCoachDao;
 import indi.xp.coachview.mapper.TeamCoachMapper;
 import indi.xp.coachview.model.TeamCoach;
+import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.StringUtils;
@@ -74,17 +77,44 @@ public class TeamCoachDaoImpl implements TeamCoachDao {
         return teamCoachMapper.findByWhere(paramMap, this.buildAuthFilterMap());
     }
 
+    @Override
+    public List<ListItemVo> findTeamCoachItemList() {
+        List<TeamCoach> teamCoachList = teamCoachMapper.findList(null);
+        List<ListItemVo> itemList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(teamCoachList)) {
+            teamCoachList.forEach(coach -> {
+                ListItemVo item = new ListItemVo();
+                item.setId(coach.getCoachId());
+                item.setName(coach.getName());
+                item.addExtra("photo", coach.getPhoto());
+                itemList.add(item);
+            });
+        }
+        return itemList;
+    }
+    
     private Map<String, Object[]> buildAuthFilterMap() {
         Map<String, Object[]> authFilterMap = new HashMap<>();
         SessionConext sessionContext = SessionConext.getThreadLocalSessionContext();
-        if (sessionContext != null) {
+        if (sessionContext != null && sessionContext.available()) {
+            if (sessionContext.hasRole(SysRoleEnum.ADMIN)) {
+                // 不限制
+            } else if (sessionContext.hasRole(SysRoleEnum.CLUB)) {
+                // 只能访问管理员是自己的俱乐部
+                authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
+            } else if (sessionContext.hasRole(SysRoleEnum.SCHOOL)) {
+                // 只能访问自己所在的俱乐部
+
+            } else if (sessionContext.hasRole(SysRoleEnum.TEAM)) {
+                // 只能访问自己所在的俱乐部
+            } else {
+                // 不能访问
+                authFilterMap.put("club_id", new String[] { "" });
+            }
+
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
             logger.info("SessionContext<{}> {} AuthFilterMap: " + JSON.toJSONString(authFilterMap),
                 sessionContext.getSessionId(), TeamCoach.class.getSimpleName());
-            
-            
-            
-            
         } else {
             logger.warn("SessionContext is null");
         }

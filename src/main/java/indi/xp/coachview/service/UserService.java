@@ -2,6 +2,7 @@ package indi.xp.coachview.service;
 
 import java.util.List;
 
+import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.UserVo;
 
 public interface UserService {
@@ -20,4 +21,5 @@ public interface UserService {
 
     public void deleteByUid(String uid);
 
+    public List<ListItemVo> findUserItemList();
 }

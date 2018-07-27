@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.model.TeamCoach;
+import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.TeamCoachService;
 import indi.xp.common.constants.MediaType;
 import indi.xp.common.restful.ResponseResult;
@@ -28,6 +29,13 @@ public class TeamCoachController {
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(teamCoachService.findList());
+    }
+    
+    @RequestMapping(value = "list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public ResponseResult<List<ListItemVo>> findTeamCoachItemList(
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
+        return ResponseResult.buildResult(teamCoachService.findTeamCoachItemList());
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)

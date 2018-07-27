@@ -28,11 +28,13 @@ import indi.xp.common.utils.WebUtils;
 
 public class SessionFilter implements Filter {
 
-    private Logger logger = LoggerFactory.getLogger(SessionFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(SessionFilter.class);
+
+    private static final boolean sessionFilterSwitchOn = true; // 开启SessionFilter
 
     // 不进行拦截的URL
-    private String[] skipPaths = { "*|/swagger-ui.html", "*|/webjars", "*|/swagger", "*|/v2/api-docs",
-        "*|/hello", "GET|/public/verification-code/", "POST|/user/sign-in" };
+    private String[] skipPaths = { "*|/swagger-ui.html", "*|/webjars", "*|/swagger", "*|/v2/api-docs", "*|/hello",
+        "GET|/public/verification-code/", "POST|/user/sign-in" };
 
     public SessionFilter() {
     }
@@ -65,7 +67,7 @@ public class SessionFilter implements Filter {
             String urlMethod = url[0];
             String urlPath = url[1];
             if ((urlMethod.equalsIgnoreCase(requestMethod) || "*".equals(urlMethod))
-                && StringUtils.startsWithIgnoreCase(requestUri, urlPath)) {
+                && StringUtils.startsWithIgnoreCase(requestUri, urlPath) || !sessionFilterSwitchOn) {
                 chain.doFilter(req, response);
                 return;
             }

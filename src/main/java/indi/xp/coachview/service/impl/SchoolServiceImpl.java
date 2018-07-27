@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import indi.xp.coachview.dao.SchoolDao;
 import indi.xp.coachview.model.School;
+import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.SchoolService;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
@@ -91,6 +92,11 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public List<School> findListByClubId(String clubId) {
         return schoolDao.findListByClubId(clubId);
+    }
+
+    @Override
+    public List<ListItemVo> findSchoolItemList() {
+        return schoolDao.findSchoolItemList();
     }
 
 }

@@ -92,7 +92,7 @@
             team_name = #{teamCoach.teamName},
             create_time = #{teamCoach.createTime},
             delete_status = #{teamCoach.deleteStatus}
-        where <include refid="pk_column" /> = #{teamCoach.memberId}
+        where <include refid="pk_column" /> = #{teamCoach.coachId}
     </update>
     
     <update id="delete">

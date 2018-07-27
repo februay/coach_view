@@ -3,6 +3,7 @@ package indi.xp.coachview.dao;
 import java.util.List;
 
 import indi.xp.coachview.model.User;
+import indi.xp.coachview.model.vo.ListItemVo;
 
 public interface UserDao {
 
@@ -17,5 +18,7 @@ public interface UserDao {
     public User addUser(User user);
 
     public User update(User user);
+
+    public List<ListItemVo> findUserItemList();
 
 }

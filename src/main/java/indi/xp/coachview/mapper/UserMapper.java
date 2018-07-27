@@ -11,29 +11,35 @@ import indi.xp.coachview.model.User;
 @Mapper
 public interface UserMapper {
 
-    public User getUserByUid(@Param("id") String id);
+    public User getUserByUid(@Param("id") String id, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public User getUserByPhone(@Param("phone") String phone);
+    public User getUserByPhone(@Param("phone") String phone,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<User> getUserByUidList(@Param("uidList") List<String> uidList);
+    public List<User> getUserByUidList(@Param("uidList") List<String> uidList,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<User> findUserList();
+    public List<User> findUserList(@Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public void addUser(@Param("user") User user);
+    public void addUser(@Param("user") User user, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public void updateUser(@Param("user") User user);
+    public void updateUser(@Param("user") User user, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public void delete(@Param("id") String id);
+    public void delete(@Param("id") String id, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public void batchDelete(@Param("idList") List<String> idList);
+    public void batchDelete(@Param("idList") List<String> idList,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<User> getByWhere(@Param("paramMap") Map<String, Object[]> paramMap);
+    public List<User> getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<User> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap);
+    public List<User> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public Integer queryCount(@Param("paramMap") Map<String, Object[]> paramMap);
+    public Integer queryCount(@Param("paramMap") Map<String, Object[]> paramMap,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public void updateByWhere(@Param("updateMap") Map<String, Object> updateMap,
-        @Param("paramMap") Map<String, Object[]> paramMap);
-    
+        @Param("paramMap") Map<String, Object[]> paramMap, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
+
 }

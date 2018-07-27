@@ -3,6 +3,7 @@ package indi.xp.coachview.dao;
 import java.util.List;
 
 import indi.xp.coachview.model.TeamMember;
+import indi.xp.coachview.model.vo.ListItemVo;
 
 public interface TeamMemberDao {
 
@@ -21,5 +22,7 @@ public interface TeamMemberDao {
     public void batchDelete(List<String> idList);
 
     public List<TeamMember> findListByTeamId(String teamId);
+
+    public List<ListItemVo> findTeamMemberItemList();
 
 }

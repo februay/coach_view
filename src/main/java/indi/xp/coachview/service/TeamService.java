@@ -3,6 +3,7 @@ package indi.xp.coachview.service;
 import java.util.List;
 
 import indi.xp.coachview.model.Team;
+import indi.xp.coachview.model.vo.ListItemVo;
 
 public interface TeamService {
 
@@ -19,5 +20,7 @@ public interface TeamService {
     public void delete(String id);
 
     public List<Team> findTeamListBySchoolId(String schoolId);
+    
+    public List<ListItemVo> findTeamItemList();
 
 }

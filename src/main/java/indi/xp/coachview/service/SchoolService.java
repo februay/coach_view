@@ -3,6 +3,7 @@ package indi.xp.coachview.service;
 import java.util.List;
 
 import indi.xp.coachview.model.School;
+import indi.xp.coachview.model.vo.ListItemVo;
 
 public interface SchoolService {
 
@@ -19,5 +20,7 @@ public interface SchoolService {
     public void delete(String id);
 
     public List<School> findListByClubId(String clubId);
+    
+    public List<ListItemVo> findSchoolItemList();
 
 }

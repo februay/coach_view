@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import indi.xp.coachview.dao.TeamMemberDao;
 import indi.xp.coachview.model.TeamMember;
+import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.TeamMemberService;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
@@ -95,6 +96,11 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     @Override
     public List<TeamMember> findTeamMemberListByTeamId(String teamId) {
         return teamMemberDao.findListByTeamId(teamId);
+    }
+
+    @Override
+    public List<ListItemVo> findTeamMemberItemList() {
+        return teamMemberDao.findTeamMemberItemList();
     }
 
 }

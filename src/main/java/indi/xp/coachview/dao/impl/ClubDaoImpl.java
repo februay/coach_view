@@ -1,5 +1,6 @@
 package indi.xp.coachview.dao.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +17,7 @@ import indi.xp.coachview.dao.ClubDao;
 import indi.xp.coachview.mapper.ClubMapper;
 import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.TeamCoach;
+import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.StringUtils;
@@ -87,7 +89,7 @@ public class ClubDaoImpl implements ClubDao {
                 // 不能访问
                 authFilterMap.put("club_id", new String[] { "" });
             }
-            
+
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
             logger.info("SessionContext<{}> {} AuthFilterMap: " + JSON.toJSONString(authFilterMap),
                 sessionContext.getSessionId(), TeamCoach.class.getSimpleName());
@@ -95,6 +97,21 @@ public class ClubDaoImpl implements ClubDao {
             logger.warn("SessionContext is null");
         }
         return authFilterMap;
+    }
+
+    @Override
+    public List<ListItemVo> findClubItemList() {
+        List<Club> clubList = clubMapper.findClubList(null);
+        List<ListItemVo> itemList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(clubList)) {
+            clubList.forEach(club -> {
+                ListItemVo item = new ListItemVo();
+                item.setId(club.getClubId());
+                item.setName(club.getClubName());
+                itemList.add(item);
+            });
+        }
+        return itemList;
     }
 
 }

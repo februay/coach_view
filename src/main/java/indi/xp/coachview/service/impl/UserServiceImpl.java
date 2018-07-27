@@ -13,6 +13,7 @@ import indi.xp.coachview.dao.UserDao;
 import indi.xp.coachview.model.SysRole;
 import indi.xp.coachview.model.SysUserRole;
 import indi.xp.coachview.model.User;
+import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.UserVo;
 import indi.xp.coachview.service.SysRoleService;
 import indi.xp.coachview.service.SysUserRoleService;
@@ -218,6 +219,11 @@ public class UserServiceImpl implements UserService {
             }
         }
         return userVoList;
+    }
+
+    @Override
+    public List<ListItemVo> findUserItemList() {
+        return userDao.findUserItemList();
     }
 
 }

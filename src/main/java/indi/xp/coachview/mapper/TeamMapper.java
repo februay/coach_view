@@ -11,26 +11,31 @@ import indi.xp.coachview.model.Team;
 @Mapper
 public interface TeamMapper {
 
-    public Team getTeamById(@Param("id") String id);
+    public Team getTeamById(@Param("id") String id, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<Team> getTeamByIdList(@Param("idList") List<String> idList);
+    public List<Team> getTeamByIdList(@Param("idList") List<String> idList,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<Team> findTeamList();
+    public List<Team> findTeamList(@Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public void addTeam(@Param("team") Team team);
 
-    public void updateTeam(@Param("team") Team team);
+    public void updateTeam(@Param("team") Team team, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public void delete(@Param("id") String id);
+    public void delete(@Param("id") String id, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public void batchDelete(@Param("idList") List<String> idList);
+    public void batchDelete(@Param("idList") List<String> idList,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<Team> getByWhere(@Param("paramMap") Map<String, Object[]> paramMap);
+    public List<Team> getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<Team> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap);
+    public List<Team> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public Integer queryCount(@Param("paramMap") Map<String, Object[]> paramMap);
+    public Integer queryCount(@Param("paramMap") Map<String, Object[]> paramMap,
+        @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public void updateByWhere(@Param("updateMap") Map<String, Object> updateMap,
-        @Param("paramMap") Map<String, Object[]> paramMap);
+        @Param("paramMap") Map<String, Object[]> paramMap, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 }

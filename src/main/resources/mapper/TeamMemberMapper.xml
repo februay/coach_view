@@ -23,11 +23,40 @@
         team_member
     </sql>
 
+    <sql id="pk_column">member_id</sql>
+    
     <sql id="common_where">
         where delete_status = 0
+        <include refid="auth_filter" />
     </sql>
 
-    <sql id="id_in">
+    <sql id="query_by_param">
+        <if test="paramMap != null and !paramMap.isEmpty()">
+            <foreach collection="paramMap" item="valueList" index="key">
+                <if test="valueList != null and valueList.length > 0">
+                    and ${key} in
+                    <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                        #{value}
+                    </foreach>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+
+    <sql id="auth_filter">
+        <if test="authFilterMap != null and !authFilterMap.isEmpty()">
+            <foreach collection="authFilterMap" item="valueList" index="key">
+                <if test="valueList != null and valueList.length > 0">
+                    and ${key} in
+                    <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                        #{value}
+                    </foreach>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+
+    <sql id="pk_in">
         <if test="idList != null and idList.size() > 0">
             and team_member.member_id in
             <foreach collection="idList" item="id" open="(" separator="," close=")">
@@ -47,7 +76,7 @@
         select *
         from team_member
         <include refid="common_where" />
-        <include refid="id_in" />
+        <include refid="pk_in" />
     </select>
 
     <select id="findTeamMemberList" parameterType="java.util.List" resultMap="teamMemberResultMap">
@@ -103,47 +132,26 @@
         update <include refid="table_name" /> set
             delete_status = 1
         <include refid="common_where" />
-        <include refid="id_in" />
+        <include refid="pk_in" />
     </update>
     
     <select id="getByWhere" parameterType="java.util.Map" resultMap="teamMemberResultMap">
         select * from <include refid="table_name" />
         <include refid="common_where" />
-        <foreach collection="paramMap" item="valueList" index="key" >
-            <if test="valueList != null and valueList.length > 0">
-                and ${key} in
-                <foreach collection="valueList" item="value" open="(" separator="," close=")">
-                    #{value}
-                </foreach>
-            </if>
-        </foreach>
+        <include refid="query_by_param" />
         limit 1
     </select>
 
     <select id="findByWhere" parameterType="java.util.Map" resultMap="teamMemberResultMap">
         select * from <include refid="table_name" />
         <include refid="common_where" />
-        <foreach collection="paramMap" item="valueList" index="key" >
-            <if test="valueList != null and valueList.length > 0">
-                and ${key} in
-                <foreach collection="valueList" item="value" open="(" separator="," close=")">
-                    #{value}
-                </foreach>
-            </if>
-        </foreach>
+        <include refid="query_by_param" />
     </select>
     
     <select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Integer">
         select count(1) from <include refid="table_name" />
         <include refid="common_where" />
-        <foreach collection="paramMap" item="valueList" index="key" >
-            <if test="valueList != null and valueList.length > 0">
-                and ${key} in
-                <foreach collection="valueList" item="value" open="(" separator="," close=")">
-                    #{value}
-                </foreach>
-            </if>
-        </foreach>
+        <include refid="query_by_param" />
     </select>
     
     <update id="updateByWhere" parameterType="java.util.Map">
@@ -152,14 +160,7 @@
             ${key} = #{value}
         </foreach>
         <include refid="common_where" />
-        <foreach collection="paramMap" item="valueList" index="key" >
-            <if test="valueList != null and valueList.length > 0">
-                and ${key} in
-                <foreach collection="valueList" item="value" open="(" separator="," close=")">
-                    #{value}
-                </foreach>
-            </if>
-        </foreach>
+        <include refid="query_by_param" />
     </update>
 
 </mapper>

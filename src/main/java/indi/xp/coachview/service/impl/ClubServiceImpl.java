@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import indi.xp.coachview.dao.ClubDao;
 import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.ClubService;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
@@ -80,6 +81,11 @@ public class ClubServiceImpl implements ClubService {
         if (dbClub != null) {
             clubDao.delete(id);
         }
+    }
+
+    @Override
+    public List<ListItemVo> findClubItemList() {
+        return clubDao.findClubItemList();
     }
 
 }
