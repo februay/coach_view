@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -36,6 +35,8 @@
         <fastjson.version>1.2.34</fastjson.version>
         <joda-time.version>2.7</joda-time.version>
         <swagger.version>2.6.1</swagger.version>
+        <!-- for aliyun-java-sdk-core org.json.JSONArray jar conflict -->
+        <json.version>20170516</json.version>
     </properties>
 
 
@@ -76,6 +77,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <!-- for aliyun-java-sdk-core org.json.JSONArray jar conflict -->
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 
@@ -117,6 +125,23 @@
             <version>${swagger.version}</version>
         </dependency>
 
+        <!-- 阿里云短信产品相关的SDK -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-core</artifactId>
+            <version>3.7.1</version>
+            <!-- 注：如提示报错，先升级基础包版，无法解决可联系技术支持 -->
+        </dependency>
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -125,39 +150,39 @@
     </dependencies>
 
     <build>
-    
-<!--     <resources> -->
-<!--             <resource> -->
-<!--                 <directory>src/main/java</directory> -->
-<!--                 <includes> -->
-<!--                     <include>**/*.xml</include> -->
-<!--                     <include>**/*.properties</include> -->
-<!--                 </includes> -->
-<!--                 <filtering>true</filtering> -->
-<!--             </resource> -->
-<!--             <resource> -->
-<!--                 <directory>src/main/resources</directory> -->
-<!--                 <includes> -->
-<!--                     <include>**/*.xml</include> -->
-<!--                     <include>**/*.properties</include> -->
-<!--                     <include>META-INF/**/*</include> -->
-<!--                 </includes> -->
-<!--                 <filtering>true</filtering> -->
-<!--             </resource> -->
-<!--         </resources> -->
+
+        <!-- <resources> -->
+        <!-- <resource> -->
+        <!-- <directory>src/main/java</directory> -->
+        <!-- <includes> -->
+        <!-- <include>**/*.xml</include> -->
+        <!-- <include>**/*.properties</include> -->
+        <!-- </includes> -->
+        <!-- <filtering>true</filtering> -->
+        <!-- </resource> -->
+        <!-- <resource> -->
+        <!-- <directory>src/main/resources</directory> -->
+        <!-- <includes> -->
+        <!-- <include>**/*.xml</include> -->
+        <!-- <include>**/*.properties</include> -->
+        <!-- <include>META-INF/**/*</include> -->
+        <!-- </includes> -->
+        <!-- <filtering>true</filtering> -->
+        <!-- </resource> -->
+        <!-- </resources> -->
 
         <plugins>
 
-<!--             编译插件 -->
-<!--             <plugin> -->
-<!--                 <groupId>org.apache.maven.plugins</groupId> -->
-<!--                 <artifactId>maven-compiler-plugin</artifactId> -->
-<!--                 <configuration> -->
-<!--                     <source>${java.version}</source> -->
-<!--                     <target>${java.version}</target> -->
-<!--                     <encoding>${encoding}</encoding> -->
-<!--                 </configuration> -->
-<!--             </plugin> -->
+            <!-- 编译插件 -->
+            <!-- <plugin> -->
+            <!-- <groupId>org.apache.maven.plugins</groupId> -->
+            <!-- <artifactId>maven-compiler-plugin</artifactId> -->
+            <!-- <configuration> -->
+            <!-- <source>${java.version}</source> -->
+            <!-- <target>${java.version}</target> -->
+            <!-- <encoding>${encoding}</encoding> -->
+            <!-- </configuration> -->
+            <!-- </plugin> -->
 
             <plugin>
                 <groupId>org.springframework.boot</groupId>

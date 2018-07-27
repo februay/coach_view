@@ -12,6 +12,7 @@ import indi.xp.common.constants.MediaType;
 import indi.xp.common.restful.ResponseResult;
 import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
+import indi.xp.common.utils.sms.AliyunDysmsUtils;
 
 @RestController("publicController")
 @RequestMapping("/public")
@@ -23,11 +24,20 @@ public class PublicController {
         return StringUtils.isNotBlank(key, value) && value.equals(verificationCodeMap.get(key));
     }
 
-    @RequestMapping(value = "verification-code/{key}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<String> getVerificationCode(@PathVariable(value = "key") String key) {
+    @RequestMapping(value = "verification-code/{phoneNumber}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public ResponseResult<String> getVerificationCode(@PathVariable(value = "phoneNumber") String phoneNumber) {
         String verificationCode = UuidUtils.generateRandomNumber(4);
-        verificationCodeMap.put(key, verificationCode);
-        return ResponseResult.buildResult(verificationCode);
+        verificationCodeMap.put(phoneNumber, verificationCode);
+        this.sendLoginVerificationCode(phoneNumber, verificationCode);
+        return ResponseResult.buildResult();
+    }
+
+    private void sendLoginVerificationCode(String phoneNumber, String verificationCode) {
+        String signName = "Coachview";
+        String templateCode = "SMS_140690149"; // 登录验证码模板
+        Map<String, String> templateParamMap = new HashMap<String, String>();
+        templateParamMap.put("code", verificationCode);
+        AliyunDysmsUtils.sendSms(phoneNumber, signName, templateCode, templateParamMap);
     }
 
 }
