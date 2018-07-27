@@ -37,8 +37,8 @@ public class AliyunDysmsUtils {
     private static final String domain = "dysmsapi.aliyuncs.com";
 
     // 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
-    private static final String accessKeyId = "LTAI6sNzjcFvYBOm";
-    private static final String accessKeySecret = "sVI7QpXU8Q52Gz0lFv6V6a4kUm8b3O";
+    private static final String accessKeyId = "LTAI6ssfadfNzjcFvYBOm";
+    private static final String accessKeySecret = "sVI7QpXU8fadafaQ52Gz0lFvfadsfa6V6fadsfa4kUm8b3O";
 
     public static SendSmsResponse sendSms(String phoneNumber, String signName, String templateCode,
         Map<String, String> templateParamMap) {
