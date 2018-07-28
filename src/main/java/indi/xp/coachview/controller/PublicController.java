@@ -18,6 +18,8 @@ import indi.xp.common.utils.sms.AliyunDysmsUtils;
 @RequestMapping("/public")
 public class PublicController {
 
+    private static final boolean sendSmsOn = true;
+
     private static final Map<String, String> verificationCodeMap = new HashMap<String, String>();
 
     public static boolean validateVerificationCode(String key, String value) {
@@ -33,11 +35,13 @@ public class PublicController {
     }
 
     private void sendLoginVerificationCode(String phoneNumber, String verificationCode) {
-        String signName = "Coachview";
-        String templateCode = "SMS_140690149"; // 登录验证码模板
-        Map<String, String> templateParamMap = new HashMap<String, String>();
-        templateParamMap.put("code", verificationCode);
-        AliyunDysmsUtils.sendSms(phoneNumber, signName, templateCode, templateParamMap);
+        if (sendSmsOn) {
+            String signName = "Coachview";
+            String templateCode = "SMS_140690149"; // 登录验证码模板
+            Map<String, String> templateParamMap = new HashMap<String, String>();
+            templateParamMap.put("code", verificationCode);
+            AliyunDysmsUtils.sendSms(phoneNumber, signName, templateCode, templateParamMap);
+        }
     }
 
 }

@@ -155,7 +155,7 @@ public class SessionManager {
         if (StringUtils.isNotBlank(sessionId)) {
             Session session = this.getSession(sessionId);
             if (session != null) {
-                session.setSessionValidateTime(session.getSessionValidateTime() + defaultSessionValidateTime);
+                session.setSessionValidateTime(System.currentTimeMillis() + defaultSessionValidateTime);
                 logger.info(sessionId + ": update session time to "
                     + DateUtils.formatDate(session.getSessionValidateTime(), "yyyy-MM-dd HH:mm:ss"));
             }
