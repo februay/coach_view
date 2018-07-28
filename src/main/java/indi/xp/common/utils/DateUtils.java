@@ -30,7 +30,19 @@ public class DateUtils {
     public static String getDateTime() {
         return defaultDatetimeFormater.format(new Date());
     }
-
+    
+    public static String formatDate(long ms) {
+        return formatDate(new Date(ms));
+    }
+    
+    public static String formatDate(long ms, String format) {
+        return formatDate(new Date(ms), format);
+    }
+    
+    public static String formatDate(Date date) {
+        return defaultDatetimeFormater.format(date);
+    }
+    
     public static String replaceDateString(String string) {
         return string.replaceAll("-", "");
     }

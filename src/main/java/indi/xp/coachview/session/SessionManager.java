@@ -5,12 +5,21 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import indi.xp.coachview.model.vo.UserVo;
+import indi.xp.common.utils.CollectionUtils;
+import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
 
@@ -19,10 +28,61 @@ public class SessionManager {
 
     private Logger logger = LoggerFactory.getLogger(SessionManager.class);
 
-    private long defaultSessionValidateTime = 24 * 60 * 60 * 1000; // 毫秒(24小时)
+    private long defaultSessionValidateTime = 2 * 60 * 60 * 1000; // 毫秒(2小时)
     private long rememberMeSessionValidateTime = 7 * 24 * 60 * 60 * 1000; // 毫秒(7天)
 
     private static HashMap<String, Session> sessionMap = new HashMap<String, Session>();
+
+    private static boolean isActive = false; // 启动后标记为active状态，避免初始化多次
+    private static ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(3);
+
+    @PostConstruct
+    private synchronized void startSessionCheckSchedule() {
+        // 启动定时任务扫描自动更新source任务队列，每个任务完成后触发下一个(最少有一个线程)
+        if (!isActive) {
+            scheduledThreadPool.scheduleWithFixedDelay(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        checkSessionMap();
+                    } catch (Exception e) {
+                        logger.error("checkSessionMap error:" + e.getMessage(), e);
+                    }
+                }
+            }, 10, 10, TimeUnit.MINUTES);
+            isActive = true;
+        }
+    }
+
+    /**
+     * 检查sessionMap， 并清理过期的session
+     * 
+     * @date: 2018年7月28日
+     * @author peng.xu
+     */
+    private void checkSessionMap() {
+        logger.info("start checkSessionMap ...");
+        int sessionCount = 0;
+        if (CollectionUtils.isNotEmpty(sessionMap)) {
+            Iterator<Map.Entry<String, Session>> iterator = sessionMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry<String, Session> entury = iterator.next();
+                String sessionId = entury.getKey();
+                Session session = entury.getValue();
+                if (entury.getValue().getSessionValidateTime() < System.currentTimeMillis()) {
+                    logger.info(" >>> remove session<{}>", sessionId);
+                    iterator.remove();
+                } else {
+                    sessionCount++;
+                    logger.info(
+                        " >>> {}\t current session<{}> to time"
+                            + DateUtils.formatDate(session.getSessionValidateTime(), "yyyy-MM-dd HH:mm:ss"),
+                        sessionCount, sessionId);
+                }
+            }
+        }
+        logger.info("success checkSessionMap: sessionCount:" + sessionCount);
+    }
 
     public Session addSession(UserVo user) {
         return this.addSession(user, false);
@@ -72,8 +132,8 @@ public class SessionManager {
             } else {
                 session.setSessionValidateTime(defaultSessionValidateTime + System.currentTimeMillis());
             }
-            logger.info(sessionId + ": build remember<{}> session time to " + session.getSessionValidateTime(),
-                rememberMe);
+            logger.info(sessionId + ": build remember<{}> session time to "
+                + DateUtils.formatDate(session.getSessionValidateTime(), "yyyy-MM-dd HH:mm:ss"), rememberMe);
             return session;
         }
         return null;
@@ -96,7 +156,8 @@ public class SessionManager {
             Session session = this.getSession(sessionId);
             if (session != null) {
                 session.setSessionValidateTime(session.getSessionValidateTime() + defaultSessionValidateTime);
-                logger.info(sessionId + ": update session time to " + session.getSessionValidateTime());
+                logger.info(sessionId + ": update session time to "
+                    + DateUtils.formatDate(session.getSessionValidateTime(), "yyyy-MM-dd HH:mm:ss"));
             }
         }
     }
