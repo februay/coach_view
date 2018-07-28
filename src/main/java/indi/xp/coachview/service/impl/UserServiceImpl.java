@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import indi.xp.coachview.common.BusinessErrorCodeEnum;
 import indi.xp.coachview.dao.UserDao;
 import indi.xp.coachview.model.SysRole;
 import indi.xp.coachview.model.SysUserRole;
@@ -18,6 +19,7 @@ import indi.xp.coachview.model.vo.UserVo;
 import indi.xp.coachview.service.SysRoleService;
 import indi.xp.coachview.service.SysUserRoleService;
 import indi.xp.coachview.service.UserService;
+import indi.xp.common.exception.BusinessException;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
@@ -64,6 +66,13 @@ public class UserServiceImpl implements UserService {
     public UserVo addUser(UserVo userVo) {
         String currentTime = DateUtils.getDateTime();
 
+        String phoneNumber = userVo.getPhone();
+        if (StringUtils.isBlank(phoneNumber)) {
+            throw new BusinessException(BusinessErrorCodeEnum.USER_PHONE_NUMBER_IS_BLANK);
+        } else if (this.checkUserPhoneExists(phoneNumber, null)) {
+            throw new BusinessException(BusinessErrorCodeEnum.USER_EXISTS);
+        }
+
         userVo.setUid(UuidUtils.generateUUID());
         userVo.setCreateTime(currentTime);
         userVo.setActiveTime(currentTime);
@@ -94,10 +103,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean checkUserPhoneExists(String phoneNumber, String uid) {
+        User user = userDao.getUserByPhone(phoneNumber);
+        return user != null && !user.getUid().equals(uid);
+    }
+
+    @Override
     @Transactional
     public UserVo updateUser(UserVo userVo) {
         User user = userVo != null ? userDao.getUserByUid(userVo.getUid()) : null;
         if (user != null) {
+
+            String phoneNumber = userVo.getPhone();
+            if (StringUtils.isNotBlank(phoneNumber) && this.checkUserPhoneExists(phoneNumber, user.getUid())) {
+                throw new BusinessException(BusinessErrorCodeEnum.USER_EXISTS);
+            }
+
             if (StringUtils.isNotBlank(userVo.getUserName())) {
                 user.setUserName(userVo.getUserName());
             }
@@ -140,7 +161,7 @@ public class UserServiceImpl implements UserService {
                 List<String> deleteRoleIdList = new ArrayList<String>();
                 for (String newRole : newRoles) {
                     boolean isNew = true;
-                    if(CollectionUtils.isNotEmpty(dbRoleList)) {
+                    if (CollectionUtils.isNotEmpty(dbRoleList)) {
                         for (SysRole role : dbRoleList) {
                             if (role.getCode().equals(newRole)) {
                                 isNew = false;
@@ -151,15 +172,15 @@ public class UserServiceImpl implements UserService {
                         addRoleCodeList.add(newRole);
                     }
                 }
-                if(CollectionUtils.isNotEmpty(dbRoleList)) {
+                if (CollectionUtils.isNotEmpty(dbRoleList)) {
                     for (SysRole role : dbRoleList) {
-                        if(!newRoles.contains(role.getCode())) {
+                        if (!newRoles.contains(role.getCode())) {
                             deleteRoleIdList.add(role.getRoleId());
                         }
                     }
                 }
-                
-                if(CollectionUtils.isNotEmpty(addRoleCodeList)) {
+
+                if (CollectionUtils.isNotEmpty(addRoleCodeList)) {
                     List<SysRole> addRoleList = sysRoleService.findListByCodeList(addRoleCodeList);
                     if (CollectionUtils.isNotEmpty(addRoleList)) {
                         addRoleList.forEach(role -> {

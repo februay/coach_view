@@ -3,6 +3,7 @@ package indi.xp.coachview.common;
 public enum BusinessErrorCodeEnum {
 
     USER_EXISTS("USER_EXISTS", "用户已存在"), 
+    USER_PHONE_NUMBER_IS_BLANK("USER_PHONE_NUMBER_IS_BLANK", "用户手机号为空"), 
     USER_NOT_EXISTS("USER_NOT_EXISTS", "用户不存在"), 
     USER_VERIFICATION_CODE_ERROR("USER_VERIFICATION_CODE_ERROR", "用户验证码错误"),
     NO_SESSION("NO_SESSION", "用户未登录"), 

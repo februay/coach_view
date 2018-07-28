@@ -22,4 +22,6 @@ public interface UserService {
     public void deleteByUid(String uid);
 
     public List<ListItemVo> findUserItemList();
+
+    public boolean checkUserPhoneExists(String phoneNumber, String uid);
 }
