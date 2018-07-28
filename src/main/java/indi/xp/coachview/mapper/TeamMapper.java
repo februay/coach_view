@@ -38,4 +38,19 @@ public interface TeamMapper {
 
     public void updateByWhere(@Param("updateMap") Map<String, Object> updateMap,
         @Param("paramMap") Map<String, Object[]> paramMap, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
+
+    /**
+     * 获取CLUB角色用户有权限的teamId列表
+     */
+    public List<String> findClubUserAuthorizedTeamIdList(@Param("uid") String uid);
+
+    /**
+     * 获取SCHOOL角色用户有权限的teamId列表
+     */
+    public List<String> findSchoolUserAuthorizedTeamIdList(@Param("uid") String uid);
+
+    /**
+     * 获取TEAM角色用户有权限的teamId列表
+     */
+    public List<String> findTeamUserAuthorizedTeamIdList(@Param("uid") String uid);
 }

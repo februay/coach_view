@@ -24,7 +24,7 @@ import indi.xp.common.utils.StringUtils;
 
 @Repository
 public class TeamDaoImpl implements TeamDao {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(TeamDaoImpl.class);
 
     @Autowired
@@ -42,7 +42,7 @@ public class TeamDaoImpl implements TeamDao {
 
     @Override
     public List<Team> findTeamList() {
-        return teamMapper.findTeamList( this.buildAuthFilterMap());
+        return teamMapper.findTeamList(this.buildAuthFilterMap());
     }
 
     @Override
@@ -92,7 +92,7 @@ public class TeamDaoImpl implements TeamDao {
         }
         return itemList;
     }
-    
+
     private Map<String, Object[]> buildAuthFilterMap() {
         Map<String, Object[]> authFilterMap = new HashMap<>();
         SessionConext sessionContext = SessionConext.getThreadLocalSessionContext();
@@ -100,16 +100,29 @@ public class TeamDaoImpl implements TeamDao {
             if (sessionContext.hasRole(SysRoleEnum.ADMIN)) {
                 // 不限制
             } else if (sessionContext.hasRole(SysRoleEnum.CLUB)) {
-                // 只能访问管理员是自己的俱乐部
-                authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
+                // 只能访问俱乐部下属球队
+                List<String> authorizedTeamIdList = this
+                    .findClubUserAuthorizedTeamIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedTeamIdList)) {
+                    authFilterMap.put("team_id", authorizedTeamIdList.toArray());
+                } else {
+                    authFilterMap.put("team_id", new String[] { "" });
+                }
             } else if (sessionContext.hasRole(SysRoleEnum.SCHOOL)) {
-                // 只能访问自己所在的俱乐部
-
+                // 只能访问学校下属球队
+                List<String> authorizedTeamIdList = this
+                    .findSchoolUserAuthorizedTeamIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedTeamIdList)) {
+                    authFilterMap.put("team_id", authorizedTeamIdList.toArray());
+                } else {
+                    authFilterMap.put("team_id", new String[] { "" });
+                }
             } else if (sessionContext.hasRole(SysRoleEnum.TEAM)) {
                 // 只能访问自己所在的俱乐部
+                authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
             } else {
                 // 不能访问
-                authFilterMap.put("club_id", new String[] { "" });
+                authFilterMap.put("team_id", new String[] { "" });
             }
 
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
@@ -119,5 +132,29 @@ public class TeamDaoImpl implements TeamDao {
             logger.warn("SessionContext is null");
         }
         return authFilterMap;
+    }
+
+    /**
+     * 获取CLUB角色用户有权限的teamId列表
+     */
+    @Override
+    public List<String> findClubUserAuthorizedTeamIdList(String uid) {
+        return teamMapper.findClubUserAuthorizedTeamIdList(uid);
+    }
+
+    /**
+     * 获取SCHOOL角色用户有权限的teamId列表
+     */
+    @Override
+    public List<String> findSchoolUserAuthorizedTeamIdList(String uid) {
+        return teamMapper.findSchoolUserAuthorizedTeamIdList(uid);
+    }
+
+    /**
+     * 获取TEAM角色用户有权限的teamId列表
+     */
+    @Override
+    public List<String> findTeamUserAuthorizedTeamIdList(String uid) {
+        return teamMapper.findTeamUserAuthorizedTeamIdList(uid);
     }
 }

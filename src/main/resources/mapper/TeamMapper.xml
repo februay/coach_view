@@ -151,5 +151,29 @@
         <include refid="common_where" />
         <include refid="query_by_param" />
     </update>
+    
+    <select id="findClubUserAuthorizedTeamIdList" parameterType="java.lang.String" resultType="java.lang.String">
+        select team.team_id
+        from team left join school on team.school_id = school.school_id  left join club on school.club_id = club.club_id 
+        where team.delete_status = 0 and school.delete_status = 0 and club.delete_status = 0 
+            and club.admin_id = #{uid}
+        group by team.team_id
+    </select>
+    
+    <select id="findSchoolUserAuthorizedTeamIdList" parameterType="java.lang.String" resultType="java.lang.String">
+        select team.team_id
+        from team left join school on team.school_id = school.school_id  left join club on school.club_id = club.club_id 
+        where team.delete_status = 0 and school.delete_status = 0 and club.delete_status = 0 
+            and school.admin_id = #{uid}
+        group by team.team_id
+    </select>
+    
+    <select id="findTeamUserAuthorizedTeamIdList" parameterType="java.lang.String" resultType="java.lang.String">
+        select team.team_id
+        from team left join school on team.school_id = school.school_id  left join club on school.club_id = club.club_id 
+        where team.delete_status = 0 and school.delete_status = 0 and club.delete_status = 0 
+            and team.admin_id = #{uid}
+        group by team.team_id
+    </select>
 
 </mapper>

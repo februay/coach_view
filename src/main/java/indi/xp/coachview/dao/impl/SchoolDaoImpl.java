@@ -104,16 +104,29 @@ public class SchoolDaoImpl implements SchoolDao {
             if (sessionContext.hasRole(SysRoleEnum.ADMIN)) {
                 // 不限制
             } else if (sessionContext.hasRole(SysRoleEnum.CLUB)) {
-                // 只能访问管理员是自己的俱乐部
-                authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
+                // 只能访问俱乐部下属学校
+                List<String> authorizedSchoolIdList = this
+                    .findClubUserAuthorizedSchoolIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedSchoolIdList)) {
+                    authFilterMap.put("school_id", authorizedSchoolIdList.toArray());
+                } else {
+                    authFilterMap.put("school_id", new String[] { "" });
+                }
             } else if (sessionContext.hasRole(SysRoleEnum.SCHOOL)) {
-                // 只能访问自己所在的俱乐部
-
+                // 只能访问管理员是自己的学校
+                authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
             } else if (sessionContext.hasRole(SysRoleEnum.TEAM)) {
-                // 只能访问自己所在的俱乐部
+                // 只能访问自己所在的学校
+                List<String> authorizedSchoolIdList = this
+                    .findTeamUserAuthorizedSchoolIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedSchoolIdList)) {
+                    authFilterMap.put("school_id", authorizedSchoolIdList.toArray());
+                } else {
+                    authFilterMap.put("school_id", new String[] { "" });
+                }
             } else {
                 // 不能访问
-                authFilterMap.put("club_id", new String[] { "" });
+                authFilterMap.put("school_id", new String[] { "" });
             }
 
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
@@ -124,4 +137,19 @@ public class SchoolDaoImpl implements SchoolDao {
         }
         return authFilterMap;
     }
+
+    /**
+     * 获取CLUB角色用户有权限的schoolId列表
+     */
+    private List<String> findClubUserAuthorizedSchoolIdList(String uid) {
+        return schoolMapper.findClubUserAuthorizedSchoolIdList(uid);
+    }
+
+    /**
+     * 获取TEAM角色用户有权限的schoolId列表
+     */
+    private List<String> findTeamUserAuthorizedSchoolIdList(String uid) {
+        return schoolMapper.findTeamUserAuthorizedSchoolIdList(uid);
+    }
+
 }

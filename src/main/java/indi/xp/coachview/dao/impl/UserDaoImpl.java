@@ -82,17 +82,9 @@ public class UserDaoImpl implements UserDao {
         if (sessionContext != null && sessionContext.available()) {
             if (sessionContext.hasRole(SysRoleEnum.ADMIN)) {
                 // 不限制
-            } else if (sessionContext.hasRole(SysRoleEnum.CLUB)) {
-                // 只能访问管理员是自己的俱乐部
-                authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
-            } else if (sessionContext.hasRole(SysRoleEnum.SCHOOL)) {
-                // 只能访问自己所在的俱乐部
-
-            } else if (sessionContext.hasRole(SysRoleEnum.TEAM)) {
-                // 只能访问自己所在的俱乐部
             } else {
-                // 不能访问
-                authFilterMap.put("club_id", new String[] { "" });
+                // 只能访问自己的信息
+                authFilterMap.put("uid", new String[] { sessionContext.getSessionUser().getUid() });
             }
 
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());

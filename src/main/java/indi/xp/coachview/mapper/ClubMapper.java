@@ -39,4 +39,14 @@ public interface ClubMapper {
     public void updateByWhere(@Param("updateMap") Map<String, Object> updateMap,
         @Param("paramMap") Map<String, Object[]> paramMap, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
+    /**
+     * 获取SCHOOL角色用户有权限的clubId列表
+     */
+    public List<String> findSchoolUserAuthorizedClubIdList(@Param("uid") String uid);
+
+    /**
+     * 获取SCHOOL角色用户有权限的clubId列表
+     */
+    public List<String> findTeamUserAuthorizedClubIdList(@Param("uid") String uid);
+
 }

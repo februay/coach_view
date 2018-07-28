@@ -25,4 +25,19 @@ public interface TeamDao {
 
     public List<ListItemVo> findTeamItemList();
 
+    /**
+     * 获取CLUB角色用户有权限的teamId列表
+     */
+    public List<String> findClubUserAuthorizedTeamIdList(String uid);
+
+    /**
+     * 获取SCHOOL角色用户有权限的teamId列表
+     */
+    public List<String> findSchoolUserAuthorizedTeamIdList(String uid);
+
+    /**
+     * 获取TEAM角色用户有权限的teamId列表
+     */
+    public List<String> findTeamUserAuthorizedTeamIdList(String uid);
+
 }

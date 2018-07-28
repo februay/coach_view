@@ -39,4 +39,14 @@ public interface SchoolMapper {
     public void updateByWhere(@Param("updateMap") Map<String, Object> updateMap,
         @Param("paramMap") Map<String, Object[]> paramMap, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
+    /**
+     * 获取CLUB角色用户有权限的schoolId列表
+     */
+    public List<String> findClubUserAuthorizedSchoolIdList(@Param("uid") String uid);
+
+    /**
+     * 获取TEAM角色用户有权限的schoolId列表
+     */
+    public List<String> findTeamUserAuthorizedSchoolIdList(@Param("uid") String uid);
+
 }

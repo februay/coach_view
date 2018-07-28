@@ -71,6 +71,21 @@ public class ClubDaoImpl implements ClubDao {
         }
     }
 
+    @Override
+    public List<ListItemVo> findClubItemList() {
+        List<Club> clubList = clubMapper.findClubList(null);
+        List<ListItemVo> itemList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(clubList)) {
+            clubList.forEach(club -> {
+                ListItemVo item = new ListItemVo();
+                item.setId(club.getClubId());
+                item.setName(club.getClubName());
+                itemList.add(item);
+            });
+        }
+        return itemList;
+    }
+
     private Map<String, Object[]> buildAuthFilterMap() {
         Map<String, Object[]> authFilterMap = new HashMap<>();
         SessionConext sessionContext = SessionConext.getThreadLocalSessionContext();
@@ -82,9 +97,22 @@ public class ClubDaoImpl implements ClubDao {
                 authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
             } else if (sessionContext.hasRole(SysRoleEnum.SCHOOL)) {
                 // 只能访问自己所在的俱乐部
-
+                List<String> authorizedClbuIdList = this
+                    .findSchoolUserAuthorizedClubIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedClbuIdList)) {
+                    authFilterMap.put("club_id", authorizedClbuIdList.toArray());
+                } else {
+                    authFilterMap.put("club_id", new String[] { "" });
+                }
             } else if (sessionContext.hasRole(SysRoleEnum.TEAM)) {
                 // 只能访问自己所在的俱乐部
+                List<String> authorizedClbuIdList = this
+                    .findTeamUserAuthorizedClubIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedClbuIdList)) {
+                    authFilterMap.put("club_id", authorizedClbuIdList.toArray());
+                } else {
+                    authFilterMap.put("club_id", new String[] { "" });
+                }
             } else {
                 // 不能访问
                 authFilterMap.put("club_id", new String[] { "" });
@@ -99,19 +127,18 @@ public class ClubDaoImpl implements ClubDao {
         return authFilterMap;
     }
 
-    @Override
-    public List<ListItemVo> findClubItemList() {
-        List<Club> clubList = clubMapper.findClubList(null);
-        List<ListItemVo> itemList = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(clubList)) {
-            clubList.forEach(club -> {
-                ListItemVo item = new ListItemVo();
-                item.setId(club.getClubId());
-                item.setName(club.getClubName());
-                itemList.add(item);
-            });
-        }
-        return itemList;
+    /**
+     * 获取SCHOOL角色用户有权限的clubId列表
+     */
+    private List<String> findSchoolUserAuthorizedClubIdList(String uid) {
+        return clubMapper.findSchoolUserAuthorizedClubIdList(uid);
+    }
+
+    /**
+     * 获取SCHOOL角色用户有权限的clubId列表
+     */
+    private List<String> findTeamUserAuthorizedClubIdList(String uid) {
+        return clubMapper.findTeamUserAuthorizedClubIdList(uid);
     }
 
 }
