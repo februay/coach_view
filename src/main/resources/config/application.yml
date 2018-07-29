@@ -36,7 +36,7 @@ logging:
   file: /data/${spring.application.name}
 store:
   file:
-    visit-domain: http://127.0.0.1:5556
+    visit-domain: http://207.148.82.48:5556
     local-strategy:
       path: /data/coach-view/files
 ...
