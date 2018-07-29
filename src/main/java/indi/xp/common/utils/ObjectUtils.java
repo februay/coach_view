@@ -1,19 +1,37 @@
+
 package indi.xp.common.utils;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.Flushable;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * change this template use File | Settings | File Templates.
  */
 public final class ObjectUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(ObjectUtils.class);
 
     private static final int INITIAL_HASH = 7;
     private static final int MULTIPLIER = 31;
@@ -60,12 +78,47 @@ public final class ObjectUtils {
         }
     }
 
-    public static Boolean isEmpty(Object obj) {
+    public static <T> T mapToObject(Map<String, Object> map, Class<T> beanClass) throws Exception {
+        if (map == null) {
+            return null;
+        }
+        T obj = beanClass.newInstance();
+        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (PropertyDescriptor property : propertyDescriptors) {
+            Method setter = property.getWriteMethod();
+            if (setter != null && map.containsKey(property.getName())) {
+                setter.invoke(obj, map.get(property.getName()));
+            }
+        }
+        return obj;
+    }
+
+    public static Map<String, Object> objectToMap(Object obj) throws Exception {
+        if (obj == null) {
+            return null;
+        }
+        Map<String, Object> map = new HashMap<String, Object>();
+        BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+        PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+        for (PropertyDescriptor property : propertyDescriptors) {
+            String key = property.getName();
+            if (key.compareToIgnoreCase("class") == 0) {
+                continue;
+            }
+            Method getter = property.getReadMethod();
+            Object value = getter != null ? getter.invoke(obj) : null;
+            map.put(key, value);
+        }
+        return map;
+    }
+
+    public static boolean isEmpty(Object obj) {
         return obj == null;
     }
 
     @SuppressWarnings("rawtypes")
-    public static Boolean isEmpty(Collection objects) {
+    public static boolean isEmpty(Collection objects) {
         return objects == null || objects.size() == 0;
     }
 
@@ -1003,12 +1056,89 @@ public final class ObjectUtils {
 
     /**
      * 公共的销毁对象方法，用于内存回收
-     * 
-     * @author you.zou
-     * @date 2016年8月10日 下午12:13:30
-     * @param obj
      */
     public static void destroy(Object obj) {
         obj = null;
     }
+
+    /**
+     * 安全关闭流
+     */
+    public static void safeClose(Object... objects) {
+        boolean debugEnabled = logger.isDebugEnabled();
+
+        if (objects == null || objects.length == 0) {
+            logger.info("safeClose(...) was invoked with null or empty array: {}", objects);
+            return;
+        }
+
+        for (Object obj : objects) {
+            if (obj != null) {
+                if (debugEnabled) {
+                    logger.debug("Trying to safely close {}", obj);
+                }
+
+                if (obj instanceof Flushable) {
+                    try {
+                        ((Flushable) obj).flush();
+                    } catch (Exception e) {
+                        if (debugEnabled) {
+                            logger.debug("Flushing Flushable failed", e);
+                        }
+                    }
+                }
+
+                if (obj instanceof Closeable) {
+                    try {
+                        ((Closeable) obj).close();
+                    } catch (IOException e) {
+                        if (debugEnabled) {
+                            logger.debug("Closing Closeable failed", e);
+                        }
+                    }
+                } else if (obj instanceof Connection) {
+                    try {
+                        ((Connection) obj).close();
+                    } catch (Exception e) {
+                        if (debugEnabled) {
+                            logger.debug("Closing Connection failed", e);
+                        }
+                    }
+                } else if (obj instanceof Statement) {
+                    try {
+                        ((Statement) obj).close();
+                    } catch (Exception e) {
+                        if (debugEnabled) {
+                            logger.debug("Closing Statement failed", e);
+                        }
+                    }
+                } else if (obj instanceof ResultSet) {
+                    try {
+                        ((ResultSet) obj).close();
+                    } catch (Exception e) {
+                        if (debugEnabled) {
+                            logger.debug("Closing ResultSet failed", e);
+                        }
+                    }
+                } else {
+                    logger.info("obj was neither Closeable, Connection, Statement or ResultSet.");
+
+                    try {
+                        Method method = obj.getClass().getMethod("close", new Class[0]);
+                        if (method == null) {
+                            logger.info("obj did not have a close() method, ignoring");
+                        } else {
+                            method.setAccessible(true);
+                            method.invoke(obj);
+                        }
+                    } catch (InvocationTargetException e) {
+                        logger.warn("Invoking close() by reflection threw exception", e);
+                    } catch (Exception e) {
+                        logger.warn("Could not invoke close() by reflection", e);
+                    }
+                }
+            }
+        }
+    }
+
 }

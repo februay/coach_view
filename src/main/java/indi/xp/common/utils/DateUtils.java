@@ -204,9 +204,9 @@ public class DateUtils {
         return result;
     }
 
-    public static String formatDate(Date dDate, String sFormat) {
-        SimpleDateFormat formatter = new SimpleDateFormat(sFormat);
-        String dateString = formatter.format(dDate);
+    public static String formatDate(Date date, String format) {
+        SimpleDateFormat formatter = new SimpleDateFormat(format);
+        String dateString = formatter.format(date);
         return dateString;
     }
 

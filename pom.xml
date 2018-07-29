@@ -42,6 +42,9 @@
         <commons-io.version>2.0.1</commons-io.version>
         <commons-fileupload.version>1.2.2</commons-fileupload.version>
 
+        <!-- poi -->
+        <poi.version>3.15</poi.version>
+
         <!-- for aliyun-java-sdk-core org.json.JSONArray jar conflict -->
         <json.version>20170516</json.version>
 
@@ -122,8 +125,6 @@
             <artifactId>joda-time</artifactId>
         </dependency>
 
-
-
         <!-- ftp -->
         <dependency>
             <groupId>commons-net</groupId>
@@ -141,6 +142,29 @@
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>${commons-fileupload.version}</version>
+        </dependency>
+
+        <!--POI各个jar包的作用 ：http://blog.csdn.net/szwangdf/article/details/39053859 -->
+        <!--poi用于处理XLS格式 -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+        <!--ooxml 用于处理XLSX -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${poi.version}</version>
+        </dependency>
+
+        <!--用于文件编码的判断, 工程文件lib下 -->
+        <dependency>
+            <groupId>com.ptmind</groupId>
+            <artifactId>cpdetector</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/com/ptmind/cpdetector/1.0/cpdetector-1.0.jar</systemPath>
         </dependency>
 
         <!-- 阿里云短信产品相关的SDK -->
