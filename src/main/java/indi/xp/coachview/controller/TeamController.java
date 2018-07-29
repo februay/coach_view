@@ -1,4 +1,4 @@
-﻿package indi.xp.coachview.controller;
+package indi.xp.coachview.controller;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
