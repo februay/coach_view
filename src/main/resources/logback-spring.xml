@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}" />
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+    <springProperty name="applicationName" source="spring.application.name"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>[${applicationName}]\t%d{yyyy-MM-dd HH:mm:ss.SSS}\t[%-5level]\t[%thread]\t%logger\t| %msg%n</pattern>
+        </layout>
+    </appender>
+    
+    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}/%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[${applicationName}]\t%d{yyyy-MM-dd HH:mm:ss.SSS}\t[%-5level]\t[%thread]\t%logger\t| %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.ptmind.datadeck.app.dataset.mapper" level="info" additivity="false">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="rollingFile" />
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="rollingFile" />
+        <appender-ref ref="CONSOLE" />
+    </root>
+
+    <!-- <logger name="java.sql.*" level="DEBUG"/> -->
+    <!-- <logger name="java.sql.Connection" level="DEBUG"/> -->
+    <!-- <logger name="java.sql.Statement" level="DEBUG"/> -->
+    <!-- <logger name="java.sql.PreparedStatement" level="DEBUG"/> -->
+    <!-- <logger name="java.sql.ResultSet" level="DEBUG"/> -->
+
+</configuration>

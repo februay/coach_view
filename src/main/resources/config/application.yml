@@ -1,39 +1,38 @@
+---
 spring:
-    datasource:
-        name: coach_view
-        url: jdbc:mysql://127.0.0.1:3306/coach_view
-        username: coach_view
-        password: coach_view123!@#
-        driver-class-name: com.mysql.jdbc.Driver
-
-mybatis: 
-    mapper-locations: classpath:mapper/*.xml
-    type-aliases-package: indi.xp.coachview.model
- 
-#允许跨域domain
+  application:
+    name: coach-view
+  datasource:
+    name: coach_view
+    url: jdbc:mysql://127.0.0.1:3306/coach_view
+    username: coach_view
+    password: coach_view123!@#
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: indi.xp.coachview.model
 cros:
-    allow-domain: 
-
-#swagger config
+  allow-domain:  
+logging:
+  file: d:/data/${spring.application.name}
 swagger:
-    base-package: indi.xp.coachview.controller
-
-
+  base-package: indi.xp.coachview.controller
+...
 ---
-
 spring:
-    profiles: develop
-
-    datasource:
-        name: coach_view
-        url: jdbc:mysql://207.148.82.48:3306/coach_view
-        username: coach_view
-        password: coach_view123!@#
-        driver-class-name: com.mysql.jdbc.Driver
+  profiles: develop
+  datasource:
+    name: coach_view
+    url: jdbc:mysql://207.148.82.48:3306/coach_view
+    username: coach_view
+    password: coach_view123!@#
+    driver-class-name: com.mysql.jdbc.Driver
+logging:
+  file: /data/${spring.application.name}
+...
 ---
-
 spring:
-    profiles: product
-
-
- 
+  profiles: product
+logging:
+  file: /data/${spring.application.name}
+...
