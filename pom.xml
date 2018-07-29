@@ -34,9 +34,18 @@
         <mysql.version>5.1.31</mysql.version>
         <fastjson.version>1.2.34</fastjson.version>
         <joda-time.version>2.7</joda-time.version>
-        <swagger.version>2.6.1</swagger.version>
+
+        <!-- ftp -->
+        <commons-net.version>3.5</commons-net.version>
+
+        <!-- File Upload -->
+        <commons-io.version>2.0.1</commons-io.version>
+        <commons-fileupload.version>1.2.2</commons-fileupload.version>
+
         <!-- for aliyun-java-sdk-core org.json.JSONArray jar conflict -->
         <json.version>20170516</json.version>
+
+        <swagger.version>2.6.1</swagger.version>
     </properties>
 
 
@@ -113,16 +122,25 @@
             <artifactId>joda-time</artifactId>
         </dependency>
 
-        <!-- swagger2 -->
+
+
+        <!-- ftp -->
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${commons-net.version}</version>
+        </dependency>
+
+        <!-- File Upload -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${commons-fileupload.version}</version>
         </dependency>
 
         <!-- 阿里云短信产品相关的SDK -->
@@ -140,6 +158,18 @@
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
+        </dependency>
+
+        <!-- swagger2 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
         </dependency>
 
         <dependency>

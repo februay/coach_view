@@ -12,11 +12,16 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: indi.xp.coachview.model
 cros:
-  allow-domain:  
+  allow-domain: null
 logging:
-  file: d:/data/${spring.application.name}
+  file: d:/data/${spring.application.name}/logs
 swagger:
   base-package: indi.xp.coachview.controller
+store:
+  file:
+    visit-domain: http://127.0.0.1:5556
+    local-strategy:
+      path: d:/data/coach-view/files
 ...
 ---
 spring:
@@ -29,6 +34,11 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
 logging:
   file: /data/${spring.application.name}
+store:
+  file:
+    visit-domain: http://127.0.0.1:5556
+    local-strategy:
+      path: /data/coach-view/files
 ...
 ---
 spring:

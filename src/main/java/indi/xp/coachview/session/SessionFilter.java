@@ -34,7 +34,7 @@ public class SessionFilter implements Filter {
 
     // 不进行拦截的URL
     private String[] skipPaths = { "OPTIONS|*", "*|/swagger-ui.html", "*|/webjars", "*|/swagger", "*|/v2/api-docs", "*|/hello",
-        "GET|/public/verification-code/", "*|/user/sign-in" };
+        "GET|/public/verification-code/", "POST|/user/sign-in", "POST|/file/upload" };
 
     public SessionFilter() {
     }
