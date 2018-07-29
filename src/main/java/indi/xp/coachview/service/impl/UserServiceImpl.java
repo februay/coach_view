@@ -115,7 +115,9 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
 
             String phoneNumber = userVo.getPhone();
-            if (StringUtils.isNotBlank(phoneNumber) && this.checkUserPhoneExists(phoneNumber, user.getUid())) {
+            if (phoneNumber!= null && StringUtils.isBlank(phoneNumber)) {
+                throw new BusinessException(BusinessErrorCodeEnum.USER_PHONE_NUMBER_IS_BLANK);
+            } else if (this.checkUserPhoneExists(phoneNumber, user.getUid())) {
                 throw new BusinessException(BusinessErrorCodeEnum.USER_EXISTS);
             }
 

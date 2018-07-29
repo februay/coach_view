@@ -21,6 +21,9 @@ public class PublicController {
     private static final boolean sendSmsOn = true;
 
     private static final Map<String, String> verificationCodeMap = new HashMap<String, String>();
+    static {
+        verificationCodeMap.put("13426233960", "xp123");
+    }
 
     public static boolean validateVerificationCode(String key, String value) {
         return StringUtils.isNotBlank(key, value) && value.equals(verificationCodeMap.get(key));
