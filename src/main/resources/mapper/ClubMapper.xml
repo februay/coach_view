@@ -8,9 +8,15 @@
         <result column="admin_id" property="adminId" />
         <result column="admin_name" property="adminName" />
         <result column="province" property="province" />
+        <result column="province_name" property="provinceName" />
         <result column="city" property="city" />
+        <result column="city_name" property="cityName" />
         <result column="region" property="region" />
+        <result column="region_name" property="regionName" />
         <result column="county" property="county" />
+        <result column="county_name" property="countyName" />
+        <result column="street" property="street" />
+        <result column="street_name" property="streetName" />
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="active_time" property="activeTime" />
@@ -83,30 +89,35 @@
 
     <insert id="addClub">
         insert into club(club_id, club_name, admin_id,
-        admin_name, province, city, region, county, status,
-        create_time, active_time, delete_status)
+            admin_name, province, province_name, city, city_name, region,
+            region_name, county, county_name, street, street_name, status,
+            create_time, active_time, delete_status)
         values(#{club.clubId}, #{club.clubName}, #{club.adminId},
-        #{club.adminName}, #{club.province}, #{club.city}, #{club.region}, #{club.county},
-        #{club.status},
-        #{club.createTime}, #{club.activeTime}, #{club.deleteStatus})
+            #{club.adminName}, #{club.province}, #{club.provinceName},
+            #{club.city}, #{club.cityName}, #{club.region}, #{club.regionName},
+            #{club.county}, #{club.countyName}, #{club.street}, #{club.streetName},
+            #{club.status}, #{club.createTime}, #{club.activeTime}, #{club.deleteStatus})
     </insert>
 
     <update id="updateClub">
         update club set
-        club_name = #{club.clubName},
-        admin_id = #{club.adminId},
-        admin_name =
-        #{club.adminName},
-        province = #{club.province},
-        city = #{club.city},
-        region = #{club.region},
-        county =
-        #{club.county},
-        status = #{club.status},
-        create_time = #{club.createTime},
-        active_time = #{club.activeTime},
-        delete_status =
-        #{club.deleteStatus}
+            club_name = #{club.clubName},
+            admin_id = #{club.adminId},
+            admin_name = #{club.adminName},
+            province = #{club.province},
+            province_name = #{club.provinceName},
+            city = #{club.city},
+            city_name = #{club.cityName},
+            region = #{club.region},
+            region_name = #{club.regionName},
+            county = #{club.county},
+            county_name = #{club.countyName},
+            street = #{club.street},
+            street_name = #{club.streetName},
+            status = #{club.status},
+            create_time = #{club.createTime},
+            active_time = #{club.activeTime},
+            delete_status = #{club.deleteStatus}
         <include refid="common_where" />
         and club_id = #{club.clubId}
     </update>

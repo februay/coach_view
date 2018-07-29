@@ -52,17 +52,35 @@ public class ClubServiceImpl implements ClubService {
             if (StringUtils.isNotBlank(club.getClubName())) {
                 dbClub.setClubName(club.getClubName());
             }
-            if (StringUtils.isNotBlank(club.getCounty())) {
-                dbClub.setCounty(club.getCounty());
-            }
             if (StringUtils.isNotBlank(club.getProvince())) {
                 dbClub.setProvince(club.getProvince());
+            }
+            if (StringUtils.isNotBlank(club.getProvinceName())) {
+                dbClub.setProvinceName(club.getProvinceName());
             }
             if (StringUtils.isNotBlank(club.getCity())) {
                 dbClub.setCity(club.getCity());
             }
+            if (StringUtils.isNotBlank(club.getCityName())) {
+                dbClub.setCityName(club.getCityName());
+            }
             if (StringUtils.isNotBlank(club.getRegion())) {
                 dbClub.setRegion(club.getRegion());
+            }
+            if (StringUtils.isNotBlank(club.getRegionName())) {
+                dbClub.setRegionName(club.getRegionName());
+            }
+            if (StringUtils.isNotBlank(club.getCounty())) {
+                dbClub.setCounty(club.getCounty());
+            }
+            if (StringUtils.isNotBlank(club.getCountyName())) {
+                dbClub.setCountyName(club.getCountyName());
+            }
+            if (StringUtils.isNotBlank(club.getStreet())) {
+                dbClub.setStreet(club.getStreet());
+            }
+            if (StringUtils.isNotBlank(club.getStreetName())) {
+                dbClub.setStreetName(club.getStreetName());
             }
             if (StringUtils.isNotBlank(club.getAdminId())) {
                 dbClub.setAdminId(club.getAdminId());

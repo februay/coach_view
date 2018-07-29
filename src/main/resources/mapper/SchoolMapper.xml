@@ -10,9 +10,15 @@
         <result column="admin_id" property="adminId" />
         <result column="admin_name" property="adminName" />
         <result column="province" property="province" />
+        <result column="province_name" property="provinceName" />
         <result column="city" property="city" />
+        <result column="city_name" property="cityName" />
         <result column="region" property="region" />
+        <result column="region_name" property="regionName" />
         <result column="county" property="county" />
+        <result column="county_name" property="countyName" />
+        <result column="street" property="street" />
+        <result column="street_name" property="streetName" />
         <result column="status" property="status" />
         <result column="create_time" property="createTime" />
         <result column="active_time" property="activeTime" />
@@ -87,39 +93,42 @@
 
     <insert id="addSchool">
         insert into school(school_id, school_name,
-        club_id, club_name, admin_id, admin_name, province,
-        city,
-        region, county, status, create_time, active_time, delete_status)
-        values(#{school.schoolId},
-        #{school.schoolName},
-        #{school.clubId}, #{school.clubName}, #{school.adminId},
-        #{school.adminName},
-        #{school.province}, #{school.city},
-        #{school.region}, #{school.county}, #{school.status},
-        #{school.createTime},
-        #{school.activeTime},
-        #{school.deleteStatus})
+            club_id, club_name, admin_id, admin_name, province, province_name, city,
+            city_name, region, region_name, county, county_name,
+            street, street_name, status, create_time, active_time, delete_status)
+        values(#{school.schoolId}, #{school.schoolName},
+            #{school.clubId}, #{school.clubName}, #{school.adminId}, #{school.adminName},
+            #{school.province}, #{school.provinceName}, #{school.city}, #{school.cityName}, 
+            #{school.region}, #{school.regionName}, #{school.county},
+            #{school.countyName}, #{school.street}, #{school.streetName},
+            #{school.status},
+            #{school.createTime},
+            #{school.activeTime},
+            #{school.deleteStatus})
     </insert>
 
     <update id="updateSchool">
         update school set
-        school_name = #{school.schoolName},
-        club_id = #{school.clubId},
-        club_name =
-        #{school.clubName},
-        admin_id = #{school.adminId},
-        admin_name = #{school.adminName},
-        province = #{school.province},
-        city = #{school.city},
-        region = #{school.region},
-        county = #{school.county},
-        status = #{school.status},
-        create_time
-        = #{school.createTime},
-        active_time = #{school.activeTime},
-        delete_status = #{school.deleteStatus}
-        where school_id
-        = #{school.schoolId}
+            school_name = #{school.schoolName},
+            club_id = #{school.clubId},
+            club_name = #{school.clubName},
+            admin_id = #{school.adminId},
+            admin_name = #{school.adminName},
+            province = #{school.province},
+            province_name = #{school.provinceName},
+            city = #{school.city},
+            city_name = #{school.cityName},
+            region = #{school.region},
+            region_name = #{school.regionName},
+            county = #{school.county},
+            county_name = #{school.countyName},
+            street = #{school.street},
+            street_name = #{school.streetName},
+            status = #{school.status},
+            create_time = #{school.createTime},
+            active_time = #{school.activeTime},
+            delete_status = #{school.deleteStatus}
+        where school_id = #{school.schoolId}
     </update>
     
     <update id="delete">

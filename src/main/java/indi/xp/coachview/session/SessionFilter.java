@@ -30,11 +30,12 @@ public class SessionFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(SessionFilter.class);
 
-    private static final boolean sessionFilterSwitchOn = true; // 开启SessionFilter
+    private static final boolean sessionFilterSwitchOn = false; // 开启SessionFilter
 
     // 不进行拦截的URL
-    private String[] skipPaths = { "OPTIONS|*", "*|/swagger-ui.html", "*|/webjars", "*|/swagger", "*|/v2/api-docs", "*|/hello",
-        "GET|/public/verification-code/", "POST|/user/sign-in", "POST|/file/upload" };
+    private String[] skipPaths = { "OPTIONS|*", "*|/swagger-ui.html", "*|/webjars", "*|/swagger", "*|/v2/api-docs",
+        "*|/hello", "GET|/public/verification-code/", "POST|/user/sign-in", "GET|/user/check/|/by-phone",
+        "POST|/file/upload|*" };
 
     public SessionFilter() {
     }
@@ -65,9 +66,12 @@ public class SessionFilter implements Filter {
         for (String path : skipPaths) {
             String[] url = path.split("\\|");
             String urlMethod = url[0];
-            String urlPath = url[1];
+            String urlPreFfix = url.length > 1 ? url[1] : "";
+            String urlPostfix = url.length > 2 ? url[2] : "";
             if ((urlMethod.equalsIgnoreCase(requestMethod) || "*".equals(urlMethod))
-                && (StringUtils.startsWithIgnoreCase(requestUri, urlPath) || "*".equals(urlPath) ) || !sessionFilterSwitchOn) {
+                && (StringUtils.startsWithIgnoreCase(requestUri, urlPreFfix) || "*".equals(urlPreFfix))
+                && (StringUtils.endsWithIgnoreCase(requestUri, urlPostfix) || "*".equals(urlPostfix))
+                || !sessionFilterSwitchOn) {
                 chain.doFilter(req, response);
                 return;
             }

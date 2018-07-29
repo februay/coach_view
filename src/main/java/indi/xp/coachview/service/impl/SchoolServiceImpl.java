@@ -64,17 +64,35 @@ public class SchoolServiceImpl implements SchoolService {
             if (StringUtils.isNotBlank(school.getAdminName())) {
                 dbSchool.setAdminName(school.getAdminName());
             }
-            if (StringUtils.isNotBlank(school.getCounty())) {
-                dbSchool.setCounty(school.getCounty());
-            }
             if (StringUtils.isNotBlank(school.getProvince())) {
                 dbSchool.setProvince(school.getProvince());
+            }
+            if (StringUtils.isNotBlank(school.getProvinceName())) {
+                dbSchool.setProvinceName(school.getProvinceName());
             }
             if (StringUtils.isNotBlank(school.getCity())) {
                 dbSchool.setCity(school.getCity());
             }
+            if (StringUtils.isNotBlank(school.getCityName())) {
+                dbSchool.setCityName(school.getCityName());
+            }
             if (StringUtils.isNotBlank(school.getRegion())) {
                 dbSchool.setRegion(school.getRegion());
+            }
+            if (StringUtils.isNotBlank(school.getRegionName())) {
+                dbSchool.setRegionName(school.getRegionName());
+            }
+            if (StringUtils.isNotBlank(school.getCounty())) {
+                dbSchool.setCounty(school.getCounty());
+            }
+            if (StringUtils.isNotBlank(school.getCountyName())) {
+                dbSchool.setCountyName(school.getCountyName());
+            }
+            if (StringUtils.isNotBlank(school.getStreet())) {
+                dbSchool.setStreet(school.getStreet());
+            }
+            if (StringUtils.isNotBlank(school.getStreetName())) {
+                dbSchool.setStreetName(school.getStreetName());
             }
             return schoolDao.updateSchool(dbSchool);
         }

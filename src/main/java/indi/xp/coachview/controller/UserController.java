@@ -74,6 +74,13 @@ public class UserController {
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(userService.getUserByPhone(phone));
     }
+    
+    @RequestMapping(value = "check/{phone}/by-phone", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public ResponseResult<Boolean> checkUserByPhone(@PathVariable(value = "phone") String phone,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
+        boolean exist = userService.checkUserPhoneExists(phone, null);
+        return ResponseResult.buildResult(exist);
+    }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<UserVo> addUser(@RequestBody UserVo userVo,

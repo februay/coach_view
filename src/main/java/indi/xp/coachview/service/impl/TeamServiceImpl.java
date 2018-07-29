@@ -64,6 +64,36 @@ public class TeamServiceImpl implements TeamService {
             if (StringUtils.isNotBlank(team.getAdminName())) {
                 dbTeam.setAdminName(team.getAdminName());
             }
+            if (StringUtils.isNotBlank(team.getProvince())) {
+                dbTeam.setProvince(team.getProvince());
+            }
+            if (StringUtils.isNotBlank(team.getProvinceName())) {
+                dbTeam.setProvinceName(team.getProvinceName());
+            }
+            if (StringUtils.isNotBlank(team.getCity())) {
+                dbTeam.setCity(team.getCity());
+            }
+            if (StringUtils.isNotBlank(team.getCityName())) {
+                dbTeam.setCityName(team.getCityName());
+            }
+            if (StringUtils.isNotBlank(team.getRegion())) {
+                dbTeam.setRegion(team.getRegion());
+            }
+            if (StringUtils.isNotBlank(team.getRegionName())) {
+                dbTeam.setRegionName(team.getRegionName());
+            }
+            if (StringUtils.isNotBlank(team.getCounty())) {
+                dbTeam.setCounty(team.getCounty());
+            }
+            if (StringUtils.isNotBlank(team.getCountyName())) {
+                dbTeam.setCountyName(team.getCountyName());
+            }
+            if (StringUtils.isNotBlank(team.getStreet())) {
+                dbTeam.setStreet(team.getStreet());
+            }
+            if (StringUtils.isNotBlank(team.getStreetName())) {
+                dbTeam.setStreetName(team.getStreetName());
+            }
             return teamDao.updateTeam(dbTeam);
         }
         return dbTeam;
