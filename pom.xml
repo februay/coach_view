@@ -158,14 +158,14 @@
             <version>${poi.version}</version>
         </dependency>
 
-        <!--用于文件编码的判断, 工程文件lib下 -->
-        <dependency>
-            <groupId>com.ptmind</groupId>
-            <artifactId>cpdetector</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/com/ptmind/cpdetector/1.0/cpdetector-1.0.jar</systemPath>
-        </dependency>
+        <!-- 用于文件编码的判断, 工程文件lib下 -->
+        <!-- <dependency> -->
+        <!-- <groupId>com.ptmind</groupId> -->
+        <!-- <artifactId>cpdetector</artifactId> -->
+        <!-- <version>1.0</version> -->
+        <!-- <scope>system</scope> -->
+        <!-- <systemPath>${project.basedir}/lib/com/ptmind/cpdetector/1.0/cpdetector-1.0.jar</systemPath> -->
+        <!-- </dependency> -->
 
         <!-- 阿里云短信产品相关的SDK -->
         <dependency>

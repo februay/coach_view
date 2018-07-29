@@ -54,7 +54,7 @@ public class SpliterFileUtil {
                     if (cell.endsWith(",")) {
                         cell = cell.substring(0, cell.length() - 1);
                     }
-                    cells.add(cell);
+                    cells.add(removeQuotation(cell));
                 }
 
                 rowList.add(cells);

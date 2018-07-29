@@ -15,19 +15,23 @@ import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSON;
-import com.ptmind.cpdetector.CpdetectorUtil;
 
 import indi.xp.common.utils.ObjectUtils;
+import indi.xp.common.utils.StringUtils;
 
 public class FileAnalysisUtils {
 
-    public Map<String, List<List<String>>> convertToRowListMap(String fileName, FileType fileType,
-        InputStream inputStream) throws Exception {
+    public static Map<String, List<List<String>>> convertToRowListMap(InputStream inputStream, String fileName,
+        FileType fileType) throws Exception {
         Map<String, List<List<String>>> resultMap = new LinkedHashMap<>();
         ByteArrayOutputStream swapStream = null;
         ByteArrayInputStream byteArrayInputStream = null;
         try {
             // FileType fileType = FileType.getFileTypeByName("csv");
+            if (fileType == null) {
+                FileInfo fileInfo = getFileInfoByFileName(fileName);
+                fileType = fileInfo.getFileType();
+            }
             if (fileType == FileType.EXCEL) {
                 resultMap = ExcelAdvanceUtil.convertExcelToRowListMap(inputStream);
             } else if (fileType == FileType.CSV || fileType == FileType.TSV || fileType == FileType.TXT) {
@@ -40,7 +44,9 @@ public class FileAnalysisUtils {
                 }
                 byteArrayInputStream = new ByteArrayInputStream(swapStream.toByteArray());
                 // 先监测编码
-                Charset charset = CpdetectorUtil.determineChartSet(byteArrayInputStream);
+                // Charset charset =
+                // CpdetectorUtil.determineChartSet(byteArrayInputStream);
+                Charset charset = null;
                 List<List<String>> rowList = SpliterFileUtil.convertSpliterFileToRowList(byteArrayInputStream, spliter,
                     charset);
                 resultMap.put(fileName, rowList);
@@ -49,6 +55,32 @@ public class FileAnalysisUtils {
             ObjectUtils.safeClose(byteArrayInputStream, swapStream, inputStream);
         }
         return resultMap;
+    }
+
+    /**
+     * 通过文件名获取fileType、fileExt<br>
+     * 例如：fileName=测试.csv，返回：fileType=CSV, fileExt=.csv
+     */
+    public static FileInfo getFileInfoByFileName(String fileName) {
+        FileType fileType = null;
+        FileExtension fileExtension = null;
+        if (StringUtils.endsWithIgnoreCase(fileName, FileExtension.CSV.value())) {
+            fileType = FileType.CSV;
+            fileExtension = FileExtension.CSV;
+        } else if (StringUtils.endsWithIgnoreCase(fileName, FileExtension.XLSX.value())) {
+            fileType = FileType.EXCEL;
+            fileExtension = FileExtension.XLSX;
+        } else if (StringUtils.endsWithIgnoreCase(fileName, FileExtension.XLS.value())) {
+            fileType = FileType.EXCEL;
+            fileExtension = FileExtension.XLS;
+        } else if (StringUtils.endsWithIgnoreCase(fileName, FileExtension.TXT.value())) {
+            fileType = FileType.TXT;
+            fileExtension = FileExtension.TXT;
+        }
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setFileType(fileType);
+        fileInfo.setFileExtension(fileExtension);
+        return fileInfo;
     }
 
     public static void main(String[] args) {

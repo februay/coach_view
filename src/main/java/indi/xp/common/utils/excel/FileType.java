@@ -1,5 +1,8 @@
 package indi.xp.common.utils.excel;
 
+/**
+ * 文件类型
+ */
 public enum FileType {
     EXCEL,
     CSV,

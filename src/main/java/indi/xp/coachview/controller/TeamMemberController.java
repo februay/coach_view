@@ -30,7 +30,7 @@ public class TeamMemberController {
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(teamMemberService.findList());
     }
-    
+
     @RequestMapping(value = "list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<ListItemVo>> findTeamMemberItemList(
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
@@ -66,4 +66,5 @@ public class TeamMemberController {
 
         teamMemberService.delete(id);
     }
+
 }
