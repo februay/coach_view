@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,16 +42,22 @@ public class UserController {
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<UserVo>> findUserList(
+        @RequestParam(value = "clubId", required = false) String clubId,
+        @RequestParam(value = "schoolId", required = false) String schoolId,
+        @RequestParam(value = "teamId", required = false) String teamId,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(userService.findUserList());
+        return ResponseResult.buildResult(userService.findUserList(clubId, schoolId, teamId));
     }
     
     @RequestMapping(value = "list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<ListItemVo>> findUserItemList(
+        @RequestParam(value = "clubId", required = false) String clubId,
+        @RequestParam(value = "schoolId", required = false) String schoolId,
+        @RequestParam(value = "teamId", required = false) String teamId,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(userService.findUserItemList());
+        return ResponseResult.buildResult(userService.findUserItemList(clubId, schoolId, teamId));
     }
 
     @RequestMapping(value = "{uid}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)

@@ -11,9 +11,10 @@ public class TeamCoach implements Serializable {
 
     private String coachId;
     private String name;
-    private String idNumber;
+    private String idNumber;// 身份证号
+    private String phone;// 手机号
     private String age;
-    private String photo;
+    private String photo; // 头像
     private String teamId;
     private String teamName;
     private String createTime;
@@ -89,6 +90,14 @@ public class TeamCoach implements Serializable {
 
     public void setDeleteStatus(Boolean deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
 }

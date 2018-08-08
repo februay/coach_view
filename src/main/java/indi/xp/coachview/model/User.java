@@ -17,8 +17,12 @@ public class User implements Serializable {
     private String title; // 职位
     private String status; // 审核状态
     private String activeTime;
+    private String creatorId;
     private String createTime;
     private Boolean deleteStatus; // 是否删除
+    private String clubId;
+    private String schoolId;
+    private String teamId;
 
     public String getUid() {
         return uid;
@@ -108,6 +112,14 @@ public class User implements Serializable {
         this.activeTime = activeTime;
     }
 
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
     public String getCreateTime() {
         return createTime;
     }
@@ -124,12 +136,37 @@ public class User implements Serializable {
         this.deleteStatus = deleteStatus;
     }
 
+    public String getClubId() {
+        return clubId;
+    }
+
+    public void setClubId(String clubId) {
+        this.clubId = clubId;
+    }
+
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(String schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
     @Override
     public String toString() {
         return "User [uid=" + uid + ", userName=" + userName + ", userEmail=" + userEmail + ", userPassword="
             + userPassword + ", name=" + name + ", phone=" + phone + ", company=" + company + ", department="
             + department + ", title=" + title + ", status=" + status + ", activeTime=" + activeTime + ", createTime="
-            + createTime + ", deleteStatus=" + deleteStatus + "]";
+            + createTime + ", deleteStatus=" + deleteStatus + ", clubId=" + clubId + ", schoolId=" + schoolId
+            + ", teamId=" + teamId + "]";
     }
 
 }

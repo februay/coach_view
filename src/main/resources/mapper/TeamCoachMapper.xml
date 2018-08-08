@@ -6,6 +6,7 @@
         <id column="coach_id" property="coachId" />
         <result column="name" property="name" />
         <result column="id_number" property="idNumber" />
+        <result column="phone" property="phone" />
         <result column="age" property="age" />
         <result column="photo" property="photo" />
         <result column="team_id" property="teamId" />
@@ -77,8 +78,8 @@
 
     <insert id="add">
         insert into <include refid="table_name" /> 
-            (coach_id, name, id_number, age, photo, team_id, team_name, create_time, delete_status)
-        values(#{teamCoach.coachId}, #{teamCoach.name}, #{teamCoach.idNumber}, #{teamCoach.age}, #{teamCoach.photo},
+            (coach_id, name, id_number, phone, age, photo, team_id, team_name, create_time, delete_status)
+        values(#{teamCoach.coachId}, #{teamCoach.name}, #{teamCoach.idNumber}, #{teamCoach.phone}, #{teamCoach.age}, #{teamCoach.photo},
             #{teamCoach.teamId}, #{teamCoach.teamName}, #{teamCoach.createTime}, #{teamCoach.deleteStatus})
     </insert>
 
@@ -86,6 +87,7 @@
         update <include refid="table_name" /> set
             name = #{teamCoach.name},
             id_number = #{teamCoach.idNumber},
+            phone = #{teamCoach.phone},
             age = #{teamCoach.age},
             photo = #{teamCoach.photo},
             team_id = #{teamCoach.teamId},

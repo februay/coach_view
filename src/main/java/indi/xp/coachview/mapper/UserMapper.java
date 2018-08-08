@@ -42,4 +42,9 @@ public interface UserMapper {
     public void updateByWhere(@Param("updateMap") Map<String, Object> updateMap,
         @Param("paramMap") Map<String, Object[]> paramMap, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
+    /**
+     * 获取CLUB角色用户有权限的uid列表
+     */
+    public List<String> findClubUserAuthorizedUidList(@Param("uid") String uid);
+
 }

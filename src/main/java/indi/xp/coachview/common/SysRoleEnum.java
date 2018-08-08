@@ -1,5 +1,7 @@
 package indi.xp.coachview.common;
 
+import java.util.List;
+
 public enum SysRoleEnum {
 
     ADMIN("10001", "sys_role_admin", "管理员"),
@@ -29,5 +31,13 @@ public enum SysRoleEnum {
     public String getName() {
         return name;
     }
-
+    
+    public static boolean hasAdminRole(List<String> roles) {
+        for (String role : roles) {
+            if (ADMIN.getCode().equals(role)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

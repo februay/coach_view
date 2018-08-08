@@ -13,7 +13,7 @@ public interface UserService {
 
     public List<UserVo> findUserListByUidList(List<String> uidList);
 
-    public List<UserVo> findUserList();
+    public List<UserVo> findUserList(String clubId, String schoolId, String teamId);
 
     public UserVo addUser(UserVo userVo);
 
@@ -21,7 +21,7 @@ public interface UserService {
 
     public void deleteByUid(String uid);
 
-    public List<ListItemVo> findUserItemList();
+    public List<ListItemVo> findUserItemList(String clubId, String schoolId, String teamId);
 
     public boolean checkUserPhoneExists(String phoneNumber, String uid);
 }

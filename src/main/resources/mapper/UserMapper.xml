@@ -14,8 +14,12 @@
         <result column="title" property="title" />
         <result column="status" property="status" />
         <result column="active_time" property="activeTime" />
+        <result column="creator_id" property="creatorId" />
         <result column="create_time" property="createTime" />
         <result column="delete_status" property="deleteStatus" />
+        <result column="club_id" property="clubId" />
+        <result column="school_id" property="schoolId" />
+        <result column="team_id" property="teamId" />
     </resultMap>
 
     <sql id="table_name">
@@ -94,37 +98,35 @@
     <insert id="addUser">
         insert into user(uid, user_name, user_email,
         user_password, name, phone, company, department,
-        title, status,
-        active_time, create_time, delete_status)
+        title, status, club_id, school_id, team_id,
+        active_time, creator_id, create_time, delete_status)
         values(#{user.uid},
         #{user.userName}, #{user.userEmail},
         #{user.userPassword},
         #{user.name}, #{user.phone}, #{user.company},
         #{user.department}, #{user.title},
-        #{user.status},
-        #{user.activeTime}, #{user.createTime}, #{user.deleteStatus})
+        #{user.status},#{user.clubId},#{user.schoolId},#{user.teamId},
+        #{user.activeTime}, #{user.creatorId}, #{user.createTime}, #{user.deleteStatus})
     </insert>
 
     <update id="updateUser">
         update user set
         user_name = #{user.userName},
         user_email = #{user.userEmail},
-        user_password =
-        #{user.userPassword},
+        user_password = #{user.userPassword},
         name = #{user.name},
-        phone =
-        #{user.phone},
+        phone = #{user.phone},
         company = #{user.company},
         department = #{user.department},
-        title
-        = #{user.title},
-        status =
-        #{user.status},
-        active_time =
-        #{user.activeTime},
+        title = #{user.title},
+        status = #{user.status},
+        club_id = #{user.clubId},
+        school_id = #{user.schoolId},
+        team_id = #{user.teamId},
+        active_time = #{user.activeTime},
+        creator_id = #{user.creatorId},
         create_time = #{user.createTime},
-        delete_status =
-        #{user.deleteStatus}
+        delete_status = #{user.deleteStatus}
         where uid = #{user.uid}
     </update>
     
@@ -169,5 +171,13 @@
         <include refid="common_where" />
         <include refid="query_by_param" />
     </update>
+    
+    <select id="findClubUserAuthorizedUidList" parameterType="java.lang.String" resultType="java.lang.String">
+        select user.uid
+        from user left join club on user.club_id = club.club_id  
+        where user.delete_status = 0 and club.delete_status = 0 and 
+            and club.admin_id = #{uid}
+        group by user.uid
+    </select>
 
 </mapper>

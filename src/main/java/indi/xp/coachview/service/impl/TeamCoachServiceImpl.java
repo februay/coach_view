@@ -53,6 +53,9 @@ public class TeamCoachServiceImpl implements TeamCoachService {
             if (StringUtils.isNotBlank(teamCoach.getIdNumber())) {
                 dbTeamCoach.setIdNumber(teamCoach.getIdNumber());
             }
+            if (StringUtils.isNotBlank(teamCoach.getPhone())) {
+                dbTeamCoach.setPhone(teamCoach.getPhone());
+            }
             if (StringUtils.isNotBlank(teamCoach.getAge())) {
                 dbTeamCoach.setAge(teamCoach.getAge());
             }

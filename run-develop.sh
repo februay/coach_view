@@ -1,1 +1,1 @@
-nohup java -jar coach-view-1.0.0.jar --spring.profiles.active=develop > nohup.out  &
+nohup java -jar -Xms128m -Xmx512m  coach-view-1.0.0.jar --spring.profiles.active=develop > nohup.out  &

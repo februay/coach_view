@@ -13,12 +13,12 @@ public interface UserDao {
 
     public List<User> findUserListByUidList(List<String> uidList);
 
-    public List<User> findUserList();
+    public List<User> findUserList(String clubId, String schoolId, String teamId);
 
     public User addUser(User user);
 
     public User update(User user);
 
-    public List<ListItemVo> findUserItemList();
+    public List<ListItemVo> findUserItemList(String clubId, String schoolId, String teamId);
 
 }

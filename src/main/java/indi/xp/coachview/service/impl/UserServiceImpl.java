@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import indi.xp.coachview.common.BusinessErrorCodeEnum;
+import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.UserDao;
 import indi.xp.coachview.model.SysRole;
 import indi.xp.coachview.model.SysUserRole;
@@ -56,8 +57,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserVo> findUserList() {
-        List<User> userList = userDao.findUserList();
+    public List<UserVo> findUserList(String clubId, String schoolId, String teamId) {
+        List<User> userList = userDao.findUserList(clubId, schoolId, teamId);
         return this.parseToUserVoList(userList);
     }
 
@@ -71,6 +72,11 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(BusinessErrorCodeEnum.USER_PHONE_NUMBER_IS_BLANK);
         } else if (this.checkUserPhoneExists(phoneNumber, null)) {
             throw new BusinessException(BusinessErrorCodeEnum.USER_EXISTS);
+        }
+
+        // 非管理员用户clubId不能为空
+        if (!SysRoleEnum.hasAdminRole(userVo.getRoles()) && StringUtils.isBlank(userVo.getClubId())) {
+            throw new BusinessException(BusinessErrorCodeEnum.USER_CLUB_ID_IS_NULL);
         }
 
         userVo.setUid(UuidUtils.generateUUID());
@@ -115,7 +121,7 @@ public class UserServiceImpl implements UserService {
         if (user != null) {
 
             String phoneNumber = userVo.getPhone();
-            if (phoneNumber!= null && StringUtils.isBlank(phoneNumber)) {
+            if (phoneNumber != null && StringUtils.isBlank(phoneNumber)) {
                 throw new BusinessException(BusinessErrorCodeEnum.USER_PHONE_NUMBER_IS_BLANK);
             } else if (this.checkUserPhoneExists(phoneNumber, user.getUid())) {
                 throw new BusinessException(BusinessErrorCodeEnum.USER_EXISTS);
@@ -144,6 +150,15 @@ public class UserServiceImpl implements UserService {
             }
             if (StringUtils.isNotBlank(userVo.getTitle())) {
                 user.setTitle(userVo.getTitle());
+            }
+            if (StringUtils.isNotBlank(userVo.getClubId())) {
+                user.setClubId(userVo.getClubId());
+            }
+            if (StringUtils.isNotBlank(userVo.getSchoolId())) {
+                user.setSchoolId(userVo.getSchoolId());
+            }
+            if (StringUtils.isNotBlank(userVo.getTeamId())) {
+                user.setTeamId(userVo.getTeamId());
             }
             userDao.update(user);
 
@@ -245,8 +260,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ListItemVo> findUserItemList() {
-        return userDao.findUserItemList();
+    public List<ListItemVo> findUserItemList(String clubId, String schoolId, String teamId) {
+        return userDao.findUserItemList(clubId, schoolId, teamId );
     }
 
 }

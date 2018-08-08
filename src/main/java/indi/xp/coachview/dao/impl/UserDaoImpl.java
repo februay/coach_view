@@ -20,6 +20,7 @@ import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
+import indi.xp.common.utils.StringUtils;
 
 @Repository
 public class UserDaoImpl implements UserDao {
@@ -45,13 +46,26 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<User> findUserList() {
-        return userMapper.findUserList(this.buildAuthFilterMap());
+    public List<User> findUserList(String clubId, String schoolId, String teamId) {
+        Map<String, Object[]> filterMap = this.buildAuthFilterMap();
+        if(filterMap == null) {
+            filterMap = new HashMap<>();
+        }
+        if (StringUtils.isNotBlank(clubId)) {
+            filterMap.put("club_id", new String[] { clubId });
+        }
+        if (StringUtils.isNotBlank(schoolId)) {
+            filterMap.put("school_id", new String[] { schoolId });
+        }
+        if (StringUtils.isNotBlank(teamId)) {
+            filterMap.put("team_id", new String[] { teamId });
+        }
+        return userMapper.findUserList(filterMap);
     }
 
     @Override
     public User addUser(User user) {
-        userMapper.addUser(user, this.buildAuthFilterMap());
+        userMapper.addUser(user, null);
         return user;
     }
 
@@ -62,8 +76,21 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public List<ListItemVo> findUserItemList() {
-        List<User> userList = userMapper.findUserList(null);
+    public List<ListItemVo> findUserItemList(String clubId, String schoolId, String teamId) {
+        Map<String, Object[]> filterMap = this.buildAuthFilterMap();
+        if(filterMap == null) {
+            filterMap = new HashMap<>();
+        }
+        if (StringUtils.isNotBlank(clubId)) {
+            filterMap.put("club_id", new String[] { clubId });
+        }
+        if (StringUtils.isNotBlank(schoolId)) {
+            filterMap.put("school_id", new String[] { schoolId });
+        }
+        if (StringUtils.isNotBlank(teamId)) {
+            filterMap.put("team_id", new String[] { teamId });
+        }
+        List<User> userList = userMapper.findUserList(filterMap);
         List<ListItemVo> itemList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(userList)) {
             userList.forEach(user -> {
@@ -82,6 +109,15 @@ public class UserDaoImpl implements UserDao {
         if (sessionContext != null && sessionContext.available()) {
             if (sessionContext.hasRole(SysRoleEnum.ADMIN)) {
                 // 不限制
+            } else if (sessionContext.hasRole(SysRoleEnum.CLUB)) {
+                // 只能访问俱乐部下所属人员信息
+                List<String> authorizedUidList = this
+                    .findClubUserAuthorizedUidList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedUidList)) {
+                    authFilterMap.put("uid", authorizedUidList.toArray());
+                } else {
+                    authFilterMap.put("uid", new String[] { "" });
+                }
             } else {
                 // 只能访问自己的信息
                 authFilterMap.put("uid", new String[] { sessionContext.getSessionUser().getUid() });
@@ -94,6 +130,10 @@ public class UserDaoImpl implements UserDao {
             logger.warn("SessionContext is null");
         }
         return authFilterMap;
+    }
+
+    private List<String> findClubUserAuthorizedUidList(String uid) {
+        return userMapper.findClubUserAuthorizedUidList(uid);
     }
 
 }

@@ -17,7 +17,11 @@ public class UserVo implements Serializable {
     private String department; // 部门
     private String title; // 职位
     private String activeTime;
+    private String creatorId;
     private String createTime;
+    private String clubId;
+    private String schoolId;
+    private String teamId;
 
     private List<String> roles;
 
@@ -101,6 +105,14 @@ public class UserVo implements Serializable {
         this.activeTime = activeTime;
     }
 
+    public String getCreatorId() {
+        return creatorId;
+    }
+
+    public void setCreatorId(String creatorId) {
+        this.creatorId = creatorId;
+    }
+
     public String getCreateTime() {
         return createTime;
     }
@@ -117,11 +129,36 @@ public class UserVo implements Serializable {
         this.roles = roles;
     }
 
+    public String getClubId() {
+        return clubId;
+    }
+
+    public void setClubId(String clubId) {
+        this.clubId = clubId;
+    }
+
+    public String getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(String schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(String teamId) {
+        this.teamId = teamId;
+    }
+
     @Override
     public String toString() {
-        return "UserSignUpVo [uid=" + uid + ", userName=" + userName + ", userEmail=" + userEmail + ", userPassword="
+        return "UserVo [uid=" + uid + ", userName=" + userName + ", userEmail=" + userEmail + ", userPassword="
             + userPassword + ", name=" + name + ", phone=" + phone + ", company=" + company + ", department="
-            + department + ", title=" + title + ", roles=" + roles + "]";
+            + department + ", title=" + title + ", activeTime=" + activeTime + ", createTime=" + createTime
+            + ", clubId=" + clubId + ", schoolId=" + schoolId + ", teamId=" + teamId + ", roles=" + roles + "]";
     }
 
 }
