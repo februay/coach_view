@@ -1,5 +1,6 @@
 package indi.xp.coachview.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import indi.xp.coachview.dao.ClubDao;
 import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.vo.ClubVo;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.ClubService;
+import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
@@ -20,8 +23,13 @@ public class ClubServiceImpl implements ClubService {
     private ClubDao clubDao;
 
     @Override
-    public Club getById(String id) {
-        return clubDao.getClubById(id);
+    public ClubVo getById(String id) {
+        ClubVo clubVo = null;
+        Club club = clubDao.getClubById(id);
+        if (club != null) {
+            clubVo = new ClubVo(club);
+        }
+        return clubVo;
     }
 
     @Override
@@ -30,8 +38,17 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public List<Club> findList() {
-        return clubDao.findClubList();
+    public List<ClubVo> findList() {
+        List<ClubVo> clubVoList = null;
+        List<Club> clubList = clubDao.findClubList();
+        if (CollectionUtils.isNotEmpty(clubList)) {
+            clubVoList = new ArrayList<>();
+            for (Club club : clubList) {
+                ClubVo clubVo = new ClubVo(club);
+                clubVoList.add(clubVo);
+            }
+        }
+        return clubVoList;
     }
 
     @Override

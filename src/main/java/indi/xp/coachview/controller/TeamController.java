@@ -31,6 +31,7 @@ import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.model.TeamMember;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.TeamVo;
 import indi.xp.coachview.service.TeamCoachService;
 import indi.xp.coachview.service.TeamMemberService;
 import indi.xp.coachview.service.TeamService;
@@ -58,7 +59,7 @@ public class TeamController {
     private TeamCoachService teamCoachService;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<Team>> findTeamList(
+    public ResponseResult<List<TeamVo>> findTeamList(
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(teamService.findList());
@@ -72,7 +73,7 @@ public class TeamController {
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<Team> getTeamById(@PathVariable(value = "id") String id,
+    public ResponseResult<TeamVo> getTeamById(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(teamService.getById(id));

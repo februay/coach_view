@@ -3,15 +3,16 @@ package indi.xp.coachview.service;
 import java.util.List;
 
 import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.vo.ClubVo;
 import indi.xp.coachview.model.vo.ListItemVo;
 
 public interface ClubService {
 
-    public Club getById(String id);
+    public ClubVo getById(String id);
 
     public List<Club> findByIdList(List<String> idList);
 
-    public List<Club> findList();
+    public List<ClubVo> findList();
 
     public Club add(Club club);
 

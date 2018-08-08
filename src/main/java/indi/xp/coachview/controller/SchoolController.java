@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.model.School;
-import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.SchoolVo;
+import indi.xp.coachview.model.vo.TeamVo;
 import indi.xp.coachview.service.SchoolService;
 import indi.xp.coachview.service.TeamService;
 import indi.xp.common.constants.MediaType;
@@ -30,7 +31,7 @@ public class SchoolController {
     private TeamService teamService;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<School>> findSchoolList(
+    public ResponseResult<List<SchoolVo>> findSchoolList(
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(schoolService.findList());
@@ -44,14 +45,14 @@ public class SchoolController {
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<School> getSchoolById(@PathVariable(value = "id") String id,
+    public ResponseResult<SchoolVo> getSchoolById(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(schoolService.getById(id));
     }
 
     @RequestMapping(value = "{id}/team", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<Team>> findTeamListBySchoolId(@PathVariable(value = "id") String id,
+    public ResponseResult<List<TeamVo>> findTeamListBySchoolId(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(teamService.findTeamListBySchoolId(id));

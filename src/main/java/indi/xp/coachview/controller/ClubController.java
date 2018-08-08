@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.model.Club;
-import indi.xp.coachview.model.School;
+import indi.xp.coachview.model.vo.ClubVo;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.SchoolVo;
 import indi.xp.coachview.service.ClubService;
 import indi.xp.coachview.service.SchoolService;
 import indi.xp.common.constants.MediaType;
@@ -30,7 +31,7 @@ public class ClubController {
     private SchoolService schoolService;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<Club>> findClubList(
+    public ResponseResult<List<ClubVo>> findClubList(
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(clubService.findList());
@@ -44,14 +45,14 @@ public class ClubController {
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<Club> getClubById(@PathVariable(value = "id") String id,
+    public ResponseResult<ClubVo> getClubById(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(clubService.getById(id));
     }
 
     @RequestMapping(value = "{id}/school", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<School>> findSchoolListByClubId(@PathVariable(value = "id") String id,
+    public ResponseResult<List<SchoolVo>> findSchoolListByClubId(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(schoolService.findListByClubId(id));

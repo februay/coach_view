@@ -1,5 +1,6 @@
 package indi.xp.coachview.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Service;
 import indi.xp.coachview.dao.SchoolDao;
 import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.SchoolVo;
 import indi.xp.coachview.service.SchoolService;
+import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
@@ -20,8 +23,13 @@ public class SchoolServiceImpl implements SchoolService {
     private SchoolDao schoolDao;
 
     @Override
-    public School getById(String id) {
-        return schoolDao.getSchoolById(id);
+    public SchoolVo getById(String id) {
+        SchoolVo schoolVo = null;
+        School school = schoolDao.getSchoolById(id);
+        if (school != null) {
+            schoolVo = new SchoolVo(school);
+        }
+        return schoolVo;
     }
 
     @Override
@@ -30,8 +38,17 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public List<School> findList() {
-        return schoolDao.findSchoolList();
+    public List<SchoolVo> findList() {
+        List<SchoolVo> schoolVoList = null;
+        List<School> schoolList = schoolDao.findSchoolList();
+        if (CollectionUtils.isNotEmpty(schoolList)) {
+            schoolVoList = new ArrayList<>();
+            for (School school : schoolList) {
+                SchoolVo schoolVo = new SchoolVo(school);
+                schoolVoList.add(schoolVo);
+            }
+        }
+        return schoolVoList;
     }
 
     @Override
@@ -108,8 +125,17 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public List<School> findListByClubId(String clubId) {
-        return schoolDao.findListByClubId(clubId);
+    public List<SchoolVo> findListByClubId(String clubId) {
+        List<SchoolVo> schoolVoList = null;
+        List<School> schoolList = schoolDao.findListByClubId(clubId);
+        if (CollectionUtils.isNotEmpty(schoolList)) {
+            schoolVoList = new ArrayList<>();
+            for (School school : schoolList) {
+                SchoolVo schoolVo = new SchoolVo(school);
+                schoolVoList.add(schoolVo);
+            }
+        }
+        return schoolVoList;
     }
 
     @Override

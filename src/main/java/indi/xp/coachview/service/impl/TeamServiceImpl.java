@@ -1,5 +1,6 @@
 package indi.xp.coachview.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Service;
 import indi.xp.coachview.dao.TeamDao;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.TeamVo;
 import indi.xp.coachview.service.TeamService;
+import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
@@ -20,8 +23,13 @@ public class TeamServiceImpl implements TeamService {
     private TeamDao teamDao;
 
     @Override
-    public Team getById(String id) {
-        return teamDao.getTeamById(id);
+    public TeamVo getById(String id) {
+        TeamVo teamVo = null;
+        Team team = teamDao.getTeamById(id);
+        if (team != null) {
+            teamVo = new TeamVo(team);
+        }
+        return teamVo;
     }
 
     @Override
@@ -30,8 +38,17 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<Team> findList() {
-        return teamDao.findTeamList();
+    public List<TeamVo> findList() {
+        List<TeamVo> teamVoList = null;
+        List<Team> teamList = teamDao.findTeamList();
+        if (CollectionUtils.isNotEmpty(teamList)) {
+            teamVoList = new ArrayList<>();
+            for (Team team : teamList) {
+                TeamVo teamVo = new TeamVo(team);
+                teamVoList.add(teamVo);
+            }
+        }
+        return teamVoList;
     }
 
     @Override
@@ -108,8 +125,17 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<Team> findTeamListBySchoolId(String schoolId) {
-        return teamDao.findListBySchoolId(schoolId);
+    public List<TeamVo> findTeamListBySchoolId(String schoolId) {
+        List<TeamVo> teamVoList = null;
+        List<Team> teamList = teamDao.findListBySchoolId(schoolId);
+        if (CollectionUtils.isNotEmpty(teamList)) {
+            teamVoList = new ArrayList<>();
+            for (Team team : teamList) {
+                TeamVo teamVo = new TeamVo(team);
+                teamVoList.add(teamVo);
+            }
+        }
+        return teamVoList;
     }
 
     @Override
