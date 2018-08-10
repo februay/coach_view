@@ -9,10 +9,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.alibaba.fastjson.JSON;
+
+import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.MatchTeamMemberInfoDao;
 import indi.xp.coachview.dao.TeamDao;
 import indi.xp.coachview.mapper.MatchTeamMemberInfoMapper;
 import indi.xp.coachview.model.MatchTeamMemberInfo;
+import indi.xp.coachview.model.TeamCoach;
+import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.StringUtils;
 
@@ -72,51 +77,48 @@ public class MatchTeamMemberInfoDaoImpl implements MatchTeamMemberInfoDao {
 
     private Map<String, Object[]> buildAuthFilterMap() {
         Map<String, Object[]> authFilterMap = new HashMap<>();
-        // SessionConext sessionContext =
-        // SessionConext.getThreadLocalSessionContext();
-        // if (sessionContext != null && sessionContext.available()) {
-        // if (sessionContext.hasRole(SysRoleEnum.ADMIN)) {
-        // // 不限制
-        // } else if (sessionContext.hasRole(SysRoleEnum.CLUB)) {
-        // // 只能访问俱乐部下属球队
-        // List<String> authorizedTeamIdList = teamDao
-        // .findClubUserAuthorizedTeamIdList(sessionContext.getSessionUser().getUid());
-        // if (CollectionUtils.isNotEmpty(authorizedTeamIdList)) {
-        // authFilterMap.put("team_id", authorizedTeamIdList.toArray());
-        // } else {
-        // authFilterMap.put("team_id", new String[] { "" });
-        // }
-        // } else if (sessionContext.hasRole(SysRoleEnum.SCHOOL)) {
-        // // 只能访问学校下属球队
-        // List<String> authorizedTeamIdList = teamDao
-        // .findSchoolUserAuthorizedTeamIdList(sessionContext.getSessionUser().getUid());
-        // if (CollectionUtils.isNotEmpty(authorizedTeamIdList)) {
-        // authFilterMap.put("team_id", authorizedTeamIdList.toArray());
-        // } else {
-        // authFilterMap.put("team_id", new String[] { "" });
-        // }
-        // } else if (sessionContext.hasRole(SysRoleEnum.TEAM)) {
-        // // 只能访问管理的球队
-        // List<String> authorizedTeamIdList = teamDao
-        // .findTeamUserAuthorizedTeamIdList(sessionContext.getSessionUser().getUid());
-        // if (CollectionUtils.isNotEmpty(authorizedTeamIdList)) {
-        // authFilterMap.put("team_id", authorizedTeamIdList.toArray());
-        // } else {
-        // authFilterMap.put("team_id", new String[] { "" });
-        // }
-        // } else {
-        // // 不能访问
-        // authFilterMap.put("team_id", new String[] { "" });
-        // }
-        //
-        // logger.info("SessionContext<{}> : " +
-        // JSON.toJSONString(sessionContext), sessionContext.getSessionId());
-        // logger.info("SessionContext<{}> {} AuthFilterMap: " +
-        // JSON.toJSONString(authFilterMap),
-        // sessionContext.getSessionId(), TeamCoach.class.getSimpleName());
-        // } else {
-        // logger.warn("SessionContext is null");
-        // }
+        SessionConext sessionContext = SessionConext.getThreadLocalSessionContext();
+        if (sessionContext != null && sessionContext.available()) {
+            if (sessionContext.hasRole(SysRoleEnum.ADMIN)) {
+                // 不限制
+            } else if (sessionContext.hasRole(SysRoleEnum.CLUB)) {
+                // 只能访问俱乐部下属球队
+                List<String> authorizedTeamIdList = teamDao
+                    .findClubUserAuthorizedTeamIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedTeamIdList)) {
+                    authFilterMap.put("team_id", authorizedTeamIdList.toArray());
+                } else {
+                    authFilterMap.put("team_id", new String[] { "" });
+                }
+            } else if (sessionContext.hasRole(SysRoleEnum.SCHOOL)) {
+                // 只能访问学校下属球队
+                List<String> authorizedTeamIdList = teamDao
+                    .findSchoolUserAuthorizedTeamIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedTeamIdList)) {
+                    authFilterMap.put("team_id", authorizedTeamIdList.toArray());
+                } else {
+                    authFilterMap.put("team_id", new String[] { "" });
+                }
+            } else if (sessionContext.hasRole(SysRoleEnum.TEAM)) {
+                // 只能访问管理的球队
+                List<String> authorizedTeamIdList = teamDao
+                    .findTeamUserAuthorizedTeamIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedTeamIdList)) {
+                    authFilterMap.put("team_id", authorizedTeamIdList.toArray());
+                } else {
+                    authFilterMap.put("team_id", new String[] { "" });
+                }
+            } else {
+                // 不能访问
+                authFilterMap.put("team_id", new String[] { "" });
+            }
+
+            logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
+            logger.info("SessionContext<{}> {} AuthFilterMap: " + JSON.toJSONString(authFilterMap),
+                sessionContext.getSessionId(), TeamCoach.class.getSimpleName());
+        } else {
+            logger.warn("SessionContext is null");
+        }
         return authFilterMap;
     }
 
