@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -97,7 +96,7 @@ public class TeamController {
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(teamCoachService.findTeamCoachListByTeamId(id));
     }
-    
+
     @RequestMapping(value = "{id}/team-match", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<Match>> findTeamMatchListByTeamId(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
@@ -132,8 +131,8 @@ public class TeamController {
      */
     @RequestMapping(value = "{teamId}/export-members", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public void exportTeamMemberList(@PathVariable("teamId") String teamId, HttpServletRequest request,
-        HttpServletResponse response, @RequestHeader(value = "TraceId", required = false) String traceId,
-        @RequestParam(value = "token", required = false) String token) {
+        HttpServletResponse response, @RequestHeader(value = Constants.Header.TOKEN, required = false) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
 
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
@@ -183,8 +182,8 @@ public class TeamController {
     @RequestMapping(value = "{teamId}/import-members", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<TeamMember>> importTeamMemberList(@RequestBody MultipartFile file,
         HttpServletRequest request, HttpServletResponse response, @PathVariable("teamId") String teamId,
-        @RequestHeader(value = "TraceId", required = false) String traceId,
-        @RequestHeader(value = "token", required = false) String token) {
+        @RequestHeader(value = Constants.Header.TOKEN, required = false) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         Team team = teamService.getById(teamId);
         if (file != null && team != null) {
             InputStream inputStream = null;

@@ -18,13 +18,17 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSON;
 
 /**
  * change this template use File | Settings | File Templates.
@@ -88,7 +92,11 @@ public final class ObjectUtils {
         for (PropertyDescriptor property : propertyDescriptors) {
             Method setter = property.getWriteMethod();
             if (setter != null && map.containsKey(property.getName())) {
-                setter.invoke(obj, map.get(property.getName()));
+                try {
+                    setter.invoke(obj, map.get(property.getName()));
+                } catch (Exception e) {
+                    logger.error(property.getName() + " value " + map.get(property.getName()) + " type not match", e);
+                }
             }
         }
         return obj;
@@ -1139,6 +1147,82 @@ public final class ObjectUtils {
                 }
             }
         }
+    }
+
+    /**
+     * 将对象列表转为带表头的二维数据列表（第一行为表头）
+     * 
+     * @param objList
+     *            对象列表
+     * @param headerList
+     *            表头列表
+     * @param nameToPropertyMapping
+     *            表头和对象属性名对应关系
+     * @return
+     * @date: 2018年8月10日
+     * @author peng.xu
+     */
+    public static <T> List<List<String>> parseToRowList(List<T> objList, List<String> headerList,
+        Map<String, String> nameToPropertyMapping) {
+        List<List<String>> rowList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(objList)) {
+            for (T obj : objList) {
+                try {
+                    List<String> row = new ArrayList<String>();
+                    Map<String, Object> objMap = ObjectUtils.objectToMap(obj);
+                    for (String header : headerList) {
+                        String property = nameToPropertyMapping.get(header);
+                        if (objMap.get(property) != null && StringUtils.isNotBlank(String.valueOf(objMap.get(property)))) {
+                            row.add(String.valueOf(objMap.get(property)));
+                        } else {
+                            row.add("");
+                        }
+                    }
+                    rowList.add(row);
+                } catch (Exception e) {
+                    logger.error("parse member to map error, member=" + JSON.toJSONString(obj), e);
+                }
+            }
+        }
+        return rowList;
+    }
+
+    /**
+     * 将带表头的二维数据列表（第一行为表头）转为对象列表
+     * 
+     * @param rowList
+     * @param nameToPropertyMapping
+     * @param beanClass
+     * @return
+     * @date: 2018年8月10日
+     * @author peng.xu
+     */
+    public static <T> List<T> parseToObjectList(List<List<String>> rowList, Map<String, String> nameToPropertyMapping,
+        Class<T> beanClass) {
+        List<T> objList = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(rowList) && rowList.size() > 1) {
+            // 第一行为表头信息
+            List<String> headerList = rowList.get(0);
+            for (int i = 1; i < rowList.size(); i++) {
+                List<String> row = rowList.get(i);
+                try {
+                    Map<String, Object> objMap = new HashMap<String, Object>();
+                    for (int j = 0; j < headerList.size(); j++) {
+                        String header = headerList.get(j);
+                        String property = nameToPropertyMapping.get(header);
+                        if (StringUtils.isNotBlank(property)) {
+                            objMap.put(property, StringUtils.isNotBlank(row.get(j)) ? row.get(j) : null);
+                        }
+                    }
+                    // T obj = ObjectUtils.mapToObject(objMap, beanClass);
+                    T obj = JSON.parseObject(JSON.toJSONString(objMap), beanClass);
+                    objList.add(obj);
+                } catch (Exception e) {
+                    logger.error("parse row to {} object error, row=" + JSON.toJSONString(row), beanClass.getName(), e);
+                }
+            }
+        }
+        return objList;
     }
 
 }

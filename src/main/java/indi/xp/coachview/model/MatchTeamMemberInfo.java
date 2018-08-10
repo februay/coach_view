@@ -1,10 +1,37 @@
 package indi.xp.coachview.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import indi.xp.common.utils.CollectionUtils;
+import indi.xp.common.utils.ObjectUtils;
 
 public class MatchTeamMemberInfo implements Serializable {
 
     private static final long serialVersionUID = 5428518918142169492L;
+    
+    public static final String defaultName = "球员数据";
+
+    public static final List<String> defaultHeaderList = new ArrayList<String>(Arrays.asList("球员编号", "射门次数（次）",
+        "射正次数（次）", "传球次数（脚）", "传球成功次数（脚）", "传球成功率（%）", "跑动距离（km）", "抢断次数", "进球数", "位置"));
+
+    public static final Map<String, String> nameToPropertyMapping = new HashMap<>();
+    static {
+        nameToPropertyMapping.put("球员编号", "memberNumber");
+        nameToPropertyMapping.put("射门次数（次）", "shootCount");
+        nameToPropertyMapping.put("射正次数（次）", "shootTargetCount");
+        nameToPropertyMapping.put("传球次数（脚）", "passCount");
+        nameToPropertyMapping.put("传球成功次数（脚）", "passSuccessCount");
+        nameToPropertyMapping.put("传球成功率（%）", "passSuccessPercentage");
+        nameToPropertyMapping.put("跑动距离（km）", "runningDistance");
+        nameToPropertyMapping.put("抢断次数", "steals");
+        nameToPropertyMapping.put("进球数", "goals");
+        nameToPropertyMapping.put("位置", "position");
+    }
 
     private String uuid;
     private String matchId;
@@ -149,6 +176,23 @@ public class MatchTeamMemberInfo implements Serializable {
 
     public void setDeleteStatus(Boolean deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    public static List<List<String>> parseToRowList(List<MatchTeamMemberInfo> matchTeamMemberInfoList) {
+        return ObjectUtils.parseToRowList(matchTeamMemberInfoList, defaultHeaderList, nameToPropertyMapping);
+    }
+
+    public static List<MatchTeamMemberInfo> parseToObjectList(List<List<String>> rowList, String teamId,
+        String matchId) {
+        List<MatchTeamMemberInfo> matchTeamMemberInfoList = ObjectUtils.parseToObjectList(rowList,
+            nameToPropertyMapping, MatchTeamMemberInfo.class);
+        if (CollectionUtils.isNotEmpty(matchTeamMemberInfoList)) {
+            for (MatchTeamMemberInfo matchTeamMemberInfo : matchTeamMemberInfoList) {
+                matchTeamMemberInfo.setTeamId(teamId);
+                matchTeamMemberInfo.setMatchId(matchId);
+            }
+        }
+        return matchTeamMemberInfoList;
     }
 
 }

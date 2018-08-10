@@ -4,6 +4,7 @@
 
     <resultMap id="defaultResultMap" type="indi.xp.coachview.model.Match">
         <id column="match_id" property="matchId" />
+        <result column="match_number" property="matchNumber" />
         <result column="match_name" property="matchName" />
         <result column="team_id" property="teamId" />
         <result column="match_session" property="matchSession" />
@@ -15,7 +16,7 @@
     </resultMap>
 
     <sql id="table_name">
-        match
+        `match`
     </sql>
 
     <sql id="pk_column">match_id</sql>
@@ -79,12 +80,13 @@
     </select>
 
     <insert id="add">
-        insert into <include refid="table_name" /> (match_id, match_name, team_id, match_session, match_time, match_video, creator_id, create_time, delete_status)
-        values(#{entity.matchId}, #{entity.matchName}, #{entity.teamId}, #{entity.matchSession}, #{entity.matchTime}, #{entity.matchVideo}, #{entity.creatorId}, #{entity.createTime}, #{entity.deleteStatus})
+        insert into <include refid="table_name" /> (match_id, match_number, match_name, team_id, match_session, match_time, match_video, creator_id, create_time, delete_status)
+        values(#{entity.matchId}, #{entity.matchNumber}, #{entity.matchName}, #{entity.teamId}, #{entity.matchSession}, #{entity.matchTime}, #{entity.matchVideo}, #{entity.creatorId}, #{entity.createTime}, #{entity.deleteStatus})
     </insert>
 
     <update id="update">
         update <include refid="table_name" /> set
+          match_number = #{entity.matchNumber}, 
           match_name = #{entity.matchName}, 
           team_id = #{entity.teamId}, 
           match_session = #{entity.matchSession}, 

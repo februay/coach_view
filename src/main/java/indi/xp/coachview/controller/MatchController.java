@@ -2,6 +2,8 @@ package indi.xp.coachview.controller;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -17,15 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.alibaba.fastjson.JSON;
 
 import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.model.Match;
 import indi.xp.coachview.model.MatchTeamInfo;
 import indi.xp.coachview.model.MatchTeamMemberInfo;
-import indi.xp.coachview.model.TeamMember;
 import indi.xp.coachview.service.MatchService;
 import indi.xp.coachview.service.MatchTeamInfoService;
 import indi.xp.coachview.service.MatchTeamMemberInfoService;
@@ -34,6 +36,7 @@ import indi.xp.common.exception.BusinessException;
 import indi.xp.common.restful.ResponseResult;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.ObjectUtils;
+import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.excel.ExcelUtil;
 import indi.xp.common.utils.excel.FileAnalysisUtils;
 
@@ -85,8 +88,8 @@ public class MatchController {
      */
     @RequestMapping(value = "{matchId}/export", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public void export(@PathVariable("matchId") String matchId, HttpServletRequest request,
-        HttpServletResponse response, @RequestHeader(value = "TraceId", required = false) String traceId,
-        @RequestParam(value = "token", required = false) String token) {
+        HttpServletResponse response, @RequestHeader(value = Constants.Header.TOKEN, required = false) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
 
         OutputStream out = null;
         HSSFWorkbook xlsFile = null;
@@ -98,7 +101,7 @@ public class MatchController {
             List<MatchTeamInfo> matchTeamInfoList = matchTeamInfoService.findListByMatchId(matchId);
             List<MatchTeamMemberInfo> matchTeamMemberInfoList = matchTeamMemberInfoService.findListByMatchId(matchId);
             String fileName = match.getMatchName() + "-match-export.xls";
-            xlsFile = this.createExcelFile(match, matchTeamInfoList, matchTeamMemberInfoList, fileName);
+            xlsFile = this.createExcelFile(match, matchTeamInfoList, matchTeamMemberInfoList);
             ExcelUtil.setResponseHeader(response, fileName);
             out = response.getOutputStream();
             xlsFile.write(out);
@@ -111,22 +114,31 @@ public class MatchController {
     }
 
     private HSSFWorkbook createExcelFile(Match match, List<MatchTeamInfo> matchTeamInfoList,
-        List<MatchTeamMemberInfo> matchTeamMemberInfoList, String fileName) {
+        List<MatchTeamMemberInfo> matchTeamMemberInfoList) {
+        HSSFWorkbook workBook = null;
+        List<List<String>> matchRowList = Match.parseToRowList(new ArrayList<>(Arrays.asList(match)));
+        workBook = ExcelUtil.buildHSSFWorkbook(Match.defaultName, Match.defaultHeaderList, matchRowList, workBook);
 
-        List<String> matchHeaderList = TeamMember.defaultHeaderList;
-        List<List<String>> matchRowList = TeamMember.parseToRowList(null);
-        HSSFWorkbook wb = ExcelUtil.buildHSSFWorkbook("比赛信息", matchHeaderList, matchRowList, null);
+        List<List<String>> matchTeamRowList = MatchTeamInfo.parseToRowList(matchTeamInfoList);
+        workBook = ExcelUtil.buildHSSFWorkbook(MatchTeamInfo.defaultName, MatchTeamInfo.defaultHeaderList,
+            matchTeamRowList, workBook);
 
-        return wb;
+        List<List<String>> matchTeamMemberRowList = MatchTeamMemberInfo.parseToRowList(matchTeamMemberInfoList);
+        workBook = ExcelUtil.buildHSSFWorkbook(MatchTeamMemberInfo.defaultName, MatchTeamMemberInfo.defaultHeaderList,
+            matchTeamMemberRowList, workBook);
+
+        return workBook;
     }
 
     /**
-     * 球队队员导入
+     * 比赛数据导入
      */
-    @RequestMapping(value = "import", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
-    public void importTeamMemberList(@RequestBody MultipartFile file, HttpServletRequest request,
-        HttpServletResponse response, @RequestHeader(value = "TraceId", required = false) String traceId,
-        @RequestHeader(value = "token", required = false) String token) {
+    @RequestMapping(value = "import/{teamId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
+    public ResponseResult<Match> importMatchInfo(@RequestBody MultipartFile file, @PathVariable("teamId") String teamId,
+        HttpServletRequest request, HttpServletResponse response,
+        @RequestHeader(value = Constants.Header.TOKEN, required = false) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
+        Match match = null;
         if (file != null) {
             InputStream inputStream = null;
             try {
@@ -134,14 +146,41 @@ public class MatchController {
                 String fileName = file.getOriginalFilename();
                 Map<String, List<List<String>>> resultMap = FileAnalysisUtils.convertToRowListMap(inputStream, fileName,
                     null);
+                logger.info(JSON.toJSONString(resultMap));
+                if (CollectionUtils.isNotEmpty(resultMap)) {
+                    String matchId = null;
+                    if (resultMap.containsKey(Match.defaultName)
+                        && CollectionUtils.isNotEmpty(resultMap.get(Match.defaultName))) {
+                        List<Match> matchList = Match.parseToObjectList(resultMap.get(Match.defaultName), teamId);
+                        if (CollectionUtils.isNotEmpty(matchList)) {
+                            match = matchService.add(matchList.get(0));
+                            matchId = match.getMatchId();
+                        }
+                    }
 
-                for (Map.Entry<String, List<List<String>>> entry : resultMap.entrySet()) {
-                    if (CollectionUtils.isNotEmpty(entry.getValue())) {
-
-                        break;
+                    if (StringUtils.isNotBlank(matchId)) {
+                        if (resultMap.containsKey(MatchTeamInfo.defaultName)
+                            && CollectionUtils.isNotEmpty(resultMap.get(MatchTeamInfo.defaultName))) {
+                            List<MatchTeamInfo> matchTeamList = MatchTeamInfo
+                                .parseToObjectList(resultMap.get(MatchTeamInfo.defaultName), teamId, matchId);
+                            if (CollectionUtils.isNotEmpty(matchTeamList)) {
+                                for (MatchTeamInfo matchTeam : matchTeamList) {
+                                    matchTeamInfoService.add(matchTeam);
+                                }
+                            }
+                        }
+                        if (resultMap.containsKey(MatchTeamMemberInfo.defaultName)
+                            && CollectionUtils.isNotEmpty(resultMap.get(MatchTeamMemberInfo.defaultName))) {
+                            List<MatchTeamMemberInfo> matchTeamMemberList = MatchTeamMemberInfo
+                                .parseToObjectList(resultMap.get(MatchTeamMemberInfo.defaultName), teamId, matchId);
+                            if (CollectionUtils.isNotEmpty(matchTeamMemberList)) {
+                                for (MatchTeamMemberInfo matchTeamMember : matchTeamMemberList) {
+                                    matchTeamMemberInfoService.add(matchTeamMember);
+                                }
+                            }
+                        }
                     }
                 }
-
             } catch (BusinessException be) {
                 logger.error("import match info file<" + file.getOriginalFilename() + "> error", be);
                 throw be;
@@ -151,6 +190,7 @@ public class MatchController {
                 ObjectUtils.safeClose(inputStream);
             }
         }
+        return ResponseResult.buildResult(match);
     }
 
 }

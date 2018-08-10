@@ -1,13 +1,36 @@
 package indi.xp.coachview.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import indi.xp.common.utils.CollectionUtils;
+import indi.xp.common.utils.ObjectUtils;
 
 public class Match implements Serializable {
 
     private static final long serialVersionUID = -3758063655019034907L;
 
+    public static final String defaultName = "比赛数据";
+    
+    public static final List<String> defaultHeaderList = new ArrayList<String>(
+        Arrays.asList("比赛编号", "比赛名称", "比赛场次", "比赛时间", "视频编号"));
+
+    public static final Map<String, String> nameToPropertyMapping = new HashMap<>();
+    static {
+        nameToPropertyMapping.put("比赛编号", "matchNumber");
+        nameToPropertyMapping.put("比赛名称", "matchName");
+        nameToPropertyMapping.put("比赛场次", "matchSession");
+        nameToPropertyMapping.put("比赛时间", "matchTime");
+        nameToPropertyMapping.put("视频编号", "matchVideo");
+    }
+
     private String matchId;
-    private String matchName;
+    private String matchNumber; // 比赛编号
+    private String matchName; // 比赛名称
     private String teamId;
     private String matchSession; // 比赛场次
     private String matchTime; // 比赛时间
@@ -22,6 +45,14 @@ public class Match implements Serializable {
 
     public void setMatchId(String matchId) {
         this.matchId = matchId;
+    }
+
+    public String getMatchNumber() {
+        return matchNumber;
+    }
+
+    public void setMatchNumber(String matchNumber) {
+        this.matchNumber = matchNumber;
     }
 
     public String getMatchName() {
@@ -93,6 +124,20 @@ public class Match implements Serializable {
         return "Match [matchId=" + matchId + ", matchName=" + matchName + ", teamId=" + teamId + ", matchSession="
             + matchSession + ", matchTime=" + matchTime + ", matchVideo=" + matchVideo + ", creatorId=" + creatorId
             + ", createTime=" + createTime + ", deleteStatus=" + deleteStatus + "]";
+    }
+
+    public static List<List<String>> parseToRowList(List<Match> matchList) {
+        return ObjectUtils.parseToRowList(matchList, defaultHeaderList, nameToPropertyMapping);
+    }
+
+    public static List<Match> parseToObjectList(List<List<String>> rowList, String teamId) {
+        List<Match> matchList = ObjectUtils.parseToObjectList(rowList, nameToPropertyMapping, Match.class);
+        if (CollectionUtils.isNotEmpty(matchList)) {
+            for (Match match : matchList) {
+                match.setTeamId(teamId);
+            }
+        }
+        return matchList;
     }
 
 }
