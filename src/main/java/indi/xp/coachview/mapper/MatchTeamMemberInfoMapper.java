@@ -6,22 +6,22 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import indi.xp.coachview.model.TeamMember;
+import indi.xp.coachview.model.MatchTeamMemberInfo;
 
 @Mapper
-public interface TeamMemberMapper {
+public interface MatchTeamMemberInfoMapper {
 
-    public TeamMember getTeamMemberById(@Param("id") String id,
+    public MatchTeamMemberInfo getById(@Param("id") String id,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<TeamMember> getTeamMemberByIdList(@Param("idList") List<String> idList,
+    public List<MatchTeamMemberInfo> findByIdList(@Param("idList") List<String> idList,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<TeamMember> findTeamMemberList(@Param("authFilterMap") Map<String, Object[]> authFilterMap);
+    public List<MatchTeamMemberInfo> findList(@Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public void addTeamMember(@Param("teamMember") TeamMember teamMember);
+    public void add(@Param("entity") MatchTeamMemberInfo matchTeamMemberInfo);
 
-    public void updateTeamMember(@Param("teamMember") TeamMember teamMember,
+    public void update(@Param("entity") MatchTeamMemberInfo matchTeamMemberInfo,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public void delete(@Param("id") String id, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
@@ -29,10 +29,10 @@ public interface TeamMemberMapper {
     public void batchDelete(@Param("idList") List<String> idList,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public TeamMember getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+    public MatchTeamMemberInfo getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<TeamMember> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+    public List<MatchTeamMemberInfo> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public Integer queryCount(@Param("paramMap") Map<String, Object[]> paramMap,

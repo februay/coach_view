@@ -27,7 +27,7 @@ public interface TeamMapper {
     public void batchDelete(@Param("idList") List<String> idList,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<Team> getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+    public Team getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public List<Team> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap,

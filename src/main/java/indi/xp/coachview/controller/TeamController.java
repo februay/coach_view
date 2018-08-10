@@ -27,11 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson.JSON;
 
 import indi.xp.coachview.common.Constants;
+import indi.xp.coachview.model.Match;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.model.TeamMember;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.TeamVo;
+import indi.xp.coachview.service.MatchService;
 import indi.xp.coachview.service.TeamCoachService;
 import indi.xp.coachview.service.TeamMemberService;
 import indi.xp.coachview.service.TeamService;
@@ -57,6 +59,9 @@ public class TeamController {
 
     @Autowired
     private TeamCoachService teamCoachService;
+
+    @Autowired
+    private MatchService matchService;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<TeamVo>> findTeamList(
@@ -91,6 +96,13 @@ public class TeamController {
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(teamCoachService.findTeamCoachListByTeamId(id));
+    }
+    
+    @RequestMapping(value = "{id}/team-match", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public ResponseResult<List<Match>> findTeamMatchListByTeamId(@PathVariable(value = "id") String id,
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
+        return ResponseResult.buildResult(matchService.findListByTeamId(id));
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
@@ -169,11 +181,10 @@ public class TeamController {
      * 球队队员导入
      */
     @RequestMapping(value = "{teamId}/import-members", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
-    public void importTeamMemberList(@RequestBody MultipartFile file, HttpServletRequest request,
-        HttpServletResponse response, @PathVariable("teamId") String teamId,
+    public ResponseResult<List<TeamMember>> importTeamMemberList(@RequestBody MultipartFile file,
+        HttpServletRequest request, HttpServletResponse response, @PathVariable("teamId") String teamId,
         @RequestHeader(value = "TraceId", required = false) String traceId,
         @RequestHeader(value = "token", required = false) String token) {
-
         Team team = teamService.getById(teamId);
         if (file != null && team != null) {
             InputStream inputStream = null;
@@ -204,6 +215,7 @@ public class TeamController {
                 ObjectUtils.safeClose(inputStream);
             }
         }
+        return ResponseResult.buildResult(teamMemberService.findTeamMemberListByTeamId(teamId));
     }
 
 }

@@ -30,7 +30,7 @@ public interface UserMapper {
     public void batchDelete(@Param("idList") List<String> idList,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<User> getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+    public User getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public List<User> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap,

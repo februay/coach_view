@@ -28,7 +28,7 @@ public interface SchoolMapper {
     public void batchDelete(@Param("idList") List<String> idList,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
-    public List<School> getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
+    public School getByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
         @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     public List<School> findByWhere(@Param("paramMap") Map<String, Object[]> paramMap,
