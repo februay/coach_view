@@ -147,4 +147,26 @@
         <include refid="query_by_param" />
     </update>
 
+    <select id="statTeamMatchDataInfo" resultType="java.util.Map">
+        select mt.team_id as teamId, t.team_name as teamName,
+        avg(mt.possession_percentage) as avgPossessionPercentage,
+        avg(mt.running_distance) as avgRunningDistance,
+        avg(mt.pass_success_percentage) as avgPassSuccessPercentage,
+        sum(goals) as sumGoals, avg(goals) as avgGoals,
+        sum(losses) as sumLosses, avg(losses) as avgLosses
+        from match_team_info mt left join team t on mt.team_id = t.team_id
+        left join school s on t.school_id = s.school_id
+        where mt.delete_status = 0 and t.delete_status = 0 and s.delete_status = 0
+        <if test="teamId != null and teamId.trim().length() > 0">
+            and mt.team_id = #{teamId}
+        </if>
+        <if test="schoolId != null and schoolId.trim().length() > 0">
+            and t.school_id = #{schoolId}
+        </if>
+        <if test="clubId != null and clubId.trim().length() > 0">
+            and s.club_id = #{clubId}
+        </if>
+        group by mt.team_id
+    </select>
+
 </mapper>

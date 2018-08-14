@@ -17,7 +17,7 @@ public class MatchTeamInfo implements Serializable {
     public static final String defaultName = "球队数据";
 
     public static final List<String> defaultHeaderList = new ArrayList<String>(Arrays.asList("场次", "射门次数（次）", "射正次数（次）",
-        "传球次数（脚）", "传球成功次数（脚）", "传球成功率（%）", "控球率（%）", "跑动距离（km）", "抢断次数", "进球数", "胜平负", "是否对手球队"));
+        "传球次数（脚）", "传球成功次数（脚）", "传球成功率（%）", "控球率（%）", "跑动距离（km）", "抢断次数", "进球数", "失球数", "胜平负", "是否对手球队"));
 
     public static final Map<String, String> nameToPropertyMapping = new HashMap<>();
     static {
@@ -31,6 +31,7 @@ public class MatchTeamInfo implements Serializable {
         nameToPropertyMapping.put("跑动距离（km）", "runningDistance");
         nameToPropertyMapping.put("抢断次数", "steals");
         nameToPropertyMapping.put("进球数", "goals");
+        nameToPropertyMapping.put("失球数", "losses");
         nameToPropertyMapping.put("胜平负", "matchResult");
         nameToPropertyMapping.put("是否对手球队", "opponent");
     }
@@ -48,7 +49,8 @@ public class MatchTeamInfo implements Serializable {
     private Double runningDistance; // 跑动距离(km)
     private Integer steals; // 抢断次数
     private Integer goals; // 进球数
-    private Integer matchResult; // 比赛结果: 1:胜, 0:平, -1:负
+    private Integer losses; // 丢球数
+    private String matchResult; // 比赛结果: 胜|平|负
     private Boolean opponent; // 是否对手球队， 0 : 本队数据， 1： 对手球队数据
     private String createTime;
     private Boolean deleteStatus; // 是否删除
@@ -156,12 +158,20 @@ public class MatchTeamInfo implements Serializable {
     public void setGoals(Integer goals) {
         this.goals = goals;
     }
+    
+    public Integer getLosses() {
+        return losses;
+    }
 
-    public Integer getMatchResult() {
+    public void setLosses(Integer losses) {
+        this.losses = losses;
+    }
+
+    public String getMatchResult() {
         return matchResult;
     }
 
-    public void setMatchResult(Integer matchResult) {
+    public void setMatchResult(String matchResult) {
         this.matchResult = matchResult;
     }
 

@@ -1,6 +1,7 @@
 package indi.xp.coachview.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import indi.xp.coachview.model.Match;
 
@@ -19,5 +20,9 @@ public interface MatchDao {
     public void batchDelete(List<String> idList);
 
     public List<Match> findListByTeamId(String teamId);
+
+    public List<Map<String, Object>> statTeamMatchDataInfo(String clubId, String schoolId, String teamId);
+
+    public List<Map<String, Object>> statTeamMatchResult(String clubId, String schoolId, String teamId);
 
 }

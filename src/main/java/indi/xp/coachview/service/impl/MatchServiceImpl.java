@@ -1,6 +1,7 @@
 package indi.xp.coachview.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,6 +63,16 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public void batchDelete(List<String> idList) {
         matchDao.batchDelete(idList);
+    }
+
+    @Override
+    public List<Map<String, Object>> statTeamMatchDataInfo(String clubId, String schoolId, String teamId) {
+        return matchDao.statTeamMatchDataInfo(clubId, schoolId, teamId);
+    }
+
+    @Override
+    public List<Map<String, Object>> statTeamMatchResult(String clubId, String schoolId, String teamId) {
+        return matchDao.statTeamMatchResult(clubId, schoolId, teamId);
     }
 
 }

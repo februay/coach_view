@@ -16,6 +16,7 @@
         <result column="running_distance" property="runningDistance" />
         <result column="steals" property="steals" />
         <result column="goals" property="goals" />
+        <result column="losses" property="losses" />
         <result column="match_result" property="matchResult" />
         <result column="opponent" property="opponent" />
         <result column="create_time" property="createTime" />
@@ -87,8 +88,8 @@
     </select>
 
     <insert id="add">
-        insert into <include refid="table_name" /> (uuid, match_id, team_id, match_session, shoot_count, shoot_target_count, pass_count, pass_success_count, pass_success_percentage, possession_percentage, running_distance, steals, goals, match_result, opponent, create_time, delete_status)
-        values(#{entity.uuid}, #{entity.matchId}, #{entity.teamId}, #{entity.matchSession}, #{entity.shootCount}, #{entity.shootTargetCount}, #{entity.passCount}, #{entity.passSuccessCount}, #{entity.passSuccessPercentage}, #{entity.possessionPercentage}, #{entity.runningDistance}, #{entity.steals}, #{entity.goals}, #{entity.matchResult}, #{entity.opponent}, #{entity.createTime}, #{entity.deleteStatus})
+        insert into <include refid="table_name" /> (uuid, match_id, team_id, match_session, shoot_count, shoot_target_count, pass_count, pass_success_count, pass_success_percentage, possession_percentage, running_distance, steals, goals, losses, match_result, opponent, create_time, delete_status)
+        values(#{entity.uuid}, #{entity.matchId}, #{entity.teamId}, #{entity.matchSession}, #{entity.shootCount}, #{entity.shootTargetCount}, #{entity.passCount}, #{entity.passSuccessCount}, #{entity.passSuccessPercentage}, #{entity.possessionPercentage}, #{entity.runningDistance}, #{entity.steals}, #{entity.goals}, #{entity.losses}, #{entity.matchResult}, #{entity.opponent}, #{entity.createTime}, #{entity.deleteStatus})
     </insert>
 
     <update id="update">
@@ -107,6 +108,7 @@
         running_distance = #{entity.runningDistance},
         steals = #{entity.steals},
         goals = #{entity.goals},
+        losses = #{entity.losses},
         match_result = #{entity.matchResult},
         opponent = #{entity.opponent},
         create_time = #{entity.createTime},

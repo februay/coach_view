@@ -38,4 +38,8 @@ public interface MatchMapper {
 
     public void updateByWhere(@Param("updateMap") Map<String, Object> updateMap,
         @Param("paramMap") Map<String, Object[]> paramMap, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
+
+    public List<Map<String, Object>> statTeamMatchDataInfo(@Param("clubId") String clubId,
+        @Param("schoolId") String schoolId, @Param("teamId") String teamId,
+        @Param("authFilterMap") Map<String, Object[]> buildAuthFilterMap);
 }

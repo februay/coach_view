@@ -122,4 +122,17 @@ public class MatchDaoImpl implements MatchDao {
         return authFilterMap;
     }
 
+    @Override
+    public List<Map<String, Object>> statTeamMatchDataInfo(String clubId, String schoolId, String teamId) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("team_id", new String[] { teamId });
+        return matchMapper.statTeamMatchDataInfo(clubId, schoolId, teamId, this.buildAuthFilterMap());
+    }
+
+    @Override
+    public List<Map<String, Object>> statTeamMatchResult(String clubId, String schoolId, String teamId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
