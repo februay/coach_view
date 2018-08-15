@@ -129,10 +129,4 @@ public class MatchDaoImpl implements MatchDao {
         return matchMapper.statTeamMatchDataInfo(clubId, schoolId, teamId, this.buildAuthFilterMap());
     }
 
-    @Override
-    public List<Map<String, Object>> statTeamMatchResult(String clubId, String schoolId, String teamId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }

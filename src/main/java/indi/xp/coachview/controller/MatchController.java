@@ -197,7 +197,7 @@ public class MatchController {
 
     ///// **** 球队信息统计 ***** //////
 
-    @ApiOperation(value = "统计球队：场均控球率、场均跑动距离、场均传球成功率、总进球数、场均进球数、总失球数、场均失球数")
+    @ApiOperation(value = "统计球队：场均控球率、场均跑动距离、场均传球成功率、总进球数、场均进球数、总失球数、场均失球数、 胜场数、平场数、负场数")
     @RequestMapping(value = "team/match-data-stat", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<Map<String, Object>>> statTeamAvgPossessionPercentage(
         @RequestParam(value = "clubId", required = false) String clubId,
@@ -207,18 +207,6 @@ public class MatchController {
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
 
         return ResponseResult.buildResult(matchService.statTeamMatchDataInfo(clubId, schoolId, teamId));
-    }
-
-    @ApiOperation(value = "统计球队胜平负")
-    @RequestMapping(value = "team/match-result", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<Map<String, Object>>> statTeamMatchResult(
-        @RequestParam(value = "clubId", required = false) String clubId,
-        @RequestParam(value = "schoolId", required = false) String schoolId,
-        @RequestParam(value = "teamId", required = false) String teamId,
-        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
-        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-
-        return ResponseResult.buildResult(matchService.statTeamMatchResult(clubId, schoolId, teamId));
     }
 
 }

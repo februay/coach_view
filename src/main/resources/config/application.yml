@@ -33,16 +33,16 @@ spring:
     password: coach_view123!@#
     driver-class-name: com.mysql.jdbc.Driver
 logging:
-  file: /data/${spring.application.name}
+  file: /data/${spring.application.name}/logs
 store:
   file:
     visit-domain: http://207.148.82.48:5556
     local-strategy:
-      path: /data/coach-view/files
+      path: /data/${spring.application.name}/files
 ...
 ---
 spring:
   profiles: product
 logging:
-  file: /data/${spring.application.name}
+  file: /data/${spring.application.name}/logs
 ...

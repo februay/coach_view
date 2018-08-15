@@ -51,7 +51,7 @@ public class MatchTeamInfo implements Serializable {
     private Integer goals; // 进球数
     private Integer losses; // 丢球数
     private String matchResult; // 比赛结果: 胜|平|负
-    private Boolean opponent; // 是否对手球队， 0 : 本队数据， 1： 对手球队数据
+    private String opponent; // 是否对手球队， 否 : 本队数据， 是： 对手球队数据
     private String createTime;
     private Boolean deleteStatus; // 是否删除
 
@@ -175,11 +175,11 @@ public class MatchTeamInfo implements Serializable {
         this.matchResult = matchResult;
     }
 
-    public Boolean getOpponent() {
+    public String getOpponent() {
         return opponent;
     }
 
-    public void setOpponent(Boolean opponent) {
+    public void setOpponent(String opponent) {
         this.opponent = opponent;
     }
 

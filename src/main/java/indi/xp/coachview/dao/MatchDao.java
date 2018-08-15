@@ -23,6 +23,4 @@ public interface MatchDao {
 
     public List<Map<String, Object>> statTeamMatchDataInfo(String clubId, String schoolId, String teamId);
 
-    public List<Map<String, Object>> statTeamMatchResult(String clubId, String schoolId, String teamId);
-
 }

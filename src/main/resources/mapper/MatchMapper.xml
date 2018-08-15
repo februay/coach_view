@@ -153,10 +153,13 @@
         avg(mt.running_distance) as avgRunningDistance,
         avg(mt.pass_success_percentage) as avgPassSuccessPercentage,
         sum(goals) as sumGoals, avg(goals) as avgGoals,
-        sum(losses) as sumLosses, avg(losses) as avgLosses
+        sum(losses) as sumLosses, avg(losses) as avgLosses,
+        sum(if(mt.match_result = '胜', 1 , 0)) as countWin,
+        sum(if(mt.match_result = '平', 1 , 0)) as countDraw,
+        sum(if(mt.match_result = '负', 1 , 0)) as countDefeat
         from match_team_info mt left join team t on mt.team_id = t.team_id
         left join school s on t.school_id = s.school_id
-        where mt.delete_status = 0 and t.delete_status = 0 and s.delete_status = 0
+        where mt.delete_status = 0 and mt.opponent = 0 and t.delete_status = 0 and s.delete_status = 0 
         <if test="teamId != null and teamId.trim().length() > 0">
             and mt.team_id = #{teamId}
         </if>

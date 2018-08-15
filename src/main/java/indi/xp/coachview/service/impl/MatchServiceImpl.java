@@ -70,9 +70,4 @@ public class MatchServiceImpl implements MatchService {
         return matchDao.statTeamMatchDataInfo(clubId, schoolId, teamId);
     }
 
-    @Override
-    public List<Map<String, Object>> statTeamMatchResult(String clubId, String schoolId, String teamId) {
-        return matchDao.statTeamMatchResult(clubId, schoolId, teamId);
-    }
-
 }

@@ -175,7 +175,7 @@
     <select id="findClubUserAuthorizedUidList" parameterType="java.lang.String" resultType="java.lang.String">
         select user.uid
         from user left join club on user.club_id = club.club_id  
-        where user.delete_status = 0 and club.delete_status = 0 and 
+        where user.delete_status = 0 and club.delete_status = 0  
             and club.admin_id = #{uid}
         group by user.uid
     </select>
