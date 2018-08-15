@@ -171,5 +171,32 @@
         </if>
         group by mt.team_id
     </select>
+    
+    <select id="statTeamMemberAvgMatchDataInfo" resultType="java.util.Map">
+        select mtm.team_id as teamId, tm.member_id as memberId, tm.name, tm.number as number,
+            tm.age, tm.weight, tm.height, tm.photo, tm.first_position as firstPosition, tm.second_position as secondPosition,
+            tm.attack, tm.speed, tm.technology, tm.defense, tm.team, tm.endurance,
+            avg(mtm.pass_count) as avgPassCount, avg(mtm.pass_success_count) as avgPassSuccessCount,
+            avg(mtm.pass_success_percentage) as avgPassSuccessPercentage, avg(mtm.shoot_count) as avgShootCount, 
+            avg(mtm.shoot_target_count) as avgShootTargetCount,
+            avg(mtm.running_distance) as avgRunningDistance, avg(mtm.steals) as avgSteals, avg(mtm.goals) as avgGoals
+        from match_team_member_info mtm left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = 0
+            left join team_member tm on mtm.team_id = tm.team_id and mtm.member_number = tm.number
+        where mtm.delete_status= 0 and mt.delete_status = 0 and mt.opponent = 0 and mtm.team_id = #{teamId}
+        group by mtm.team_id, tm.member_id
+    </select>
+
+    <select id="statTeamMemberDetailMatchDataInfo" resultType="java.util.Map">
+        select mtm.match_id as matchId, mtm.team_id as
+            teamId, tm.member_id as memberId, tm.name, tm.number as number,
+            mt.match_session as matchSession, mtm.pass_count as passCount, mtm.pass_success_count as passSuccessCount,
+            mtm.pass_success_percentage as passSuccessPercentage, mtm.shoot_count as shootCount, mtm.shoot_target_count as shootTargetCount,
+            mtm.running_distance as runningDistance, mtm.steals as steals, mtm.goals as goals, mtm.position as position
+        from match_team_member_info mtm left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = 0
+            left join team_member tm on mtm.team_id = tm.team_id and mtm.member_number = tm.number
+        where mtm.delete_status= 0 and mt.delete_status = 0 and mt.opponent = 0 and mtm.team_id = #{teamId}
+    </select>
+    
+    
 
 </mapper>

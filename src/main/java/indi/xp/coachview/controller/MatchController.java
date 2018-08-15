@@ -29,6 +29,7 @@ import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.model.Match;
 import indi.xp.coachview.model.MatchTeamInfo;
 import indi.xp.coachview.model.MatchTeamMemberInfo;
+import indi.xp.coachview.model.vo.TeamSingleMatchDataVo;
 import indi.xp.coachview.service.MatchService;
 import indi.xp.coachview.service.MatchTeamInfoService;
 import indi.xp.coachview.service.MatchTeamMemberInfoService;
@@ -197,9 +198,9 @@ public class MatchController {
 
     ///// **** 球队信息统计 ***** //////
 
-    @ApiOperation(value = "统计球队：场均控球率、场均跑动距离、场均传球成功率、总进球数、场均进球数、总失球数、场均失球数、 胜场数、平场数、负场数")
+    @ApiOperation(value = "每个球队场均数据等：场均控球率、场均跑动距离、场均传球成功率、总进球数、场均进球数、总失球数、场均失球数、 胜场数、平场数、负场数")
     @RequestMapping(value = "team/match-data-stat", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<Map<String, Object>>> statTeamAvgPossessionPercentage(
+    public ResponseResult<List<Map<String, Object>>> statTeamMatchDataInfo(
         @RequestParam(value = "clubId", required = false) String clubId,
         @RequestParam(value = "schoolId", required = false) String schoolId,
         @RequestParam(value = "teamId", required = false) String teamId,
@@ -207,6 +208,25 @@ public class MatchController {
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
 
         return ResponseResult.buildResult(matchService.statTeamMatchDataInfo(clubId, schoolId, teamId));
+    }
+    
+    @ApiOperation(value = "单个球队单场次数据：比赛信息， 球队数据、对手球队数据")
+    @RequestMapping(value = "match/{matchId}/team/{teamId}/match-data-stat", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public ResponseResult<TeamSingleMatchDataVo> statTeamSingleMatchDataInfo(@PathVariable("matchId") String matchId,
+        @PathVariable("teamId") String teamId,
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
+
+        return ResponseResult.buildResult(matchService.statTeamSingleMatchDataInfo(matchId));
+    }
+    
+    @ApiOperation(value = "单个球队每个球员数据：比赛信息， 球队数据、对手球队数据")
+    @RequestMapping(value = "team/{teamId}/match-data-stat", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public ResponseResult<List<Map<String, Object>>> statTeamMemberMatchDataInfo(@PathVariable("teamId") String teamId,
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
+
+        return ResponseResult.buildResult(matchService.statTeamMemberMatchDataInfo(teamId));
     }
 
 }
