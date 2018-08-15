@@ -22,7 +22,11 @@ public class PublicController {
 
     private static final Map<String, String> verificationCodeMap = new HashMap<String, String>();
     static {
-        verificationCodeMap.put("13426233960", "1342");
+        verificationCodeMap.put("13426233960", "1342"); // admin
+        verificationCodeMap.put("13811532737", "8322"); // admin
+        verificationCodeMap.put("13000000001", "5210"); // 俱乐部权限
+        verificationCodeMap.put("13000000002", "8425"); // 学校权限
+        verificationCodeMap.put("13000000003", "3397"); // 队权限
     }
 
     public static boolean validateVerificationCode(String key, String value) {

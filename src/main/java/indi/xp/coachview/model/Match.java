@@ -17,7 +17,7 @@ public class Match implements Serializable {
     public static final String defaultName = "比赛数据";
     
     public static final List<String> defaultHeaderList = new ArrayList<String>(
-        Arrays.asList("比赛编号", "比赛名称", "比赛场次", "比赛时间", "视频编号"));
+        Arrays.asList("比赛编号", "比赛名称", "比赛场次", "比赛时间", "比赛视频"));
 
     public static final Map<String, String> nameToPropertyMapping = new HashMap<>();
     static {
@@ -25,7 +25,7 @@ public class Match implements Serializable {
         nameToPropertyMapping.put("比赛名称", "matchName");
         nameToPropertyMapping.put("比赛场次", "matchSession");
         nameToPropertyMapping.put("比赛时间", "matchTime");
-        nameToPropertyMapping.put("视频编号", "matchVideo");
+        nameToPropertyMapping.put("比赛视频", "matchVideo");
     }
 
     private String matchId;

@@ -13,6 +13,12 @@
         <result column="photo" property="photo" />
         <result column="first_position" property="firstPosition" />
         <result column="second_position" property="secondPosition" />
+        <result column="attack" property="attack" />
+        <result column="speed" property="speed" />
+        <result column="technology" property="technology" />
+        <result column="defense" property="defense" />
+        <result column="team" property="team" />
+        <result column="endurance" property="endurance" />
         <result column="team_id" property="teamId" />
         <result column="team_name" property="teamName" />
         <result column="create_time" property="createTime" />
@@ -24,7 +30,7 @@
     </sql>
 
     <sql id="pk_column">member_id</sql>
-    
+
     <sql id="common_where">
         where delete_status = 0
         <include refid="auth_filter" />
@@ -86,76 +92,94 @@
     </select>
 
     <insert id="addTeamMember">
-        insert into team_member(member_id, number, name,
-        id_number, age, height, weight, photo,
-        first_position,
-        second_position, team_id, team_name, create_time, delete_status)
-        values(#{teamMember.memberId},
+    insert into team_member(member_id, number, name, id_number, age, height, weight, photo, first_position, second_position,
+        attack, speed, technology, defense, team, endurance, team_id, team_name, create_time, delete_status)
+    values(#{teamMember.memberId},
         #{teamMember.number},
-        #{teamMember.name}, #{teamMember.idNumber}, #{teamMember.age},
+        #{teamMember.name}, #{teamMember.idNumber},
+        #{teamMember.age},
         #{teamMember.height},
         #{teamMember.weight}, #{teamMember.photo},
-        #{teamMember.firstPosition}, #{teamMember.secondPosition},
+        #{teamMember.firstPosition},
+        #{teamMember.secondPosition},
+        #{teamMember.attack},
+        #{teamMember.speed},
+        #{teamMember.technology},
+        #{teamMember.defense},
+        #{teamMember.team},
+        #{teamMember.endurance},
         #{teamMember.teamId}, #{teamMember.teamName},
         #{teamMember.createTime}, #{teamMember.deleteStatus})
     </insert>
 
     <update id="updateTeamMember">
-        update team_member set
+    update team_member set
         number = #{teamMember.number},
         name = #{teamMember.name},
-        id_number =
-        #{teamMember.idNumber},
+        id_number = #{teamMember.idNumber},
         age = #{teamMember.age},
         height = #{teamMember.height},
         weight = #{teamMember.weight},
         photo = #{teamMember.photo},
         first_position = #{teamMember.firstPosition},
-        second_position =
-        #{teamMember.secondPosition},
+        second_position = #{teamMember.secondPosition},
+        attack = #{teamMember.attack},
+        speed = #{teamMember.speed},
+        technology = #{teamMember.technology},
+        defense = #{teamMember.defense},
+        team = #{teamMember.team},
+        endurance = #{teamMember.endurance},
         team_id = #{teamMember.teamId},
         team_name = #{teamMember.teamName},
-        create_time =
-        #{teamMember.createTime},
+        create_time = #{teamMember.createTime},
         delete_status = #{teamMember.deleteStatus}
-        where member_id = #{teamMember.memberId}
+    where member_id = #{teamMember.memberId}
     </update>
-    
+
     <update id="delete">
-        update <include refid="table_name" /> set
-            delete_status = 1
+        update
+        <include refid="table_name" />
+        set
+        delete_status = 1
         <include refid="common_where" />
         and member_id = #{id}
     </update>
-    
-    <update id="batchDelete" parameterType="java.util.List" >
-        update <include refid="table_name" /> set
-            delete_status = 1
+
+    <update id="batchDelete" parameterType="java.util.List">
+        update
+        <include refid="table_name" />
+        set
+        delete_status = 1
         <include refid="common_where" />
         <include refid="pk_in" />
     </update>
-    
+
     <select id="getByWhere" parameterType="java.util.Map" resultMap="teamMemberResultMap">
-        select * from <include refid="table_name" />
+        select * from
+        <include refid="table_name" />
         <include refid="common_where" />
         <include refid="query_by_param" />
         limit 1
     </select>
 
     <select id="findByWhere" parameterType="java.util.Map" resultMap="teamMemberResultMap">
-        select * from <include refid="table_name" />
+        select * from
+        <include refid="table_name" />
         <include refid="common_where" />
         <include refid="query_by_param" />
     </select>
-    
+
     <select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Integer">
-        select count(1) from <include refid="table_name" />
+        select count(1) from
+        <include refid="table_name" />
         <include refid="common_where" />
         <include refid="query_by_param" />
     </select>
-    
+
     <update id="updateByWhere" parameterType="java.util.Map">
-        update <include refid="table_name" /> set
+        update
+        <include refid="table_name" />
+        set
         <foreach collection="updateMap" item="value" index="key" separator=",">
             ${key} = #{value}
         </foreach>

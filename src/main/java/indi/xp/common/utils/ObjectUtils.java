@@ -1172,7 +1172,8 @@ public final class ObjectUtils {
                     Map<String, Object> objMap = ObjectUtils.objectToMap(obj);
                     for (String header : headerList) {
                         String property = nameToPropertyMapping.get(header);
-                        if (objMap.get(property) != null && StringUtils.isNotBlank(String.valueOf(objMap.get(property)))) {
+                        if (objMap.get(property) != null
+                            && StringUtils.isNotBlank(String.valueOf(objMap.get(property)))) {
                             row.add(String.valueOf(objMap.get(property)));
                         } else {
                             row.add("");
@@ -1180,7 +1181,8 @@ public final class ObjectUtils {
                     }
                     rowList.add(row);
                 } catch (Exception e) {
-                    logger.error("parse member to map error, member=" + JSON.toJSONString(obj), e);
+                    logger.error("parse object<{}> to row error, member=" + JSON.toJSONString(obj),
+                        obj.getClass().getName(), e);
                 }
             }
         }
@@ -1218,7 +1220,8 @@ public final class ObjectUtils {
                     T obj = JSON.parseObject(JSON.toJSONString(objMap), beanClass);
                     objList.add(obj);
                 } catch (Exception e) {
-                    logger.error("parse row to {} object error, row=" + JSON.toJSONString(row), beanClass.getName(), e);
+                    logger.error("parse row to object<{}> error, row=" + JSON.toJSONString(row), beanClass.getName(),
+                        e);
                 }
             }
         }

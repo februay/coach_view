@@ -74,6 +74,24 @@ public class TeamMemberServiceImpl implements TeamMemberService {
             if (StringUtils.isNotBlank(teamMember.getSecondPosition())) {
                 dbTeamMember.setSecondPosition(teamMember.getSecondPosition());
             }
+            if (teamMember.getAttack() != null) {
+                dbTeamMember.setAttack(teamMember.getAttack());
+            }
+            if (teamMember.getSpeed() != null) {
+                dbTeamMember.setSpeed(teamMember.getSpeed());
+            }
+            if (teamMember.getTechnology() != null) {
+                dbTeamMember.setTechnology(teamMember.getTechnology());
+            }
+            if (teamMember.getDefense() != null) {
+                dbTeamMember.setDefense(teamMember.getDefense());
+            }
+            if (teamMember.getTeam() != null) {
+                dbTeamMember.setTeam(teamMember.getTeam());
+            }
+            if (teamMember.getEndurance() != null) {
+                dbTeamMember.setEndurance(teamMember.getEndurance());
+            }
             if (StringUtils.isNotBlank(teamMember.getTeamId())) {
                 dbTeamMember.setTeamId(teamMember.getTeamId());
             }
