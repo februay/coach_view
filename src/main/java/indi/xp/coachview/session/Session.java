@@ -9,12 +9,13 @@ public class Session implements Serializable {
     private static final long serialVersionUID = -962224562523414811L;
 
     private String sessionId;
+    private String uid;
     private UserVo sessionUser;
     private Long createTime = System.currentTimeMillis();
     private Long updateSessionTime;
     private Long sessionValidateTime;
     private Boolean loginBySuperKey; // 是否使用superKey登录产品
-    private SessionConext sessionConext ;
+    private SessionConext sessionConext;
 
     public Session() {
     }
@@ -29,6 +30,9 @@ public class Session implements Serializable {
 
     public void setSessionUser(UserVo sessionUser) {
         this.sessionUser = sessionUser;
+        if (sessionUser != null) {
+            this.uid = sessionUser.getUid();
+        }
     }
 
     public Long getSessionValidateTime() {
@@ -53,6 +57,14 @@ public class Session implements Serializable {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public Long getUpdateSessionTime() {

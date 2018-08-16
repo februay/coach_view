@@ -20,6 +20,7 @@ import indi.xp.coachview.model.vo.UserVo;
 import indi.xp.coachview.service.SysRoleService;
 import indi.xp.coachview.service.SysUserRoleService;
 import indi.xp.coachview.service.UserService;
+import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.exception.BusinessException;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
@@ -82,6 +83,11 @@ public class UserServiceImpl implements UserService {
         userVo.setUid(UuidUtils.generateUUID());
         userVo.setCreateTime(currentTime);
         userVo.setActiveTime(currentTime);
+        
+        SessionConext sessionContext = SessionConext.getThreadLocalSessionContext();
+        if(sessionContext != null) {
+            userVo.setCreatorId(sessionContext.getUid());
+        }
 
         User user = new User();
         BeanUtils.copyProperties(userVo, user);

@@ -33,12 +33,12 @@ public class MatchTeamInfoServiceImpl implements MatchTeamInfoService {
     }
 
     @Override
-    public MatchTeamInfo add(MatchTeamInfo match) {
+    public MatchTeamInfo add(MatchTeamInfo matchTeamInfo) {
         String currentTime = DateUtils.getDateTime();
-        match.setUuid(UuidUtils.generateUUID());
-        match.setCreateTime(currentTime);
-        match.setDeleteStatus(false);
-        return matchTeamInfoDao.add(match);
+        matchTeamInfo.setUuid(UuidUtils.generateUUID());
+        matchTeamInfo.setCreateTime(currentTime);
+        matchTeamInfo.setDeleteStatus(false);
+        return matchTeamInfoDao.add(matchTeamInfo);
     }
 
     @Override

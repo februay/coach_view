@@ -13,6 +13,7 @@ import indi.xp.coachview.model.MatchTeamInfo;
 import indi.xp.coachview.model.vo.TeamSingleMatchDataVo;
 import indi.xp.coachview.service.MatchService;
 import indi.xp.coachview.service.MatchTeamInfoService;
+import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.UuidUtils;
@@ -42,6 +43,12 @@ public class MatchServiceImpl implements MatchService {
         match.setMatchId(UuidUtils.generateUUID());
         match.setCreateTime(currentTime);
         match.setDeleteStatus(false);
+        
+        SessionConext sessionContext = SessionConext.getThreadLocalSessionContext();
+        if(sessionContext != null) {
+            match.setCreatorId(sessionContext.getUid());
+        }
+        
         return matchDao.add(match);
     }
 

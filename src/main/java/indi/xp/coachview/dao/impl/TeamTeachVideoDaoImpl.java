@@ -1,6 +1,5 @@
 package indi.xp.coachview.dao.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,87 +13,60 @@ import com.alibaba.fastjson.JSON;
 
 import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.TeamDao;
-import indi.xp.coachview.dao.TeamMemberDao;
-import indi.xp.coachview.mapper.TeamMemberMapper;
-import indi.xp.coachview.model.TeamMember;
-import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.dao.TeamTeachVideoDao;
+import indi.xp.coachview.mapper.TeamTeachVideoMapper;
+import indi.xp.coachview.model.TeamTeachVideo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.StringUtils;
 
 @Repository
-public class TeamMemberDaoImpl implements TeamMemberDao {
+public class TeamTeachVideoDaoImpl implements TeamTeachVideoDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(TeamMemberDaoImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(TeamTeachVideoDaoImpl.class);
 
     @Autowired
-    private TeamMemberMapper teamMemberMapper;
+    private TeamTeachVideoMapper teamTeachVideoMapper;
 
     @Autowired
     private TeamDao teamDao;
 
     @Override
-    public TeamMember getTeamMemberById(String teamMemberId) {
-        return teamMemberMapper.getTeamMemberById(teamMemberId, this.buildAuthFilterMap());
+    public TeamTeachVideo getById(String id) {
+        return teamTeachVideoMapper.getById(id, this.buildAuthFilterMap());
     }
 
     @Override
-    public List<TeamMember> getTeamMemberByIdList(List<String> idList) {
-        return teamMemberMapper.getTeamMemberByIdList(idList, this.buildAuthFilterMap());
+    public TeamTeachVideo add(TeamTeachVideo teachVideo) {
+        teamTeachVideoMapper.add(teachVideo);
+        return teachVideo;
     }
 
     @Override
-    public List<TeamMember> findTeamMemberList() {
-        return teamMemberMapper.findTeamMemberList(this.buildAuthFilterMap());
-    }
-
-    @Override
-    public TeamMember addTeamMember(TeamMember teamMember) {
-        teamMemberMapper.addTeamMember(teamMember);
-        return teamMember;
-    }
-
-    @Override
-    public TeamMember updateTeamMember(TeamMember teamMember) {
-        teamMemberMapper.updateTeamMember(teamMember, this.buildAuthFilterMap());
-        return teamMember;
+    public TeamTeachVideo update(TeamTeachVideo teachVideo) {
+        teamTeachVideoMapper.update(teachVideo, this.buildAuthFilterMap());
+        return teachVideo;
     }
 
     @Override
     public void delete(String id) {
         if (StringUtils.isNotBlank(id)) {
-            teamMemberMapper.delete(id, this.buildAuthFilterMap());
+            teamTeachVideoMapper.delete(id, this.buildAuthFilterMap());
         }
     }
 
     @Override
     public void batchDelete(List<String> idList) {
         if (CollectionUtils.isNotEmpty(idList)) {
-            teamMemberMapper.batchDelete(idList, this.buildAuthFilterMap());
+            teamTeachVideoMapper.batchDelete(idList, this.buildAuthFilterMap());
         }
     }
 
     @Override
-    public List<TeamMember> findListByTeamId(String teamId) {
+    public List<TeamTeachVideo> findListByTeamId(String teamId) {
         Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
         paramMap.put("team_id", new String[] { teamId });
-        return teamMemberMapper.findByWhere(paramMap, this.buildAuthFilterMap());
-    }
-
-    @Override
-    public List<ListItemVo> findTeamMemberItemList() {
-        List<TeamMember> teamMemberList = teamMemberMapper.findTeamMemberList(null);
-        List<ListItemVo> itemList = new ArrayList<>();
-        if (CollectionUtils.isNotEmpty(teamMemberList)) {
-            teamMemberList.forEach(teamMember -> {
-                ListItemVo item = new ListItemVo();
-                item.setId(teamMember.getMemberId());
-                item.setName(teamMember.getTeamName());
-                item.addExtra("photo", teamMember.getPhoto());
-                itemList.add(item);
-            });
-        }
-        return itemList;
+        return teamTeachVideoMapper.findByWhere(paramMap, this.buildAuthFilterMap());
     }
 
     private Map<String, Object[]> buildAuthFilterMap() {
@@ -132,12 +104,12 @@ public class TeamMemberDaoImpl implements TeamMemberDao {
                 }
             } else {
                 // 不能访问
-                authFilterMap.put("member_id", new String[] { "" });
+                authFilterMap.put("team_id", new String[] { "" });
             }
 
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
             logger.info("SessionContext<{}> {} AuthFilterMap: " + JSON.toJSONString(authFilterMap),
-                sessionContext.getSessionId(), TeamMember.class.getSimpleName());
+                sessionContext.getSessionId(), TeamTeachVideo.class.getSimpleName());
         } else {
             logger.warn("SessionContext is null");
         }

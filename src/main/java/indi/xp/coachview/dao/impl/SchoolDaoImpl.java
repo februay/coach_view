@@ -16,7 +16,6 @@ import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.SchoolDao;
 import indi.xp.coachview.mapper.SchoolMapper;
 import indi.xp.coachview.model.School;
-import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
@@ -131,7 +130,7 @@ public class SchoolDaoImpl implements SchoolDao {
 
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
             logger.info("SessionContext<{}> {} AuthFilterMap: " + JSON.toJSONString(authFilterMap),
-                sessionContext.getSessionId(), TeamCoach.class.getSimpleName());
+                sessionContext.getSessionId(), School.class.getSimpleName());
         } else {
             logger.warn("SessionContext is null");
         }

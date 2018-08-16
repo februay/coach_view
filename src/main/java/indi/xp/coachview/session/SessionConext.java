@@ -22,6 +22,7 @@ public class SessionConext implements SessionConextConstants, Serializable {
     private static ThreadLocal<SessionConext> threadLocalSessionContext = new ThreadLocal<SessionConext>();
 
     private String sessionId;
+    private String uid;
     private UserVo sessionUser;
     private Map<String, Object> attributeMap = new HashMap<>();
     private Map<String, String> attributeClazzMap = new HashMap<>();
@@ -77,13 +78,16 @@ public class SessionConext implements SessionConextConstants, Serializable {
         return this.getSessionUser() != null
             && StringUtils.isNotBlank(this.getSessionUser().getUid(), this.getSessionId());
     }
-    
+
     public SessionConext() {
     }
 
     public SessionConext(String sessionId, UserVo sessionUser) {
         this.sessionId = sessionId;
         this.sessionUser = sessionUser;
+        if (sessionUser != null) {
+            this.uid = sessionUser.getUid();
+        }
     }
 
     public String getSessionId() {
@@ -92,6 +96,14 @@ public class SessionConext implements SessionConextConstants, Serializable {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public UserVo getSessionUser() {

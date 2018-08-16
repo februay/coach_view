@@ -15,7 +15,6 @@ import com.alibaba.fastjson.JSON;
 import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.UserDao;
 import indi.xp.coachview.mapper.UserMapper;
-import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
@@ -125,7 +124,7 @@ public class UserDaoImpl implements UserDao {
 
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
             logger.info("SessionContext<{}> {} AuthFilterMap: " + JSON.toJSONString(authFilterMap),
-                sessionContext.getSessionId(), TeamCoach.class.getSimpleName());
+                sessionContext.getSessionId(), User.class.getSimpleName());
         } else {
             logger.warn("SessionContext is null");
         }

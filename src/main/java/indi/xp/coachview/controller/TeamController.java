@@ -30,12 +30,14 @@ import indi.xp.coachview.model.Match;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.model.TeamMember;
+import indi.xp.coachview.model.TeamTeachVideo;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.TeamVo;
 import indi.xp.coachview.service.MatchService;
 import indi.xp.coachview.service.TeamCoachService;
 import indi.xp.coachview.service.TeamMemberService;
 import indi.xp.coachview.service.TeamService;
+import indi.xp.coachview.service.TeamTeachVideoService;
 import indi.xp.common.constants.MediaType;
 import indi.xp.common.exception.BusinessException;
 import indi.xp.common.restful.ResponseResult;
@@ -58,6 +60,9 @@ public class TeamController {
 
     @Autowired
     private TeamCoachService teamCoachService;
+
+    @Autowired
+    private TeamTeachVideoService teamTeachVideoService;
 
     @Autowired
     private MatchService matchService;
@@ -95,6 +100,13 @@ public class TeamController {
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(teamCoachService.findTeamCoachListByTeamId(id));
+    }
+
+    @RequestMapping(value = "{id}/team-teach-video", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public ResponseResult<List<TeamTeachVideo>> findTeamTeachVideoListByTeamId(@PathVariable(value = "id") String id,
+        @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
+        return ResponseResult.buildResult(teamTeachVideoService.findListByTeamId(id));
     }
 
     @RequestMapping(value = "{id}/team-match", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)

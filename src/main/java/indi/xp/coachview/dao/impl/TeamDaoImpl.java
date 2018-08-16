@@ -16,7 +16,6 @@ import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.TeamDao;
 import indi.xp.coachview.mapper.TeamMapper;
 import indi.xp.coachview.model.Team;
-import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
@@ -127,7 +126,7 @@ public class TeamDaoImpl implements TeamDao {
 
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
             logger.info("SessionContext<{}> {} AuthFilterMap: " + JSON.toJSONString(authFilterMap),
-                sessionContext.getSessionId(), TeamCoach.class.getSimpleName());
+                sessionContext.getSessionId(), Team.class.getSimpleName());
         } else {
             logger.warn("SessionContext is null");
         }

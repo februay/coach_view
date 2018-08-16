@@ -16,7 +16,6 @@ import indi.xp.coachview.dao.MatchTeamMemberInfoDao;
 import indi.xp.coachview.dao.TeamDao;
 import indi.xp.coachview.mapper.MatchTeamMemberInfoMapper;
 import indi.xp.coachview.model.MatchTeamMemberInfo;
-import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.StringUtils;
@@ -115,7 +114,7 @@ public class MatchTeamMemberInfoDaoImpl implements MatchTeamMemberInfoDao {
 
             logger.info("SessionContext<{}> : " + JSON.toJSONString(sessionContext), sessionContext.getSessionId());
             logger.info("SessionContext<{}> {} AuthFilterMap: " + JSON.toJSONString(authFilterMap),
-                sessionContext.getSessionId(), TeamCoach.class.getSimpleName());
+                sessionContext.getSessionId(), MatchTeamMemberInfo.class.getSimpleName());
         } else {
             logger.warn("SessionContext is null");
         }

@@ -123,7 +123,7 @@ public class SessionManager {
     public Session buildSession(UserVo user, boolean rememberMe) {
         if (user != null) {
             String uid = user.getUid();
-            String sessionId = uid + ":" + UuidUtils.generateUUID();
+            String sessionId = uid + ":" + DateUtils.getDate("yyyyMMddHHmmss") + "-" + UuidUtils.generateUUID();
             Session session = new Session(sessionId);
             session.setSessionUser(user);
             session.setSessionConext(SessionConext.build(sessionId, user));
