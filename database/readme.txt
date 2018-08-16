@@ -17,6 +17,28 @@ mysql：
 
 访问地址：http://207.148.82.48:5555/swagger-ui.html
 
+=============================
+
+创建数据库：
+
+CREATE DATABASE coach_view default character set utf8mb4 collate utf8mb4_general_ci;
+
+创建用户：
+
+
+CREATE USER 'coach_view'@'localhost' IDENTIFIED BY 'coach_view123!@#';
+GRANT ALL PRIVILEGES ON coach_view.* TO 'coach_view'@'localhost';
+flush privileges;
+
+CREATE USER 'coach_view'@'%' IDENTIFIED BY 'coach_view123!@#';
+GRANT ALL PRIVILEGES ON coach_view.* TO 'coach_view'@'%';
+flush privileges;
+
+修改密码:
+
+　方法1: mysqladmin -u用户名 -p旧密码 password 新密码。 
+
+  方法2: set password for root@localhost = password('123');  
 
 ==============================
 

@@ -28,11 +28,6 @@ public class MatchTeamInfoServiceImpl implements MatchTeamInfoService {
     }
 
     @Override
-    public List<MatchTeamInfo> findByIdList(List<String> idList, boolean isOpponent) {
-        return matchTeamInfoDao.findByIdList(idList, isOpponent);
-    }
-
-    @Override
     public MatchTeamInfo add(MatchTeamInfo matchTeamInfo) {
         String currentTime = DateUtils.getDateTime();
         matchTeamInfo.setUuid(UuidUtils.generateUUID());

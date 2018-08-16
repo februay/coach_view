@@ -1,6 +1,9 @@
 package indi.xp.coachview.common;
 
 public class Constants {
+    
+    public static final String TRUE = "是";
+    public static final String FALSE = "否";
 
     /**
      * http请求header变量名

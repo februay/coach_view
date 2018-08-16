@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
 
+import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.MatchTeamInfoDao;
 import indi.xp.coachview.dao.TeamDao;
@@ -75,15 +76,10 @@ public class MatchTeamInfoDaoImpl implements MatchTeamInfoDao {
     }
 
     @Override
-    public List<MatchTeamInfo> findByIdList(List<String> idList, boolean isOpponent) {
-        return null;
-    }
-
-    @Override
     public MatchTeamInfo getByMatchId(String matchId, boolean isOpponent) {
         Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
         paramMap.put("match_id", new String[] { matchId });
-        paramMap.put("opponent", new Object[] { isOpponent });
+        paramMap.put("opponent", new String[] { isOpponent ? Constants.TRUE : Constants.FALSE });
         return matchTeamInfoMapper.getByWhere(paramMap, this.buildAuthFilterMap());
     }
 

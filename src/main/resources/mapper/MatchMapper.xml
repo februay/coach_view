@@ -148,7 +148,7 @@
     </update>
 
     <select id="statTeamMatchDataInfo" resultType="java.util.Map">
-        select mt.team_id as teamId, t.team_name as teamName,
+        select t.team_id as teamId, t.team_name as teamName,
         avg(mt.possession_percentage) as avgPossessionPercentage,
         avg(mt.running_distance) as avgRunningDistance,
         avg(mt.pass_success_percentage) as avgPassSuccessPercentage,
@@ -157,11 +157,11 @@
         sum(if(mt.match_result = '胜', 1 , 0)) as countWin,
         sum(if(mt.match_result = '平', 1 , 0)) as countDraw,
         sum(if(mt.match_result = '负', 1 , 0)) as countDefeat
-        from match_team_info mt left join team t on mt.team_id = t.team_id
-        left join school s on t.school_id = s.school_id
-        where mt.delete_status = 0 and mt.opponent = 0 and t.delete_status = 0 and s.delete_status = 0 
+        from team t left join match_team_info mt on mt.team_id = t.team_id
+            left join school s on t.school_id = s.school_id
+        where t.delete_status = 0 and (mt.delete_status = 0 and mt.opponent = 0 or mt.match_id is null) and s.delete_status = 0 
         <if test="teamId != null and teamId.trim().length() > 0">
-            and mt.team_id = #{teamId}
+            and t.team_id = #{teamId}
         </if>
         <if test="schoolId != null and schoolId.trim().length() > 0">
             and t.school_id = #{schoolId}
@@ -169,34 +169,33 @@
         <if test="clubId != null and clubId.trim().length() > 0">
             and s.club_id = #{clubId}
         </if>
-        group by mt.team_id
+        group by t.team_id
     </select>
     
     <select id="statTeamMemberAvgMatchDataInfo" resultType="java.util.Map">
-        select mtm.team_id as teamId, tm.member_id as memberId, tm.name, tm.number as number,
+        select tm.team_id as teamId, tm.member_id as memberId, tm.name, tm.number as number,
             tm.age, tm.weight, tm.height, tm.photo, tm.first_position as firstPosition, tm.second_position as secondPosition,
             tm.attack, tm.speed, tm.technology, tm.defense, tm.team, tm.endurance,
             avg(mtm.pass_count) as avgPassCount, avg(mtm.pass_success_count) as avgPassSuccessCount,
             avg(mtm.pass_success_percentage) as avgPassSuccessPercentage, avg(mtm.shoot_count) as avgShootCount, 
             avg(mtm.shoot_target_count) as avgShootTargetCount,
             avg(mtm.running_distance) as avgRunningDistance, avg(mtm.steals) as avgSteals, avg(mtm.goals) as avgGoals
-        from match_team_member_info mtm left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = 0
-            left join team_member tm on mtm.team_id = tm.team_id and mtm.member_number = tm.number
-        where mtm.delete_status= 0 and mt.delete_status = 0 and mt.opponent = 0 and mtm.team_id = #{teamId}
-        group by mtm.team_id, tm.member_id
+        from team_member tm left join match_team_member_info mtm on mtm.team_id = tm.team_id and mtm.member_number = tm.number 
+            left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = 0
+        where tm.team_id = #{teamId} and tm.delete_status = 0 and (mtm.delete_status= 0 or mtm.match_id is null) 
+            and (mt.delete_status = 0 and mt.opponent = 0 or mt.match_id is null) 
+        group by tm.team_id, tm.member_id
     </select>
 
     <select id="statTeamMemberDetailMatchDataInfo" resultType="java.util.Map">
-        select mtm.match_id as matchId, mtm.team_id as
-            teamId, tm.member_id as memberId, tm.name, tm.number as number,
-            mt.match_session as matchSession, mtm.pass_count as passCount, mtm.pass_success_count as passSuccessCount,
+        select tm.team_id as teamId, tm.member_id as memberId, tm.name, tm.number as number,
+            mtm.match_id as matchId, mt.match_session as matchSession, mtm.pass_count as passCount, mtm.pass_success_count as passSuccessCount,
             mtm.pass_success_percentage as passSuccessPercentage, mtm.shoot_count as shootCount, mtm.shoot_target_count as shootTargetCount,
             mtm.running_distance as runningDistance, mtm.steals as steals, mtm.goals as goals, mtm.position as position
-        from match_team_member_info mtm left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = 0
-            left join team_member tm on mtm.team_id = tm.team_id and mtm.member_number = tm.number
-        where mtm.delete_status= 0 and mt.delete_status = 0 and mt.opponent = 0 and mtm.team_id = #{teamId}
+        from team_member tm left join match_team_member_info mtm on mtm.team_id = tm.team_id and mtm.member_number = tm.number 
+            left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = 0
+        where tm.team_id = #{teamId} and tm.delete_status = 0 and (mtm.delete_status= 0 or mtm.match_id is null) 
+            and (mt.delete_status = 0 and mt.opponent = 0 or mt.match_id is null)
     </select>
-    
-    
 
 </mapper>

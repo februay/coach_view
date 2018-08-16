@@ -10,8 +10,6 @@ public interface MatchTeamInfoService {
 
     public List<MatchTeamInfo> findByIdList(List<String> idList);
 
-    public List<MatchTeamInfo> findByIdList(List<String> idList, boolean isOpponent);
-
     public MatchTeamInfo add(MatchTeamInfo matchTeamInfo);
 
     public MatchTeamInfo update(MatchTeamInfo matchTeamInfo);
