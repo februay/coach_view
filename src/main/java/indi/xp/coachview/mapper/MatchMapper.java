@@ -54,4 +54,16 @@ public interface MatchMapper {
      */
     public List<Map<String, Object>> statTeamMemberDetailMatchDataInfo(@Param("teamId") String teamId,
         @Param("authFilterMap") Map<String, Object[]> buildAuthFilterMap);
+
+    /**
+     * 单个球队比赛场均数据
+     */
+    public List<Map<String, Object>> statSingleTeamAvgMatchDataInfo(@Param("teamId") String teamId,
+        @Param("params") Map<String, Object> params);
+
+    /**
+     * 单个球队比赛明细数据
+     */
+    public List<Map<String, Object>> statSingleTeamDetailMatchDataInfo(@Param("teamId") String teamId,
+        @Param("params") Map<String, Object> params);
 }

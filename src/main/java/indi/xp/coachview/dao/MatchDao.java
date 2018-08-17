@@ -36,4 +36,14 @@ public interface MatchDao {
      */
     public List<Map<String, Object>> statTeamMemberDetailMatchDataInfo(String teamId);
 
+    /**
+     * 单个球队比赛场均数据
+     */
+    public List<Map<String, Object>> statSingleTeamAvgMatchDataInfo(String teamId, Map<String, Object> params);
+
+    /**
+     * 单个球队比赛明细数据
+     */
+    public List<Map<String, Object>> statSingleTeamDetailMatchDataInfo(String teamId, Map<String, Object> params);
+
 }

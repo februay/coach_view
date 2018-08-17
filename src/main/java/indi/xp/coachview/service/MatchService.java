@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import indi.xp.coachview.model.Match;
+import indi.xp.coachview.model.vo.SingleTeamMatchDataVo;
 import indi.xp.coachview.model.vo.TeamSingleMatchDataVo;
 
 public interface MatchService {
@@ -35,6 +36,11 @@ public interface MatchService {
     /**
      * 单个球队每个球员数据：比赛信息， 球队数据、对手球队数据
      */
-    public List<Map<String, Object>> statTeamMemberMatchDataInfo(String teamId);
+    public List<Map<String, Object>> statTeamMemberMatchDataInfo(String teamId, boolean withDetails);
+
+    /**
+     * 单个球队对比对手数据
+     */
+    public SingleTeamMatchDataVo statSingleTeamMatchDataInfo(String teamId, boolean withDetails, Map<String, Object> params);
 
 }

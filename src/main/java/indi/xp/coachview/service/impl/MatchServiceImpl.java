@@ -7,9 +7,11 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.dao.MatchDao;
 import indi.xp.coachview.model.Match;
 import indi.xp.coachview.model.MatchTeamInfo;
+import indi.xp.coachview.model.vo.SingleTeamMatchDataVo;
 import indi.xp.coachview.model.vo.TeamSingleMatchDataVo;
 import indi.xp.coachview.service.MatchService;
 import indi.xp.coachview.service.MatchTeamInfoService;
@@ -43,12 +45,12 @@ public class MatchServiceImpl implements MatchService {
         match.setMatchId(UuidUtils.generateUUID());
         match.setCreateTime(currentTime);
         match.setDeleteStatus(false);
-        
+
         SessionConext sessionContext = SessionConext.getThreadLocalSessionContext();
-        if(sessionContext != null) {
+        if (sessionContext != null) {
             match.setCreatorId(sessionContext.getUid());
         }
-        
+
         return matchDao.add(match);
     }
 
@@ -99,12 +101,12 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
-    public List<Map<String, Object>> statTeamMemberMatchDataInfo(String teamId) {
+    public List<Map<String, Object>> statTeamMemberMatchDataInfo(String teamId, boolean widgetDetails) {
         List<Map<String, Object>> memberAvgList = matchDao.statTeamMemberAvgMatchDataInfo(teamId);
-        List<Map<String, Object>> memberDetailList = matchDao.statTeamMemberDetailMatchDataInfo(teamId);
 
         // 为每个球员数据添加明细数据
-        if (CollectionUtils.isNotEmpty(memberAvgList)) {
+        if (CollectionUtils.isNotEmpty(memberAvgList) && widgetDetails) {
+            List<Map<String, Object>> memberDetailList = matchDao.statTeamMemberDetailMatchDataInfo(teamId);
             for (Map<String, Object> memberAvg : memberAvgList) {
                 String memberId = String.valueOf(memberAvg.get("memberId"));
                 List<Map<String, Object>> details = new ArrayList<>();
@@ -117,6 +119,43 @@ public class MatchServiceImpl implements MatchService {
             }
         }
         return memberAvgList;
+    }
+
+    @Override
+    public SingleTeamMatchDataVo statSingleTeamMatchDataInfo(String teamId, boolean withDetails,
+        Map<String, Object> params) {
+        SingleTeamMatchDataVo result = new SingleTeamMatchDataVo();
+        List<Map<String, Object>> teamAvgList = matchDao.statSingleTeamAvgMatchDataInfo(teamId, params);
+        if (CollectionUtils.isNotEmpty(teamAvgList)) {
+            for (Map<String, Object> teamAvg : teamAvgList) {
+                if (Constants.TRUE.equals(String.valueOf(teamAvg.get("opponent")))) {
+                    result.setOpponentTeamInfo(teamAvg);
+                } else {
+                    result.setTeamInfo(teamAvg);
+                }
+            }
+            if (withDetails) {
+                List<Map<String, Object>> teamDetailList = matchDao.statSingleTeamDetailMatchDataInfo(teamId, params);
+                List<Map<String, Object>> teamDetails = new ArrayList<>();
+                List<Map<String, Object>> opponentTeamDetails = new ArrayList<>();
+                if (CollectionUtils.isNotEmpty(teamDetailList)) {
+                    for (Map<String, Object> teamDetail : teamDetailList) {
+                        if (Constants.TRUE.equals(String.valueOf(teamDetail.get("opponent")))) {
+                            opponentTeamDetails.add(teamDetail);
+                        } else if(Constants.FALSE.equals(String.valueOf(teamDetail.get("opponent")))){
+                            teamDetails.add(teamDetail);
+                        }
+                    }
+                }
+                if (result.getTeamInfo() != null) {
+                    result.getTeamInfo().put("details", teamDetails);
+                }
+                if (result.getOpponentTeamInfo() != null) {
+                    result.getOpponentTeamInfo().put("details", opponentTeamDetails);
+                }
+            }
+        }
+        return result;
     }
 
 }

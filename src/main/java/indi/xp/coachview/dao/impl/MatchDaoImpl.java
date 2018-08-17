@@ -136,4 +136,14 @@ public class MatchDaoImpl implements MatchDao {
         return matchMapper.statTeamMemberDetailMatchDataInfo(teamId, this.buildAuthFilterMap());
     }
 
+    @Override
+    public List<Map<String, Object>> statSingleTeamAvgMatchDataInfo(String teamId, Map<String, Object> params) {
+        return matchMapper.statSingleTeamAvgMatchDataInfo(teamId, params);
+    }
+
+    @Override
+    public List<Map<String, Object>> statSingleTeamDetailMatchDataInfo(String teamId, Map<String, Object> params) {
+        return matchMapper.statSingleTeamDetailMatchDataInfo(teamId, params);
+    }
+
 }
