@@ -30,7 +30,7 @@ public class SessionFilter implements Filter {
 
     private static final Logger logger = LoggerFactory.getLogger(SessionFilter.class);
 
-    private static final boolean sessionFilterSwitchOn = false; // 开启SessionFilter
+    private static final boolean sessionFilterSwitchOn = true; // 开启SessionFilter
 
     // 不进行拦截的URL
     private String[] skipPaths = { "OPTIONS|*", "*|/swagger-ui.html", "*|/webjars", "*|/swagger", "*|/v2/api-docs",
