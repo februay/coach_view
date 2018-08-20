@@ -36,6 +36,11 @@ public class MatchTeamInfo implements Serializable {
         nameToPropertyMapping.put("是否对手球队", "opponent");
     }
 
+    public static final String MATCH_RESULT_WIN = "胜";// 胜
+    public static final String MATCH_RESULT_DRAW = "平"; // 平
+    public static final String MATCH_RESULT_DEFEAT = "负"; // 负
+    
+
     private String uuid;
     private String matchId;
     private String teamId;

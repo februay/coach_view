@@ -93,7 +93,13 @@ public class ClubDaoImpl implements ClubDao {
                 // 不限制
             } else if (sessionContext.hasRole(SysRoleEnum.CLUB)) {
                 // 只能访问管理员是自己的俱乐部
-                authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
+                List<String> authorizedClbuIdList = this
+                    .findClubUserAuthorizedClubIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedClbuIdList)) {
+                    authFilterMap.put("club_id", authorizedClbuIdList.toArray());
+                } else {
+                    authFilterMap.put("club_id", new String[] { "" });
+                }
             } else if (sessionContext.hasRole(SysRoleEnum.SCHOOL)) {
                 // 只能访问自己所在的俱乐部
                 List<String> authorizedClbuIdList = this
@@ -124,6 +130,13 @@ public class ClubDaoImpl implements ClubDao {
             logger.warn("SessionContext is null");
         }
         return authFilterMap;
+    }
+    
+    /**
+     * 获取Club角色用户有权限的clubId列表
+     */
+    private List<String> findClubUserAuthorizedClubIdList(String uid) {
+        return clubMapper.findClubUserAuthorizedClubIdList(uid);
     }
 
     /**

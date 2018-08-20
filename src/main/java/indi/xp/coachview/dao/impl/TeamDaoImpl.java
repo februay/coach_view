@@ -118,7 +118,13 @@ public class TeamDaoImpl implements TeamDao {
                 }
             } else if (sessionContext.hasRole(SysRoleEnum.TEAM)) {
                 // 只能访问自己所在的俱乐部
-                authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
+                List<String> authorizedTeamIdList = this
+                    .findTeamUserAuthorizedTeamIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedTeamIdList)) {
+                    authFilterMap.put("team_id", authorizedTeamIdList.toArray());
+                } else {
+                    authFilterMap.put("team_id", new String[] { "" });
+                }
             } else {
                 // 不能访问
                 authFilterMap.put("team_id", new String[] { "" });

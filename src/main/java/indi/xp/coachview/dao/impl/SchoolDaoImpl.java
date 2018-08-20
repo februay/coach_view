@@ -113,7 +113,13 @@ public class SchoolDaoImpl implements SchoolDao {
                 }
             } else if (sessionContext.hasRole(SysRoleEnum.SCHOOL)) {
                 // 只能访问管理员是自己的学校
-                authFilterMap.put("admin_id", new String[] { sessionContext.getSessionUser().getUid() });
+                List<String> authorizedSchoolIdList = this
+                    .findSchoolUserAuthorizedSchoolIdList(sessionContext.getSessionUser().getUid());
+                if (CollectionUtils.isNotEmpty(authorizedSchoolIdList)) {
+                    authFilterMap.put("school_id", authorizedSchoolIdList.toArray());
+                } else {
+                    authFilterMap.put("school_id", new String[] { "" });
+                }
             } else if (sessionContext.hasRole(SysRoleEnum.TEAM)) {
                 // 只能访问自己所在的学校
                 List<String> authorizedSchoolIdList = this
@@ -142,6 +148,13 @@ public class SchoolDaoImpl implements SchoolDao {
      */
     private List<String> findClubUserAuthorizedSchoolIdList(String uid) {
         return schoolMapper.findClubUserAuthorizedSchoolIdList(uid);
+    }
+    
+    /**
+     * 获取School角色用户有权限的schoolId列表
+     */
+    private List<String> findSchoolUserAuthorizedSchoolIdList(String uid) {
+        return schoolMapper.findSchoolUserAuthorizedSchoolIdList(uid);
     }
 
     /**

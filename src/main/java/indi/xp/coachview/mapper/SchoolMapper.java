@@ -43,6 +43,11 @@ public interface SchoolMapper {
      * 获取CLUB角色用户有权限的schoolId列表
      */
     public List<String> findClubUserAuthorizedSchoolIdList(@Param("uid") String uid);
+    
+    /**
+     * 获取School角色用户有权限的schoolId列表
+     */
+    public List<String> findSchoolUserAuthorizedSchoolIdList(@Param("uid") String uid);
 
     /**
      * 获取TEAM角色用户有权限的schoolId列表

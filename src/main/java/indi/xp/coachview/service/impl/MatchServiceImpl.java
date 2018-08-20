@@ -148,10 +148,30 @@ public class MatchServiceImpl implements MatchService {
                     }
                 }
                 if (result.getTeamInfo() != null) {
+                    int consecutiveWins = 0; // 连胜
+                    for (Map<String, Object> info : teamDetails) {
+                        String matchResult = String.valueOf(info.get("matchResult"));
+                        if (MatchTeamInfo.MATCH_RESULT_WIN.equals(matchResult)) {
+                            consecutiveWins++;
+                        } else {
+                            consecutiveWins = 0;
+                        }
+                    }
                     result.getTeamInfo().put("details", teamDetails);
+                    result.getTeamInfo().put("consecutiveWins", consecutiveWins);
                 }
                 if (result.getOpponentTeamInfo() != null) {
+                    int consecutiveWins = 0; // 连胜
+                    for (Map<String, Object> info : opponentTeamDetails) {
+                        String matchResult = String.valueOf(info.get("matchResult"));
+                        if (MatchTeamInfo.MATCH_RESULT_WIN.equals(matchResult)) {
+                            consecutiveWins++;
+                        } else {
+                            consecutiveWins = 0;
+                        }
+                    }
                     result.getOpponentTeamInfo().put("details", opponentTeamDetails);
+                    result.getOpponentTeamInfo().put("consecutiveWins", consecutiveWins);
                 }
             }
         }

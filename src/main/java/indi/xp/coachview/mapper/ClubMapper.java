@@ -40,6 +40,11 @@ public interface ClubMapper {
         @Param("paramMap") Map<String, Object[]> paramMap, @Param("authFilterMap") Map<String, Object[]> authFilterMap);
 
     /**
+     * 获取Club角色用户有权限的clubId列表
+     */
+    public List<String> findClubUserAuthorizedClubIdList(@Param("uid") String uid);
+    
+    /**
      * 获取SCHOOL角色用户有权限的clubId列表
      */
     public List<String> findSchoolUserAuthorizedClubIdList(@Param("uid") String uid);
