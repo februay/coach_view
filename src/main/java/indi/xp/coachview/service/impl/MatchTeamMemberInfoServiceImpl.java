@@ -66,4 +66,9 @@ public class MatchTeamMemberInfoServiceImpl implements MatchTeamMemberInfoServic
         matchTeamMemberInfoDao.batchDelete(idList);
     }
 
+    @Override
+    public void deleteByMatchId(String matchId) {
+        matchTeamMemberInfoDao.deleteByMatchId(matchId);
+    }
+
 }

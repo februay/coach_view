@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.alibaba.druid.util.FnvHash.Constants;
 import com.alibaba.fastjson.JSON;
 
 import indi.xp.coachview.common.SysRoleEnum;
@@ -119,6 +120,15 @@ public class MatchTeamMemberInfoDaoImpl implements MatchTeamMemberInfoDao {
             logger.warn("SessionContext is null");
         }
         return authFilterMap;
+    }
+    
+    @Override
+    public void deleteByMatchId(String matchId) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("match_id", new String[] { matchId });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("delete_status", Constants.VALIDATE);
+        matchTeamMemberInfoMapper.updateByWhere(updateMap, paramMap, this.buildAuthFilterMap());
     }
 
 }

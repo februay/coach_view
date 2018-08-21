@@ -15,6 +15,7 @@ import indi.xp.coachview.model.vo.SingleTeamMatchDataVo;
 import indi.xp.coachview.model.vo.TeamSingleMatchDataVo;
 import indi.xp.coachview.service.MatchService;
 import indi.xp.coachview.service.MatchTeamInfoService;
+import indi.xp.coachview.service.MatchTeamMemberInfoService;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
@@ -28,6 +29,9 @@ public class MatchServiceImpl implements MatchService {
 
     @Autowired
     private MatchTeamInfoService matchTeamInfoService;
+    
+    @Autowired
+    private MatchTeamMemberInfoService matchTeamMemberInfoService;
 
     @Override
     public Match getById(String id) {
@@ -69,6 +73,10 @@ public class MatchServiceImpl implements MatchService {
         Match dbMatch = this.getById(id);
         if (dbMatch != null) {
             matchDao.delete(id);
+            
+            // 级联删除
+            matchTeamInfoService.deleteByMatchId(id);
+            matchTeamMemberInfoService.deleteByMatchId(id);
         }
     }
 

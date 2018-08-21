@@ -20,4 +20,6 @@ public interface MatchTeamMemberInfoService{
 
     public List<MatchTeamMemberInfo> findListByMatchId(String matchId);
 
+    public void deleteByMatchId(String matchId);
+
 }

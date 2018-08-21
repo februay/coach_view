@@ -163,7 +163,7 @@
         from team t left join match_team_info mt on mt.team_id = t.team_id
             left join school s on t.school_id = s.school_id
             left join `match` m on mt.match_id = m.match_id
-        where t.delete_status = 0 and (mt.delete_status = 0 and mt.opponent = 0 or mt.match_id is null) and s.delete_status = 0 
+        where t.delete_status = 0 and (mt.delete_status = 0 and mt.opponent = '否' or mt.match_id is null) and s.delete_status = 0 
             and (m.delete_status = 0 or m.match_id is null) 
         <if test="teamId != null and teamId.trim().length() > 0">
             and t.team_id = #{teamId}
@@ -186,10 +186,10 @@
             avg(mtm.shoot_target_count) as avgShootTargetCount,
             avg(mtm.running_distance) as avgRunningDistance, avg(mtm.steals) as avgSteals, avg(mtm.goals) as avgGoals
         from team_member tm left join match_team_member_info mtm on mtm.team_id = tm.team_id and mtm.member_number = tm.number 
-            left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = 0
+            left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = '否'
             left join `match` m on mt.match_id = m.match_id
         where tm.team_id = #{teamId} and tm.delete_status = 0 and (mtm.delete_status= 0 or mtm.match_id is null) 
-            and (mt.delete_status = 0 and mt.opponent = 0 or mt.match_id is null) 
+            and (mt.delete_status = 0 and mt.opponent = '否' or mt.match_id is null) 
             and (m.delete_status = 0 or m.match_id is null) 
         group by tm.team_id, tm.member_id
     </select>
@@ -202,10 +202,10 @@
             mtm.shoot_count as shootCount, mtm.shoot_target_count as shootTargetCount, mtm.running_distance as runningDistance, 
             mtm.steals as steals, mtm.goals as goals, mtm.position as position
         from team_member tm left join match_team_member_info mtm on mtm.team_id = tm.team_id and mtm.member_number = tm.number 
-            left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = 0 
+            left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = '否' 
             left join `match` m on mt.match_id = m.match_id
         where tm.team_id = #{teamId} and tm.delete_status = 0 and mtm.delete_status= 0
-            and (mt.delete_status = 0 and mt.opponent = 0) and m.delete_status = 0
+            and (mt.delete_status = 0 and mt.opponent = '否') and m.delete_status = 0
     </select>
 
     <select id="statSingleTeamAvgMatchDataInfo" resultType="java.util.Map">
@@ -224,7 +224,7 @@
         from team t left join match_team_info mt on mt.team_id = t.team_id
             left join `match` m on mt.match_id = m.match_id
         where t.team_id = #{teamId} and t.delete_status = 0 
-            and (mt.delete_status = 0 and mt.opponent = 0 or mt.match_id is null)  
+            and (mt.delete_status = 0 and mt.opponent = '否' or mt.match_id is null)  
             and (m.delete_status = 0 or m.match_id is null) 
         group by mt.opponent
     </select>
@@ -242,7 +242,7 @@
         from team t left join match_team_info mt on mt.team_id = t.team_id 
             left join `match` m on mt.match_id = m.match_id
         where t.team_id = #{teamId} and t.delete_status = 0 
-            and (mt.delete_status = 0 and mt.opponent = 0) 
+            and (mt.delete_status = 0 and mt.opponent = '否') 
             and m.delete_status = 0
         order by mt.match_session
     </select>

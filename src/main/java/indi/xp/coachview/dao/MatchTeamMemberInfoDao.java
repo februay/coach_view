@@ -20,4 +20,6 @@ public interface MatchTeamMemberInfoDao {
 
     public List<MatchTeamMemberInfo> findListByMatchId(String matchId);
 
+    public void deleteByMatchId(String matchId);
+
 }

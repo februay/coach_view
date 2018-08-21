@@ -22,4 +22,6 @@ public interface MatchTeamInfoService {
 
     public MatchTeamInfo getByMatchId(String matchId, boolean isOpponent);
 
+    public void deleteByMatchId(String matchId);
+
 }

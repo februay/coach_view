@@ -1,9 +1,12 @@
 package indi.xp.coachview.common;
 
 public class Constants {
-    
+
     public static final String TRUE = "是";
     public static final String FALSE = "否";
+
+    public static final String VALIDATE = "1";
+    public static final String INVALIDATE = "0";
 
     /**
      * http请求header变量名

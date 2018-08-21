@@ -130,4 +130,13 @@ public class MatchTeamInfoDaoImpl implements MatchTeamInfoDao {
         return authFilterMap;
     }
 
+    @Override
+    public void deleteByMatchId(String matchId) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("match_id", new String[] { matchId });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("delete_status", Constants.VALIDATE);
+        matchTeamInfoMapper.updateByWhere(updateMap, paramMap, this.buildAuthFilterMap());
+    }
+
 }
