@@ -19,6 +19,7 @@ public class WebUtils {
         } else {
             response.setContentType("text/html;charset=UTF-8");
         }
+        response.setCharacterEncoding("UTF-8");
         PrintWriter writer = null;
         try {
             writer = response.getWriter();
@@ -29,18 +30,18 @@ public class WebUtils {
         } finally {
             ObjectUtils.safeClose(writer);
         }
-        
-//        try{
-//            writer = response.getWriter();
-//            writer.append(message);
-//        } catch (Exception e){
-//            logger.error("sendMessage Error: " + e.getMessage(), e);
-//            try {
-//                response.sendError(500);
-//            } catch (IOException e1) {
-//                e1.printStackTrace();
-//            }
-//        }
+
+        // try{
+        // writer = response.getWriter();
+        // writer.append(message);
+        // } catch (Exception e){
+        // logger.error("sendMessage Error: " + e.getMessage(), e);
+        // try {
+        // response.sendError(500);
+        // } catch (IOException e1) {
+        // e1.printStackTrace();
+        // }
+        // }
     }
 
     /**
