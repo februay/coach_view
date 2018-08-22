@@ -75,13 +75,13 @@ public class SessionManager {
                 } else {
                     sessionCount++;
                     logger.info(
-                        " >>> {}\t current session<{}> to time"
+                        " >>> {}\t current session<{}> to time "
                             + DateUtils.formatDate(session.getSessionValidateTime(), "yyyy-MM-dd HH:mm:ss"),
                         sessionCount, sessionId);
                 }
             }
         }
-        logger.info("success checkSessionMap: sessionCount:" + sessionCount);
+        logger.info("success checkSessionMap: sessionCount: " + sessionCount);
     }
 
     public Session addSession(UserVo user) {
