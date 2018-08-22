@@ -8,7 +8,7 @@ import indi.xp.coachview.model.vo.ListItemVo;
 
 public interface ClubService {
 
-    public ClubVo getById(String id);
+    public ClubVo getById(String id, boolean withSchool);
 
     public List<Club> findByIdList(List<String> idList);
 

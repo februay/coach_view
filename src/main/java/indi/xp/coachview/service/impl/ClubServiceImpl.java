@@ -27,11 +27,14 @@ public class ClubServiceImpl implements ClubService {
     private SchoolService schoolService;
 
     @Override
-    public ClubVo getById(String id) {
+    public ClubVo getById(String id, boolean withSchool) {
         ClubVo clubVo = null;
         Club club = clubDao.getClubById(id);
         if (club != null) {
             clubVo = new ClubVo(club);
+            if (withSchool) {
+                clubVo.setSchoolList(schoolService.findListByClubId(clubVo.getClubId(), false));
+            }
         }
         return clubVo;
     }
@@ -71,7 +74,7 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public Club update(Club club) {
-        Club dbClub = club != null ? this.getById(club.getClubId()) : null;
+        Club dbClub = club != null ? clubDao.getClubById(club.getClubId()) : null;
         if (dbClub != null) {
             if (StringUtils.isNotBlank(club.getClubName())) {
                 dbClub.setClubName(club.getClubName());
@@ -119,7 +122,7 @@ public class ClubServiceImpl implements ClubService {
 
     @Override
     public void delete(String id) {
-        Club dbClub = this.getById(id);
+        Club dbClub = clubDao.getClubById(id);
         if (dbClub != null) {
             clubDao.delete(id);
         }

@@ -48,7 +48,7 @@ public class SchoolController {
     public ResponseResult<SchoolVo> getSchoolById(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(schoolService.getById(id));
+        return ResponseResult.buildResult(schoolService.getById(id, true));
     }
 
     @RequestMapping(value = "{id}/team", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)

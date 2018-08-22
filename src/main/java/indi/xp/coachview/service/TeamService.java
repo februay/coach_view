@@ -8,7 +8,7 @@ import indi.xp.coachview.model.vo.TeamVo;
 
 public interface TeamService {
 
-    public TeamVo getById(String id);
+    public TeamVo getById(String id, boolean withMember);
 
     public List<Team> findByIdList(List<String> idList);
 

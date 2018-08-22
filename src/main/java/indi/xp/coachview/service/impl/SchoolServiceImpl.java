@@ -27,11 +27,14 @@ public class SchoolServiceImpl implements SchoolService {
     private TeamService teamService;
 
     @Override
-    public SchoolVo getById(String id) {
+    public SchoolVo getById(String id, boolean withTeam) {
         SchoolVo schoolVo = null;
         School school = schoolDao.getSchoolById(id);
         if (school != null) {
             schoolVo = new SchoolVo(school);
+            if (withTeam) {
+                schoolVo.setTeamList(teamService.findTeamListBySchoolId(schoolVo.getSchoolId(), false));
+            }
         }
         return schoolVo;
     }
@@ -71,7 +74,7 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     public School update(School school) {
-        School dbSchool = school != null ? this.getById(school.getSchoolId()) : null;
+        School dbSchool = school != null ? schoolDao.getSchoolById(school.getSchoolId()) : null;
         if (dbSchool != null) {
             if (StringUtils.isNotBlank(school.getSchoolName())) {
                 dbSchool.setSchoolName(school.getSchoolName());
@@ -125,7 +128,7 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Override
     public void delete(String id) {
-        School dbSchool = this.getById(id);
+        School dbSchool = schoolDao.getSchoolById(id);
         if (dbSchool != null) {
             schoolDao.delete(id);
         }

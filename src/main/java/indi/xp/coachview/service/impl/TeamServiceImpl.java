@@ -31,11 +31,16 @@ public class TeamServiceImpl implements TeamService {
     private TeamCoachService teamCoachService;
 
     @Override
-    public TeamVo getById(String id) {
+    public TeamVo getById(String id, boolean withMember) {
         TeamVo teamVo = null;
         Team team = teamDao.getTeamById(id);
         if (team != null) {
             teamVo = new TeamVo(team);
+            if (withMember) {
+                String teamId = teamVo.getTeamId();
+                teamVo.setTeamMemberList(teamMemberService.findTeamMemberListByTeamId(teamId));
+                teamVo.setTeamCoachList(teamCoachService.findTeamCoachListByTeamId(teamId));
+            }
         }
         return teamVo;
     }
@@ -77,7 +82,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public Team update(Team team) {
-        Team dbTeam = team != null ? this.getById(team.getTeamId()) : null;
+        Team dbTeam = team != null ? teamDao.getTeamById(team.getTeamId()) : null;
         if (dbTeam != null) {
             if (StringUtils.isNotBlank(team.getTeamName())) {
                 dbTeam.setTeamName(team.getTeamName());
@@ -131,7 +136,7 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void delete(String id) {
-        Team dbTeam = this.getById(id);
+        Team dbTeam = teamDao.getTeamById(id);
         if (dbTeam != null) {
             teamDao.delete(id);
         }

@@ -85,7 +85,7 @@ public class TeamController {
     public ResponseResult<TeamVo> getTeamById(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(teamService.getById(id));
+        return ResponseResult.buildResult(teamService.getById(id, true));
     }
 
     @RequestMapping(value = "{id}/team-member", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
@@ -150,7 +150,7 @@ public class TeamController {
         BufferedOutputStream bos = null;
         File csvFile = null;
         try {
-            Team team = teamService.getById(teamId);
+            Team team = teamService.getById(teamId, false);
             List<TeamMember> memberList = teamMemberService.findTeamMemberListByTeamId(teamId);
             String fileName = team.getTeamName() + "-members-export.csv";
 
@@ -196,7 +196,7 @@ public class TeamController {
         HttpServletRequest request, HttpServletResponse response, @PathVariable("teamId") String teamId,
         @RequestHeader(value = Constants.Header.TOKEN, required = false) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        Team team = teamService.getById(teamId);
+        Team team = teamService.getById(teamId, false);
         if (file != null && team != null) {
             InputStream inputStream = null;
             try {

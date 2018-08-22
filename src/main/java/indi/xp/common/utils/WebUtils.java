@@ -15,13 +15,15 @@ public class WebUtils {
 
     public static void sendMessage(HttpServletResponse response, String message) {
         response.setContentType("text/html;charset=UTF-8");
-        PrintWriter writer;
+        PrintWriter writer = null;
         try {
             writer = response.getWriter();
             writer.write(message);
-            writer.close();
+            writer.flush();
         } catch (IOException e) {
             logger.error("sendMessage Error: " + e.getMessage(), e);
+        } finally {
+            ObjectUtils.safeClose(writer);
         }
     }
 

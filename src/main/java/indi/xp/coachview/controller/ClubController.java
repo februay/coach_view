@@ -48,7 +48,7 @@ public class ClubController {
     public ResponseResult<ClubVo> getClubById(@PathVariable(value = "id") String id,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(clubService.getById(id));
+        return ResponseResult.buildResult(clubService.getById(id, true));
     }
 
     @RequestMapping(value = "{id}/school", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
