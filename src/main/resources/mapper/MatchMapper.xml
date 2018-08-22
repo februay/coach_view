@@ -224,7 +224,7 @@
         from team t left join match_team_info mt on mt.team_id = t.team_id
             left join `match` m on mt.match_id = m.match_id
         where t.team_id = #{teamId} and t.delete_status = 0 
-            and (mt.delete_status = 0 and mt.opponent = '否' or mt.match_id is null)  
+            and (mt.delete_status = 0 or mt.match_id is null)  
             and (m.delete_status = 0 or m.match_id is null) 
         group by mt.opponent
     </select>
@@ -242,8 +242,7 @@
         from team t left join match_team_info mt on mt.team_id = t.team_id 
             left join `match` m on mt.match_id = m.match_id
         where t.team_id = #{teamId} and t.delete_status = 0 
-            and (mt.delete_status = 0 and mt.opponent = '否') 
-            and m.delete_status = 0
+            and mt.delete_status = 0 and m.delete_status = 0
         order by mt.match_session
     </select>
 
