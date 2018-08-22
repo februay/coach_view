@@ -119,7 +119,7 @@ public class SessionFilter implements Filter {
         response.setStatus(440);
         BusinessException be = new BusinessException(BusinessErrorCodeEnum.NO_SESSION);
         String result = JSON.toJSONString(ResponseResult.buildErrorResult(be));
-        WebUtils.sendMessage(response, result);
+        WebUtils.sendMessage(response, result, "application/json;charset=UTF-8");
     }
 
     /**
@@ -130,7 +130,7 @@ public class SessionFilter implements Filter {
         response.setStatus(403); // Forbidden
         BusinessException be = new BusinessException(BusinessErrorCodeEnum.USER_AND_SESSION_NOT_MATCH);
         String result = JSON.toJSONString(ResponseResult.buildErrorResult(be));
-        WebUtils.sendMessage(response, result);
+        WebUtils.sendMessage(response, result, "application/json;charset=UTF-8");
     }
 
     /**
