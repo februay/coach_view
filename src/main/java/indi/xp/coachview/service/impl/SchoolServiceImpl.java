@@ -11,6 +11,7 @@ import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.SchoolVo;
 import indi.xp.coachview.service.SchoolService;
+import indi.xp.coachview.service.TeamService;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
@@ -21,6 +22,9 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Autowired
     private SchoolDao schoolDao;
+
+    @Autowired
+    private TeamService teamService;
 
     @Override
     public SchoolVo getById(String id) {
@@ -38,13 +42,16 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public List<SchoolVo> findList() {
+    public List<SchoolVo> findList(boolean withTeam) {
         List<SchoolVo> schoolVoList = null;
         List<School> schoolList = schoolDao.findSchoolList();
         if (CollectionUtils.isNotEmpty(schoolList)) {
             schoolVoList = new ArrayList<>();
             for (School school : schoolList) {
                 SchoolVo schoolVo = new SchoolVo(school);
+                if (withTeam) {
+                    schoolVo.setTeamList(teamService.findTeamListBySchoolId(schoolVo.getSchoolId(), false));
+                }
                 schoolVoList.add(schoolVo);
             }
         }
@@ -125,13 +132,16 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
-    public List<SchoolVo> findListByClubId(String clubId) {
+    public List<SchoolVo> findListByClubId(String clubId, boolean withTeam) {
         List<SchoolVo> schoolVoList = null;
         List<School> schoolList = schoolDao.findListByClubId(clubId);
         if (CollectionUtils.isNotEmpty(schoolList)) {
             schoolVoList = new ArrayList<>();
             for (School school : schoolList) {
                 SchoolVo schoolVo = new SchoolVo(school);
+                if (withTeam) {
+                    schoolVo.setTeamList(teamService.findTeamListBySchoolId(schoolVo.getSchoolId(), false));
+                }
                 schoolVoList.add(schoolVo);
             }
         }

@@ -71,7 +71,7 @@ public class TeamController {
     public ResponseResult<List<TeamVo>> findTeamList(
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
-        return ResponseResult.buildResult(teamService.findList());
+        return ResponseResult.buildResult(teamService.findList(true));
     }
 
     @RequestMapping(value = "list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)

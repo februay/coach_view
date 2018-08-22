@@ -11,6 +11,7 @@ import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.vo.ClubVo;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.ClubService;
+import indi.xp.coachview.service.SchoolService;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.StringUtils;
@@ -21,6 +22,9 @@ public class ClubServiceImpl implements ClubService {
 
     @Autowired
     private ClubDao clubDao;
+
+    @Autowired
+    private SchoolService schoolService;
 
     @Override
     public ClubVo getById(String id) {
@@ -38,13 +42,16 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
-    public List<ClubVo> findList() {
+    public List<ClubVo> findList(boolean withSchool) {
         List<ClubVo> clubVoList = null;
         List<Club> clubList = clubDao.findClubList();
         if (CollectionUtils.isNotEmpty(clubList)) {
             clubVoList = new ArrayList<>();
             for (Club club : clubList) {
                 ClubVo clubVo = new ClubVo(club);
+                if (withSchool) {
+                    clubVo.setSchoolList(schoolService.findListByClubId(clubVo.getClubId(), false));
+                }
                 clubVoList.add(clubVo);
             }
         }

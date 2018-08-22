@@ -12,7 +12,7 @@ public interface ClubService {
 
     public List<Club> findByIdList(List<String> idList);
 
-    public List<ClubVo> findList();
+    public List<ClubVo> findList(boolean withSchool);
 
     public Club add(Club club);
 

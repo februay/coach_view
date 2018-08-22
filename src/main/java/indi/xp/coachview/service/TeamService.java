@@ -12,7 +12,7 @@ public interface TeamService {
 
     public List<Team> findByIdList(List<String> idList);
 
-    public List<TeamVo> findList();
+    public List<TeamVo> findList(boolean withMember);
 
     public Team add(Team team);
 
@@ -20,7 +20,7 @@ public interface TeamService {
 
     public void delete(String id);
 
-    public List<TeamVo> findTeamListBySchoolId(String schoolId);
+    public List<TeamVo> findTeamListBySchoolId(String schoolId, boolean withMember);
 
     public List<ListItemVo> findTeamItemList();
 

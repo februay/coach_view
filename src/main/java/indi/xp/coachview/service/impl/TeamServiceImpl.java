@@ -10,6 +10,8 @@ import indi.xp.coachview.dao.TeamDao;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.TeamVo;
+import indi.xp.coachview.service.TeamCoachService;
+import indi.xp.coachview.service.TeamMemberService;
 import indi.xp.coachview.service.TeamService;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
@@ -21,6 +23,12 @@ public class TeamServiceImpl implements TeamService {
 
     @Autowired
     private TeamDao teamDao;
+
+    @Autowired
+    private TeamMemberService teamMemberService;
+
+    @Autowired
+    private TeamCoachService teamCoachService;
 
     @Override
     public TeamVo getById(String id) {
@@ -38,13 +46,18 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<TeamVo> findList() {
+    public List<TeamVo> findList(boolean withMember) {
         List<TeamVo> teamVoList = null;
         List<Team> teamList = teamDao.findTeamList();
         if (CollectionUtils.isNotEmpty(teamList)) {
             teamVoList = new ArrayList<>();
             for (Team team : teamList) {
                 TeamVo teamVo = new TeamVo(team);
+                if (withMember) {
+                    String teamId = teamVo.getTeamId();
+                    teamVo.setTeamMemberList(teamMemberService.findTeamMemberListByTeamId(teamId));
+                    teamVo.setTeamCoachList(teamCoachService.findTeamCoachListByTeamId(teamId));
+                }
                 teamVoList.add(teamVo);
             }
         }
@@ -125,13 +138,18 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
-    public List<TeamVo> findTeamListBySchoolId(String schoolId) {
+    public List<TeamVo> findTeamListBySchoolId(String schoolId, boolean withMember) {
         List<TeamVo> teamVoList = null;
         List<Team> teamList = teamDao.findListBySchoolId(schoolId);
         if (CollectionUtils.isNotEmpty(teamList)) {
             teamVoList = new ArrayList<>();
             for (Team team : teamList) {
                 TeamVo teamVo = new TeamVo(team);
+                if (withMember) {
+                    String teamId = teamVo.getTeamId();
+                    teamVo.setTeamMemberList(teamMemberService.findTeamMemberListByTeamId(teamId));
+                    teamVo.setTeamCoachList(teamCoachService.findTeamCoachListByTeamId(teamId));
+                }
                 teamVoList.add(teamVo);
             }
         }

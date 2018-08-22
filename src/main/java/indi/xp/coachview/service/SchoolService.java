@@ -12,7 +12,7 @@ public interface SchoolService {
 
     public List<School> findByIdList(List<String> idList);
 
-    public List<SchoolVo> findList();
+    public List<SchoolVo> findList(boolean withTeam);
 
     public School add(School school);
 
@@ -20,7 +20,7 @@ public interface SchoolService {
 
     public void delete(String id);
 
-    public List<SchoolVo> findListByClubId(String clubId);
+    public List<SchoolVo> findListByClubId(String clubId, boolean withTeam);
     
     public List<ListItemVo> findSchoolItemList();
 
