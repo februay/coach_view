@@ -5,6 +5,7 @@ import java.util.List;
 import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.Team;
+import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 
 public interface TeamDao {
@@ -49,5 +50,7 @@ public interface TeamDao {
     public void syncTeamClubInfo(Club club);
 
     public void syncTeamSchoolInfo(School school);
+
+    public void syncTeamUserInfo(User user);
 
 }

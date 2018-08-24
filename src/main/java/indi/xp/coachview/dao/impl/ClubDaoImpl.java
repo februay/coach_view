@@ -16,6 +16,7 @@ import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.ClubDao;
 import indi.xp.coachview.mapper.ClubMapper;
 import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
@@ -151,6 +152,15 @@ public class ClubDaoImpl implements ClubDao {
      */
     private List<String> findTeamUserAuthorizedClubIdList(String uid) {
         return clubMapper.findTeamUserAuthorizedClubIdList(uid);
+    }
+
+    @Override
+    public void syncSchoolUserInfo(User user) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("admin_id", new String[] { user.getUid() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("admin_name", user.getName());
+        clubMapper.updateByWhere(updateMap, paramMap, null);
     }
 
 }

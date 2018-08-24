@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import indi.xp.coachview.dao.ClubDao;
 import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ClubVo;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.ClubService;
@@ -147,6 +148,11 @@ public class ClubServiceImpl implements ClubService {
     @Override
     public List<ListItemVo> findClubItemList() {
         return clubDao.findClubItemList();
+    }
+
+    @Override
+    public void syncSchoolUserInfo(User user) {
+        clubDao.syncSchoolUserInfo(user);
     }
 
 }

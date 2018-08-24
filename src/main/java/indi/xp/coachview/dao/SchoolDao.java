@@ -4,6 +4,7 @@ import java.util.List;
 
 import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
+import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 
 public interface SchoolDao {
@@ -29,5 +30,7 @@ public interface SchoolDao {
     public void deleteByClubId(String clubId);
 
     public void syncSchoolClubInfo(Club club);
+
+    public void syncSchoolUserInfo(User user);
 
 }

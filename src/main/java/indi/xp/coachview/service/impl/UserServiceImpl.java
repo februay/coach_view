@@ -17,8 +17,11 @@ import indi.xp.coachview.model.SysUserRole;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.UserVo;
+import indi.xp.coachview.service.ClubService;
+import indi.xp.coachview.service.SchoolService;
 import indi.xp.coachview.service.SysRoleService;
 import indi.xp.coachview.service.SysUserRoleService;
+import indi.xp.coachview.service.TeamService;
 import indi.xp.coachview.service.UserService;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.exception.BusinessException;
@@ -38,6 +41,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private SysUserRoleService sysUserRoleService;
+
+    @Autowired
+    private ClubService clubService;
+
+    @Autowired
+    private SchoolService schoolService;
+
+    @Autowired
+    private TeamService teamService;
 
     @Override
     public UserVo getUserByUid(String uid) {
@@ -133,6 +145,8 @@ public class UserServiceImpl implements UserService {
                 throw new BusinessException(BusinessErrorCodeEnum.USER_EXISTS);
             }
 
+            boolean syncRelatedEntityInfo = false;
+
             if (userVo.getUserName() != null) {
                 user.setUserName(userVo.getUserName());
             }
@@ -167,6 +181,12 @@ public class UserServiceImpl implements UserService {
                 user.setTeamId(userVo.getTeamId());
             }
             userDao.update(user);
+
+            if (syncRelatedEntityInfo) {
+                clubService.syncSchoolUserInfo(user);
+                schoolService.syncSchoolUserInfo(user);
+                teamService.syncTeamUserInfo(user);
+            }
 
             // 处理roles
             String uid = user.getUid();

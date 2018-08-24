@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import indi.xp.coachview.dao.SchoolDao;
 import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
+import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.SchoolVo;
 import indi.xp.coachview.service.SchoolService;
@@ -175,6 +176,11 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public void syncSchoolClubInfo(Club club) {
         schoolDao.syncSchoolClubInfo(club);
+    }
+
+    @Override
+    public void syncSchoolUserInfo(User user) {
+        schoolDao.syncSchoolUserInfo(user);
     }
 
 }

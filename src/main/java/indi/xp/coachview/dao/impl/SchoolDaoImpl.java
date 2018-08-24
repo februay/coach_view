@@ -18,6 +18,7 @@ import indi.xp.coachview.dao.SchoolDao;
 import indi.xp.coachview.mapper.SchoolMapper;
 import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
+import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
@@ -181,6 +182,15 @@ public class SchoolDaoImpl implements SchoolDao {
         paramMap.put("club_id", new String[] { club.getClubId() });
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("club_name", club.getClubName());
+        schoolMapper.updateByWhere(updateMap, paramMap, null);
+    }
+
+    @Override
+    public void syncSchoolUserInfo(User user) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("admin_id", new String[] { user.getUid() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("admin_name", user.getName());
         schoolMapper.updateByWhere(updateMap, paramMap, null);
     }
 

@@ -10,6 +10,7 @@ import indi.xp.coachview.dao.TeamDao;
 import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.Team;
+import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.TeamVo;
 import indi.xp.coachview.service.TeamCoachService;
@@ -202,6 +203,11 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public void syncTeamSchoolInfo(School school) {
         teamDao.syncTeamSchoolInfo(school);
+    }
+
+    @Override
+    public void syncTeamUserInfo(User user) {
+        teamDao.syncTeamUserInfo(user);
     }
 
 }

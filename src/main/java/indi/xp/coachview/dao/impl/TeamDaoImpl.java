@@ -19,6 +19,7 @@ import indi.xp.coachview.mapper.TeamMapper;
 import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.Team;
+import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
@@ -199,6 +200,15 @@ public class TeamDaoImpl implements TeamDao {
         paramMap.put("school_id", new String[] { school.getSchoolId() });
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("school_name", school.getSchoolName());
+        teamMapper.updateByWhere(updateMap, paramMap, null);
+    }
+
+    @Override
+    public void syncTeamUserInfo(User user) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("admin_id", new String[] { user.getUid() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("admin_name", user.getName());
         teamMapper.updateByWhere(updateMap, paramMap, null);
     }
 }
