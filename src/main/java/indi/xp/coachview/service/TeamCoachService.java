@@ -2,6 +2,7 @@ package indi.xp.coachview.service;
 
 import java.util.List;
 
+import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.model.vo.ListItemVo;
 
@@ -24,5 +25,7 @@ public interface TeamCoachService {
     public List<ListItemVo> findTeamCoachItemList();
 
     public void deleteByTeamId(String teamId);
+
+    public void syncTeamCoachTeamInfo(Team team);
 
 }

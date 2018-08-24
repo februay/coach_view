@@ -84,8 +84,10 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public Team update(Team team) {
         Team dbTeam = team != null ? teamDao.getTeamById(team.getTeamId()) : null;
+        boolean syncRelatedEntityInfo = false;
         if (dbTeam != null) {
-            if (team.getTeamName() != null) {
+            if (team.getTeamName() != null && !team.getTeamName().equals(dbTeam.getTeamName())) {
+                syncRelatedEntityInfo = true;
                 dbTeam.setTeamName(team.getTeamName());
             }
             if (team.getSchoolId() != null) {
@@ -136,7 +138,12 @@ public class TeamServiceImpl implements TeamService {
             if (team.getStreetName() != null) {
                 dbTeam.setStreetName(team.getStreetName());
             }
-            return teamDao.updateTeam(dbTeam);
+            teamDao.updateTeam(dbTeam);
+            
+            if(syncRelatedEntityInfo) {
+                teamMemberService.syncTeamMemberTeamInfo(dbTeam);
+                teamCoachService.syncTeamCoachTeamInfo(dbTeam);
+            }
         }
         return dbTeam;
     }

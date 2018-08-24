@@ -17,6 +17,7 @@ import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.TeamDao;
 import indi.xp.coachview.dao.TeamMemberDao;
 import indi.xp.coachview.mapper.TeamMemberMapper;
+import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.TeamMember;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
@@ -153,6 +154,15 @@ public class TeamMemberDaoImpl implements TeamMemberDao {
         updateMap.put("delete_status", Constants.VALIDATE);
         teamMemberMapper.updateByWhere(updateMap, paramMap, this.buildAuthFilterMap());
 
+    }
+
+    @Override
+    public void syncTeamMemberTeamInfo(Team team) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("team_id", new String[] { team.getTeamId() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("team_name", team.getTeamName());
+        teamMemberMapper.updateByWhere(updateMap, paramMap, null);
     }
 
 }

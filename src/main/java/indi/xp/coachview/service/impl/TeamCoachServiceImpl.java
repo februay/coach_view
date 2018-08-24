@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import indi.xp.coachview.dao.TeamCoachDao;
+import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.TeamCoachService;
@@ -93,6 +94,11 @@ public class TeamCoachServiceImpl implements TeamCoachService {
     @Override
     public void deleteByTeamId(String teamId) {
         teamCoachDao.deleteByTeamId(teamId);
+    }
+
+    @Override
+    public void syncTeamCoachTeamInfo(Team team) {
+        teamCoachDao.syncTeamCoachTeamInfo(team);
     }
 
 }
