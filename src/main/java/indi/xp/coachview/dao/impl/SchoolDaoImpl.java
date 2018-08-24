@@ -12,9 +12,11 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
 
+import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.SchoolDao;
 import indi.xp.coachview.mapper.SchoolMapper;
+import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
@@ -149,7 +151,7 @@ public class SchoolDaoImpl implements SchoolDao {
     private List<String> findClubUserAuthorizedSchoolIdList(String uid) {
         return schoolMapper.findClubUserAuthorizedSchoolIdList(uid);
     }
-    
+
     /**
      * 获取School角色用户有权限的schoolId列表
      */
@@ -162,6 +164,24 @@ public class SchoolDaoImpl implements SchoolDao {
      */
     private List<String> findTeamUserAuthorizedSchoolIdList(String uid) {
         return schoolMapper.findTeamUserAuthorizedSchoolIdList(uid);
+    }
+
+    @Override
+    public void deleteByClubId(String clubId) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("club_id", new String[] { clubId });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("delete_status", Constants.VALIDATE);
+        schoolMapper.updateByWhere(updateMap, paramMap, null);
+    }
+
+    @Override
+    public void syncSchoolClubInfo(Club club) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("club_id", new String[] { club.getClubId() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("club_name", club.getClubName());
+        schoolMapper.updateByWhere(updateMap, paramMap, null);
     }
 
 }

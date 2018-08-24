@@ -165,7 +165,7 @@
         <include refid="query_by_param" />
     </update>
     
-    <select id="findClublUserAuthorizedClubIdList" parameterType="java.lang.String" resultType="java.lang.String">
+    <select id="findClubUserAuthorizedClubIdList" parameterType="java.lang.String" resultType="java.lang.String">
         select club.club_id
         from team left join school on team.school_id = school.school_id left join club on school.club_id = club.club_id 
         where team.delete_status = 0 and school.delete_status = 0 and club.delete_status = 0 

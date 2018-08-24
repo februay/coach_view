@@ -10,7 +10,6 @@ import indi.xp.coachview.model.TeamMember;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.TeamMemberService;
 import indi.xp.common.utils.DateUtils;
-import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
 
 @Service
@@ -47,31 +46,31 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     public TeamMember update(TeamMember teamMember) {
         TeamMember dbTeamMember = teamMember != null ? this.getById(teamMember.getMemberId()) : null;
         if (dbTeamMember != null) {
-            if (StringUtils.isNotBlank(teamMember.getNumber())) {
+            if (teamMember.getNumber() != null) {
                 dbTeamMember.setNumber(teamMember.getNumber());
             }
-            if (StringUtils.isNotBlank(teamMember.getName())) {
+            if (teamMember.getName() != null) {
                 dbTeamMember.setName(teamMember.getName());
             }
-            if (StringUtils.isNotBlank(teamMember.getIdNumber())) {
+            if (teamMember.getIdNumber() != null) {
                 dbTeamMember.setIdNumber(teamMember.getIdNumber());
             }
-            if (StringUtils.isNotBlank(teamMember.getAge())) {
+            if (teamMember.getAge() != null) {
                 dbTeamMember.setAge(teamMember.getAge());
             }
-            if (StringUtils.isNotBlank(teamMember.getHeight())) {
+            if (teamMember.getHeight() != null) {
                 dbTeamMember.setHeight(teamMember.getHeight());
             }
-            if (StringUtils.isNotBlank(teamMember.getWeight())) {
+            if (teamMember.getWeight() != null) {
                 dbTeamMember.setWeight(teamMember.getWeight());
             }
-            if (StringUtils.isNotBlank(teamMember.getPhoto())) {
+            if (teamMember.getPhoto() != null) {
                 dbTeamMember.setPhoto(teamMember.getPhoto());
             }
-            if (StringUtils.isNotBlank(teamMember.getFirstPosition())) {
+            if (teamMember.getFirstPosition() != null) {
                 dbTeamMember.setFirstPosition(teamMember.getFirstPosition());
             }
-            if (StringUtils.isNotBlank(teamMember.getSecondPosition())) {
+            if (teamMember.getSecondPosition() != null) {
                 dbTeamMember.setSecondPosition(teamMember.getSecondPosition());
             }
             if (teamMember.getAttack() != null) {
@@ -92,10 +91,10 @@ public class TeamMemberServiceImpl implements TeamMemberService {
             if (teamMember.getEndurance() != null) {
                 dbTeamMember.setEndurance(teamMember.getEndurance());
             }
-            if (StringUtils.isNotBlank(teamMember.getTeamId())) {
+            if (teamMember.getTeamId() != null) {
                 dbTeamMember.setTeamId(teamMember.getTeamId());
             }
-            if (StringUtils.isNotBlank(teamMember.getTeamName())) {
+            if (teamMember.getTeamName() != null) {
                 dbTeamMember.setTeamName(teamMember.getTeamName());
             }
             return teamMemberDao.updateTeamMember(dbTeamMember);
@@ -119,6 +118,11 @@ public class TeamMemberServiceImpl implements TeamMemberService {
     @Override
     public List<ListItemVo> findTeamMemberItemList() {
         return teamMemberDao.findTeamMemberItemList();
+    }
+
+    @Override
+    public void deleteByTeamId(String teamId) {
+        teamMemberDao.deleteByTeamId(teamId);
     }
 
 }

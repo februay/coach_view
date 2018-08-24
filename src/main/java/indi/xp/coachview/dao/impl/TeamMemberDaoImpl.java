@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
 
+import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.TeamDao;
 import indi.xp.coachview.dao.TeamMemberDao;
@@ -142,6 +143,16 @@ public class TeamMemberDaoImpl implements TeamMemberDao {
             logger.warn("SessionContext is null");
         }
         return authFilterMap;
+    }
+
+    @Override
+    public void deleteByTeamId(String teamId) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("team_id", new String[] { teamId });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("delete_status", Constants.VALIDATE);
+        teamMemberMapper.updateByWhere(updateMap, paramMap, this.buildAuthFilterMap());
+
     }
 
 }

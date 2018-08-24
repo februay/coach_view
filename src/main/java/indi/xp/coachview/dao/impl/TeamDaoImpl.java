@@ -12,9 +12,12 @@ import org.springframework.stereotype.Repository;
 
 import com.alibaba.fastjson.JSON;
 
+import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.TeamDao;
 import indi.xp.coachview.mapper.TeamMapper;
+import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
@@ -161,5 +164,41 @@ public class TeamDaoImpl implements TeamDao {
     @Override
     public List<String> findTeamUserAuthorizedTeamIdList(String uid) {
         return teamMapper.findTeamUserAuthorizedTeamIdList(uid);
+    }
+
+    @Override
+    public void deleteByClubId(String clubId) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("club_id", new String[] { clubId });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("delete_status", Constants.VALIDATE);
+        teamMapper.updateByWhere(updateMap, paramMap, this.buildAuthFilterMap());
+    }
+
+    @Override
+    public void deleteBySchoolId(String schoolId) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("school_id", new String[] { schoolId });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("delete_status", Constants.VALIDATE);
+        teamMapper.updateByWhere(updateMap, paramMap, this.buildAuthFilterMap());
+    }
+
+    @Override
+    public void syncTeamClubInfo(Club club) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("club_id", new String[] { club.getClubId() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("club_name", club.getClubName());
+        teamMapper.updateByWhere(updateMap, paramMap, null);
+    }
+
+    @Override
+    public void syncTeamSchoolInfo(School school) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("school_id", new String[] { school.getSchoolId() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("school_name", school.getSchoolName());
+        teamMapper.updateByWhere(updateMap, paramMap, null);
     }
 }

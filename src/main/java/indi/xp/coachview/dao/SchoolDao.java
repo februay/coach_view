@@ -2,6 +2,7 @@ package indi.xp.coachview.dao;
 
 import java.util.List;
 
+import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.vo.ListItemVo;
 
@@ -24,5 +25,9 @@ public interface SchoolDao {
     public List<School> findListByClubId(String clubId);
 
     public List<ListItemVo> findSchoolItemList();
+
+    public void deleteByClubId(String clubId);
+
+    public void syncSchoolClubInfo(Club club);
 
 }

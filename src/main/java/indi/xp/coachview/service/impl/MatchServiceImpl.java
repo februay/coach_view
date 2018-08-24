@@ -29,7 +29,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Autowired
     private MatchTeamInfoService matchTeamInfoService;
-    
+
     @Autowired
     private MatchTeamMemberInfoService matchTeamMemberInfoService;
 
@@ -62,7 +62,30 @@ public class MatchServiceImpl implements MatchService {
     public Match update(Match match) {
         Match dbMatch = match != null ? this.getById(match.getMatchId()) : null;
         if (dbMatch != null) {
-            // TODO:
+            if (match.getMatchName() != null) {
+                dbMatch.setMatchName(match.getMatchName());
+            }
+            if (match.getMatchNumber() != null) {
+                dbMatch.setMatchNumber(match.getMatchNumber());
+            }
+            if (match.getMatchSession() != null) {
+                dbMatch.setMatchSession(match.getMatchSession());
+            }
+            if (match.getMatchTime() != null) {
+                dbMatch.setMatchTime(match.getMatchTime());
+            }
+            if (match.getMatchVideo() != null) {
+                dbMatch.setMatchVideo(match.getMatchVideo());
+            }
+            if (match.getVideoCoverImg() != null) {
+                dbMatch.setVideoCoverImg(match.getVideoCoverImg());
+            }
+            if (match.getRealPlaceImg() != null) {
+                dbMatch.setRealPlaceImg(match.getRealPlaceImg());
+            }
+            if (match.getAttackAreaImg() != null) {
+                dbMatch.setAttackAreaImg(match.getAttackAreaImg());
+            }
             return matchDao.update(dbMatch);
         }
         return dbMatch;
@@ -73,7 +96,7 @@ public class MatchServiceImpl implements MatchService {
         Match dbMatch = this.getById(id);
         if (dbMatch != null) {
             matchDao.delete(id);
-            
+
             // 级联删除
             matchTeamInfoService.deleteByMatchId(id);
             matchTeamMemberInfoService.deleteByMatchId(id);
@@ -150,7 +173,7 @@ public class MatchServiceImpl implements MatchService {
                     for (Map<String, Object> teamDetail : teamDetailList) {
                         if (Constants.TRUE.equals(String.valueOf(teamDetail.get("opponent")))) {
                             opponentTeamDetails.add(teamDetail);
-                        } else if(Constants.FALSE.equals(String.valueOf(teamDetail.get("opponent")))){
+                        } else if (Constants.FALSE.equals(String.valueOf(teamDetail.get("opponent")))) {
                             teamDetails.add(teamDetail);
                         }
                     }

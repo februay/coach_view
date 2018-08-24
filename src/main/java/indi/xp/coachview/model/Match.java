@@ -15,9 +15,9 @@ public class Match implements Serializable {
     private static final long serialVersionUID = -3758063655019034907L;
 
     public static final String defaultName = "比赛数据";
-    
+
     public static final List<String> defaultHeaderList = new ArrayList<String>(
-        Arrays.asList("比赛编号", "比赛名称", "比赛场次", "比赛时间", "比赛视频"));
+        Arrays.asList("比赛编号", "比赛名称", "比赛场次", "比赛时间", "比赛视频", "比赛视频封面图片", "真实占位图片", "进攻区域图片"));
 
     public static final Map<String, String> nameToPropertyMapping = new HashMap<>();
     static {
@@ -26,6 +26,9 @@ public class Match implements Serializable {
         nameToPropertyMapping.put("比赛场次", "matchSession");
         nameToPropertyMapping.put("比赛时间", "matchTime");
         nameToPropertyMapping.put("比赛视频", "matchVideo");
+        nameToPropertyMapping.put("比赛视频封面图片", "videoCoverImg");
+        nameToPropertyMapping.put("真实占位图片", "realPlaceImg");
+        nameToPropertyMapping.put("进攻区域图片", "attackAreaImg");
     }
 
     private String matchId;
@@ -35,6 +38,9 @@ public class Match implements Serializable {
     private String matchSession; // 比赛场次
     private String matchTime; // 比赛时间
     private String matchVideo; // 比赛视频
+    private String videoCoverImg; // 视频封面图片
+    private String realPlaceImg; // 真实占位图片
+    private String attackAreaImg; // 进攻区域图片
     private String creatorId;
     private String createTime;
     private Boolean deleteStatus; // 是否删除
@@ -93,6 +99,30 @@ public class Match implements Serializable {
 
     public void setMatchVideo(String matchVideo) {
         this.matchVideo = matchVideo;
+    }
+
+    public String getVideoCoverImg() {
+        return videoCoverImg;
+    }
+
+    public void setVideoCoverImg(String videoCoverImg) {
+        this.videoCoverImg = videoCoverImg;
+    }
+
+    public String getRealPlaceImg() {
+        return realPlaceImg;
+    }
+
+    public void setRealPlaceImg(String realPlaceImg) {
+        this.realPlaceImg = realPlaceImg;
+    }
+
+    public String getAttackAreaImg() {
+        return attackAreaImg;
+    }
+
+    public void setAttackAreaImg(String attackAreaImg) {
+        this.attackAreaImg = attackAreaImg;
     }
 
     public String getCreatorId() {

@@ -49,6 +49,9 @@ public class TeamTeachVideoServiceImpl implements TeamTeachVideoService {
             if (teamTeachVideo.getVideo() != null) {
                 dbTeamTeachVideo.setVideo(teamTeachVideo.getVideo());
             }
+            if (teamTeachVideo.getVideoCoverImg() != null) {
+                dbTeamTeachVideo.setVideoCoverImg(teamTeachVideo.getVideoCoverImg());
+            }
             return teamTeachVideoDao.update(dbTeamTeachVideo);
         }
         return dbTeamTeachVideo;

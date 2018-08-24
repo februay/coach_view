@@ -23,4 +23,6 @@ public interface TeamCoachService {
 
     public List<ListItemVo> findTeamCoachItemList();
 
+    public void deleteByTeamId(String teamId);
+
 }

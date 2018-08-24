@@ -14,8 +14,10 @@ public class TeamMember implements Serializable {
 
     private static final long serialVersionUID = -4173171901498089727L;
 
+    public static final String defaultName = "球员信息";
+
     public static final List<String> defaultHeaderList = new ArrayList<String>(
-        Arrays.asList("球衣号", "姓名", "身份证号", "年龄", "身高", "体重", "第一位置", "第二位置", "进攻", "速度", "技术", "防守", "团队", "耐力"));
+        Arrays.asList("球衣号", "姓名", "身份证号", "年龄", "身高", "体重", "第一位置", "第二位置", "进攻", "速度", "技术", "防守", "团队", "耐力", "照片"));
 
     public static final Map<String, String> nameToPropertyMapping = new HashMap<>();
     static {
@@ -33,6 +35,7 @@ public class TeamMember implements Serializable {
         nameToPropertyMapping.put("防守", "defense");
         nameToPropertyMapping.put("团队", "team");
         nameToPropertyMapping.put("耐力", "endurance");
+        nameToPropertyMapping.put("照片", "photo");
     }
 
     private String memberId;

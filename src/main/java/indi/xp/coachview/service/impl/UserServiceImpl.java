@@ -83,9 +83,9 @@ public class UserServiceImpl implements UserService {
         userVo.setUid(UuidUtils.generateUUID());
         userVo.setCreateTime(currentTime);
         userVo.setActiveTime(currentTime);
-        
+
         SessionConext sessionContext = SessionConext.getThreadLocalSessionContext();
-        if(sessionContext != null) {
+        if (sessionContext != null) {
             userVo.setCreatorId(sessionContext.getUid());
         }
 
@@ -133,37 +133,37 @@ public class UserServiceImpl implements UserService {
                 throw new BusinessException(BusinessErrorCodeEnum.USER_EXISTS);
             }
 
-            if (StringUtils.isNotBlank(userVo.getUserName())) {
+            if (userVo.getUserName() != null) {
                 user.setUserName(userVo.getUserName());
             }
-            if (StringUtils.isNotBlank(userVo.getUserEmail())) {
+            if (userVo.getUserEmail() != null) {
                 user.setUserEmail(userVo.getUserEmail());
             }
-            if (StringUtils.isNotBlank(userVo.getUserPassword())) {
+            if (userVo.getUserPassword() != null) {
                 user.setUserPassword(userVo.getUserPassword());
             }
-            if (StringUtils.isNotBlank(userVo.getName())) {
+            if (userVo.getName() != null) {
                 user.setName(userVo.getName());
             }
-            if (StringUtils.isNotBlank(userVo.getPhone())) {
+            if (userVo.getPhone() != null) {
                 user.setPhone(userVo.getPhone());
             }
-            if (StringUtils.isNotBlank(userVo.getCompany())) {
+            if (userVo.getCompany() != null) {
                 user.setCompany(userVo.getCompany());
             }
-            if (StringUtils.isNotBlank(userVo.getDepartment())) {
+            if (userVo.getDepartment() != null) {
                 user.setDepartment(userVo.getDepartment());
             }
-            if (StringUtils.isNotBlank(userVo.getTitle())) {
+            if (userVo.getTitle() != null) {
                 user.setTitle(userVo.getTitle());
             }
-            if (StringUtils.isNotBlank(userVo.getClubId())) {
+            if (userVo.getClubId() != null) {
                 user.setClubId(userVo.getClubId());
             }
-            if (StringUtils.isNotBlank(userVo.getSchoolId())) {
+            if (userVo.getSchoolId() != null) {
                 user.setSchoolId(userVo.getSchoolId());
             }
-            if (StringUtils.isNotBlank(userVo.getTeamId())) {
+            if (userVo.getTeamId() != null) {
                 user.setTeamId(userVo.getTeamId());
             }
             userDao.update(user);
@@ -267,7 +267,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ListItemVo> findUserItemList(String clubId, String schoolId, String teamId) {
-        return userDao.findUserItemList(clubId, schoolId, teamId );
+        return userDao.findUserItemList(clubId, schoolId, teamId);
     }
 
 }

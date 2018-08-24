@@ -25,4 +25,6 @@ public interface TeamCoachDao {
 
     public List<ListItemVo> findTeamCoachItemList();
 
+    public void deleteByTeamId(String teamId);
+
 }

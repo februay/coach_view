@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import indi.xp.coachview.dao.SchoolDao;
+import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.SchoolVo;
@@ -14,7 +16,6 @@ import indi.xp.coachview.service.SchoolService;
 import indi.xp.coachview.service.TeamService;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
-import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
 
 @Service
@@ -73,55 +74,62 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Transactional
     public School update(School school) {
         School dbSchool = school != null ? schoolDao.getSchoolById(school.getSchoolId()) : null;
+        boolean syncRelatedEntityInfo = false;
         if (dbSchool != null) {
-            if (StringUtils.isNotBlank(school.getSchoolName())) {
+            if (school.getSchoolName() != null && !school.getSchoolName().equals(dbSchool.getSchoolName())) {
+                syncRelatedEntityInfo = true;
                 dbSchool.setSchoolName(school.getSchoolName());
             }
-            if (StringUtils.isNotBlank(school.getClubId())) {
+            if (school.getClubId() != null) {
                 dbSchool.setClubId(school.getClubId());
             }
-            if (StringUtils.isNotBlank(school.getClubName())) {
+            if (school.getClubName() != null) {
                 dbSchool.setClubName(school.getClubName());
             }
-            if (StringUtils.isNotBlank(school.getAdminId())) {
+            if (school.getAdminId() != null) {
                 dbSchool.setAdminId(school.getAdminId());
             }
-            if (StringUtils.isNotBlank(school.getAdminName())) {
+            if (school.getAdminName() != null) {
                 dbSchool.setAdminName(school.getAdminName());
             }
-            if (StringUtils.isNotBlank(school.getProvince())) {
+            if (school.getProvince() != null) {
                 dbSchool.setProvince(school.getProvince());
             }
-            if (StringUtils.isNotBlank(school.getProvinceName())) {
+            if (school.getProvinceName() != null) {
                 dbSchool.setProvinceName(school.getProvinceName());
             }
-            if (StringUtils.isNotBlank(school.getCity())) {
+            if (school.getCity() != null) {
                 dbSchool.setCity(school.getCity());
             }
-            if (StringUtils.isNotBlank(school.getCityName())) {
+            if (school.getCityName() != null) {
                 dbSchool.setCityName(school.getCityName());
             }
-            if (StringUtils.isNotBlank(school.getRegion())) {
+            if (school.getRegion() != null) {
                 dbSchool.setRegion(school.getRegion());
             }
-            if (StringUtils.isNotBlank(school.getRegionName())) {
+            if (school.getRegionName() != null) {
                 dbSchool.setRegionName(school.getRegionName());
             }
-            if (StringUtils.isNotBlank(school.getCounty())) {
+            if (school.getCounty() != null) {
                 dbSchool.setCounty(school.getCounty());
             }
-            if (StringUtils.isNotBlank(school.getCountyName())) {
+            if (school.getCountyName() != null) {
                 dbSchool.setCountyName(school.getCountyName());
             }
-            if (StringUtils.isNotBlank(school.getStreet())) {
+            if (school.getStreet() != null) {
                 dbSchool.setStreet(school.getStreet());
             }
-            if (StringUtils.isNotBlank(school.getStreetName())) {
+            if (school.getStreetName() != null) {
                 dbSchool.setStreetName(school.getStreetName());
             }
-            return schoolDao.updateSchool(dbSchool);
+            schoolDao.updateSchool(dbSchool);
+            
+            if(syncRelatedEntityInfo) {
+                teamService.syncTeamSchoolInfo(dbSchool);
+            }
         }
         return dbSchool;
     }
@@ -131,6 +139,9 @@ public class SchoolServiceImpl implements SchoolService {
         School dbSchool = schoolDao.getSchoolById(id);
         if (dbSchool != null) {
             schoolDao.delete(id);
+            
+            // 级联删除team
+            teamService.deleteBySchoolId(id);
         }
     }
 
@@ -154,6 +165,16 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public List<ListItemVo> findSchoolItemList() {
         return schoolDao.findSchoolItemList();
+    }
+
+    @Override
+    public void deleteByClubId(String clubId) {
+        schoolDao.deleteByClubId(clubId);
+    }
+
+    @Override
+    public void syncSchoolClubInfo(Club club) {
+        schoolDao.syncSchoolClubInfo(club);
     }
 
 }

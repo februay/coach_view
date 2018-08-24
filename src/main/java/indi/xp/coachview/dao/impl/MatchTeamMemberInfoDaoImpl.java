@@ -128,7 +128,7 @@ public class MatchTeamMemberInfoDaoImpl implements MatchTeamMemberInfoDao {
         paramMap.put("match_id", new String[] { matchId });
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("delete_status", Constants.VALIDATE);
-        matchTeamMemberInfoMapper.updateByWhere(updateMap, paramMap, this.buildAuthFilterMap());
+        matchTeamMemberInfoMapper.updateByWhere(updateMap, paramMap, null);
     }
 
 }

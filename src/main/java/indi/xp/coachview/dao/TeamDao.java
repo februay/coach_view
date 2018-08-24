@@ -2,6 +2,8 @@ package indi.xp.coachview.dao;
 
 import java.util.List;
 
+import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.vo.ListItemVo;
 
@@ -39,5 +41,13 @@ public interface TeamDao {
      * 获取TEAM角色用户有权限的teamId列表
      */
     public List<String> findTeamUserAuthorizedTeamIdList(String uid);
+
+    public void deleteByClubId(String clubId);
+
+    public void deleteBySchoolId(String schoolId);
+
+    public void syncTeamClubInfo(Club club);
+
+    public void syncTeamSchoolInfo(School school);
 
 }

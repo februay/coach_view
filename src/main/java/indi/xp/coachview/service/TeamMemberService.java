@@ -23,4 +23,6 @@ public interface TeamMemberService {
     
     public List<ListItemVo> findTeamMemberItemList();
 
+    public void deleteByTeamId(String teamId);
+
 }

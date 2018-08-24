@@ -10,6 +10,8 @@ public class Team implements Serializable {
     private String teamName;
     private String schoolId;
     private String schoolName;
+    private String clubId;
+    private String clubName;
     private String adminId;
     private String adminName;
     private String province;
@@ -57,6 +59,22 @@ public class Team implements Serializable {
 
     public void setSchoolName(String schoolName) {
         this.schoolName = schoolName;
+    }
+
+    public String getClubId() {
+        return clubId;
+    }
+
+    public void setClubId(String clubId) {
+        this.clubId = clubId;
+    }
+
+    public String getClubName() {
+        return clubName;
+    }
+
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
     }
 
     public String getAdminId() {

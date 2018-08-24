@@ -11,6 +11,7 @@ public class TeamTeachVideo implements Serializable {
     private String name; // 视频名称
     private String description; // 视频描述
     private String video; // 视频地址
+    private String videoCoverImg; // 视频封面图片
     private String creatorId;
     private String createTime;
     private Boolean deleteStatus; // 是否删除
@@ -53,6 +54,14 @@ public class TeamTeachVideo implements Serializable {
 
     public void setVideo(String video) {
         this.video = video;
+    }
+
+    public String getVideoCoverImg() {
+        return videoCoverImg;
+    }
+
+    public void setVideoCoverImg(String videoCoverImg) {
+        this.videoCoverImg = videoCoverImg;
     }
 
     public String getCreatorId() {

@@ -8,6 +8,7 @@
         <result column="name" property="name" />
         <result column="description" property="description" />
         <result column="video" property="video" />
+        <result column="video_cover_img" property="videoCoverImg" />
         <result column="creator_id" property="creatorId" />
         <result column="create_time" property="createTime" />
         <result column="delete_status" property="deleteStatus" />
@@ -67,8 +68,8 @@
 
 
     <insert id="add">
-        insert into <include refid="table_name" /> (video_id, team_id, name, description, video, creator_id, create_time, delete_status)
-        values(#{entity.videoId}, #{entity.teamId}, #{entity.name}, #{entity.description}, #{entity.video}, #{entity.creatorId}, #{entity.createTime}, #{entity.deleteStatus})
+        insert into <include refid="table_name" /> (video_id, team_id, name, description, video, video_cover_img, creator_id, create_time, delete_status)
+        values(#{entity.videoId}, #{entity.teamId}, #{entity.name}, #{entity.description}, #{entity.video}, #{entity.videoCoverImg}, #{entity.creatorId}, #{entity.createTime}, #{entity.deleteStatus})
     </insert>
 
     <update id="update">
@@ -77,6 +78,7 @@
             name = #{entity.name},
             description = #{entity.description},
             video = #{entity.video},
+            video_cover_img = #{entity.videoCoverImg},
             creator_id = #{entity.creatorId},
             create_time = #{entity.createTime},
             delete_status = #{entity.deleteStatus}

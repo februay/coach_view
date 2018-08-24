@@ -10,7 +10,6 @@ import indi.xp.coachview.model.TeamCoach;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.TeamCoachService;
 import indi.xp.common.utils.DateUtils;
-import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
 
 @Service
@@ -47,25 +46,25 @@ public class TeamCoachServiceImpl implements TeamCoachService {
     public TeamCoach update(TeamCoach teamCoach) {
         TeamCoach dbTeamCoach = teamCoach != null ? this.getById(teamCoach.getCoachId()) : null;
         if (dbTeamCoach != null) {
-            if (StringUtils.isNotBlank(teamCoach.getName())) {
+            if (teamCoach.getName() != null) {
                 dbTeamCoach.setName(teamCoach.getName());
             }
-            if (StringUtils.isNotBlank(teamCoach.getIdNumber())) {
+            if (teamCoach.getIdNumber() != null) {
                 dbTeamCoach.setIdNumber(teamCoach.getIdNumber());
             }
-            if (StringUtils.isNotBlank(teamCoach.getPhone())) {
+            if (teamCoach.getPhone() != null) {
                 dbTeamCoach.setPhone(teamCoach.getPhone());
             }
-            if (StringUtils.isNotBlank(teamCoach.getAge())) {
+            if (teamCoach.getAge() != null) {
                 dbTeamCoach.setAge(teamCoach.getAge());
             }
-            if (StringUtils.isNotBlank(teamCoach.getPhoto())) {
+            if (teamCoach.getPhoto() != null) {
                 dbTeamCoach.setPhoto(teamCoach.getPhoto());
             }
-            if (StringUtils.isNotBlank(teamCoach.getTeamId())) {
+            if (teamCoach.getTeamId() != null) {
                 dbTeamCoach.setTeamId(teamCoach.getTeamId());
             }
-            if (StringUtils.isNotBlank(teamCoach.getTeamName())) {
+            if (teamCoach.getTeamName() != null) {
                 dbTeamCoach.setTeamName(teamCoach.getTeamName());
             }
             return teamCoachDao.update(dbTeamCoach);
@@ -89,6 +88,11 @@ public class TeamCoachServiceImpl implements TeamCoachService {
     @Override
     public List<ListItemVo> findTeamCoachItemList() {
         return teamCoachDao.findTeamCoachItemList();
+    }
+
+    @Override
+    public void deleteByTeamId(String teamId) {
+        teamCoachDao.deleteByTeamId(teamId);
     }
 
 }

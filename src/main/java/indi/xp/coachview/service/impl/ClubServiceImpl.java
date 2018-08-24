@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import indi.xp.coachview.dao.ClubDao;
 import indi.xp.coachview.model.Club;
@@ -12,9 +13,9 @@ import indi.xp.coachview.model.vo.ClubVo;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.service.ClubService;
 import indi.xp.coachview.service.SchoolService;
+import indi.xp.coachview.service.TeamService;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
-import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
 
 @Service
@@ -25,6 +26,9 @@ public class ClubServiceImpl implements ClubService {
 
     @Autowired
     private SchoolService schoolService;
+    
+    @Autowired
+    private TeamService teamService;
 
     @Override
     public ClubVo getById(String id, boolean withSchool) {
@@ -73,49 +77,57 @@ public class ClubServiceImpl implements ClubService {
     }
 
     @Override
+    @Transactional
     public Club update(Club club) {
         Club dbClub = club != null ? clubDao.getClubById(club.getClubId()) : null;
+        boolean syncRelatedEntityInfo = false;
         if (dbClub != null) {
-            if (StringUtils.isNotBlank(club.getClubName())) {
+            if (club.getClubName() != null && !club.getClubName().equals(dbClub.getClubName())) {
+                syncRelatedEntityInfo = true;
                 dbClub.setClubName(club.getClubName());
             }
-            if (StringUtils.isNotBlank(club.getProvince())) {
+            if (club.getProvince() != null) {
                 dbClub.setProvince(club.getProvince());
             }
-            if (StringUtils.isNotBlank(club.getProvinceName())) {
+            if (club.getProvinceName() != null) {
                 dbClub.setProvinceName(club.getProvinceName());
             }
-            if (StringUtils.isNotBlank(club.getCity())) {
+            if (club.getCity() != null) {
                 dbClub.setCity(club.getCity());
             }
-            if (StringUtils.isNotBlank(club.getCityName())) {
+            if (club.getCityName() != null) {
                 dbClub.setCityName(club.getCityName());
             }
-            if (StringUtils.isNotBlank(club.getRegion())) {
+            if (club.getRegion() != null) {
                 dbClub.setRegion(club.getRegion());
             }
-            if (StringUtils.isNotBlank(club.getRegionName())) {
+            if (club.getRegionName() != null) {
                 dbClub.setRegionName(club.getRegionName());
             }
-            if (StringUtils.isNotBlank(club.getCounty())) {
+            if (club.getCounty() != null) {
                 dbClub.setCounty(club.getCounty());
             }
-            if (StringUtils.isNotBlank(club.getCountyName())) {
+            if (club.getCountyName() != null) {
                 dbClub.setCountyName(club.getCountyName());
             }
-            if (StringUtils.isNotBlank(club.getStreet())) {
+            if (club.getStreet() != null) {
                 dbClub.setStreet(club.getStreet());
             }
-            if (StringUtils.isNotBlank(club.getStreetName())) {
+            if (club.getStreetName() != null) {
                 dbClub.setStreetName(club.getStreetName());
             }
-            if (StringUtils.isNotBlank(club.getAdminId())) {
+            if (club.getAdminId() != null) {
                 dbClub.setAdminId(club.getAdminId());
             }
-            if (StringUtils.isNotBlank(club.getAdminName())) {
+            if (club.getAdminName() != null) {
                 dbClub.setAdminName(club.getAdminName());
             }
-            return clubDao.updateClub(dbClub);
+            clubDao.updateClub(dbClub);
+            
+            if(syncRelatedEntityInfo) {
+                schoolService.syncSchoolClubInfo(dbClub);
+                teamService.syncTeamClubInfo(dbClub);
+            }
         }
         return dbClub;
     }
@@ -125,6 +137,10 @@ public class ClubServiceImpl implements ClubService {
         Club dbClub = clubDao.getClubById(id);
         if (dbClub != null) {
             clubDao.delete(id);
+            
+            // 级联删除school、team
+            schoolService.deleteByClubId(id);
+            teamService.deleteByClubId(id);
         }
     }
 

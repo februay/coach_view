@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,7 @@ import indi.xp.common.restful.ResponseResult;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.ObjectUtils;
 import indi.xp.common.utils.excel.CsvBuilderUtils;
+import indi.xp.common.utils.excel.ExcelUtil;
 import indi.xp.common.utils.excel.FileAnalysisUtils;
 
 @RestController("teamController")
@@ -139,10 +142,11 @@ public class TeamController {
     }
 
     /**
-     * 球队队员导出
+     * 球队队员导出（csv）
      */
-    @RequestMapping(value = "{teamId}/export-members", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public void exportTeamMemberList(@PathVariable("teamId") String teamId, HttpServletRequest request,
+    @Deprecated
+    @RequestMapping(value = "{teamId}/export-members/csv", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public void exportTeamMemberListCsv(@PathVariable("teamId") String teamId, HttpServletRequest request,
         HttpServletResponse response, @RequestHeader(value = Constants.Header.TOKEN, required = false) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
 
@@ -182,10 +186,48 @@ public class TeamController {
 
     }
 
+    @Deprecated
     private File createCSVFile(Team team, List<TeamMember> memberList, String fileName) {
         List<String> headerList = TeamMember.defaultHeaderList;
         List<List<String>> rowList = TeamMember.parseToRowList(memberList);
         return CsvBuilderUtils.createCSVFile(headerList, rowList, null, fileName);
+    }
+    
+    /**
+     * 球队队员导出
+     */
+    @RequestMapping(value = "{teamId}/export-members", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+    public void exportTeamMemberList(@PathVariable("teamId") String teamId, HttpServletRequest request,
+        HttpServletResponse response, @RequestHeader(value = Constants.Header.TOKEN, required = false) String token,
+        @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
+        
+        OutputStream out = null;
+        HSSFWorkbook xlsFile = null;
+        try {
+            Team team = teamService.getById(teamId, false);
+            if (team == null) {
+                return;
+            }
+            List<TeamMember> memberList = teamMemberService.findTeamMemberListByTeamId(teamId);
+            String fileName = team.getTeamName() + "-members-export.xls";
+            xlsFile = this.createExcelFile(memberList);
+            ExcelUtil.setResponseHeader(response, fileName);
+            out = response.getOutputStream();
+            xlsFile.write(out);
+            out.flush();
+        } catch (Exception e) {
+            logger.error("export team<{}> members error", teamId, e);
+        } finally {
+            ObjectUtils.safeClose(out);
+        }
+    }
+    
+    private HSSFWorkbook createExcelFile(List<TeamMember> memberList) {
+        HSSFWorkbook workBook = null;
+        List<List<String>> teamMemberRowList = TeamMember.parseToRowList(memberList);
+        workBook = ExcelUtil.buildHSSFWorkbook(TeamMember.defaultName, TeamMember.defaultHeaderList,
+            teamMemberRowList, workBook);
+        return workBook;
     }
 
     /**

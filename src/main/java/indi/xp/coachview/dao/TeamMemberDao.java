@@ -25,4 +25,6 @@ public interface TeamMemberDao {
 
     public List<ListItemVo> findTeamMemberItemList();
 
+    public void deleteByTeamId(String teamId);
+
 }
