@@ -20,6 +20,9 @@ public class WebUtils {
             response.setContentType("text/html;charset=UTF-8");
         }
         response.setCharacterEncoding("UTF-8");
+        // * 表示允许任何域名跨域访问, http:localhost:8080/ 指定特定域名可以访问
+        response.setHeader("Access-Control-Allow-Origin", "*");
+
         PrintWriter writer = null;
         try {
             writer = response.getWriter();
