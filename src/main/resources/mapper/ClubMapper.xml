@@ -164,29 +164,31 @@
         <include refid="common_where" />
         <include refid="query_by_param" />
     </update>
-    
+
     <select id="findClubUserAuthorizedClubIdList" parameterType="java.lang.String" resultType="java.lang.String">
-        select club.club_id
-        from team left join school on team.school_id = school.school_id left join club on school.club_id = club.club_id 
-        where team.delete_status = 0 and school.delete_status = 0 and club.delete_status = 0 
-            and (club.admin_id = #{uid} or school.admin_id = #{uid} or team.admin_id = #{uid})
-        group by club.club_id
+        select club_id from club where delete_status = 0 and admin_id = #{uid} group by club_id
+        UNION
+        select club_id from school where delete_status = 0 and admin_id = #{uid} group by club_id
+        UNION
+        select club_id from team where delete_status = 0 and admin_id = #{uid} group by club_id
     </select>
     
     <select id="findSchoolUserAuthorizedClubIdList" parameterType="java.lang.String" resultType="java.lang.String">
-        select club.club_id
-        from team left join school on team.school_id = school.school_id left join club on school.club_id = club.club_id 
-        where team.delete_status = 0 and school.delete_status = 0 and club.delete_status = 0 
-            and (school.admin_id = #{uid} or team.admin_id = #{uid})
-        group by club.club_id
+        select school.club_id
+        from school left join club on school.club_id = club.club_id 
+        where school.delete_status = 0 and club.delete_status = 0 
+            and school.admin_id = #{uid}
+        group by school.club_id
+        UNION
+        select club_id from team where delete_status = 0 and admin_id = #{uid} group by club_id
     </select>
     
     <select id="findTeamUserAuthorizedClubIdList" parameterType="java.lang.String" resultType="java.lang.String">
-        select club.club_id
+        select team.club_id
         from team left join school on team.school_id = school.school_id  left join club on school.club_id = club.club_id 
         where team.delete_status = 0 and school.delete_status = 0 and club.delete_status = 0 
             and team.admin_id = #{uid}
-        group by club.club_id
+        group by team.club_id
     </select>
 
 </mapper>
