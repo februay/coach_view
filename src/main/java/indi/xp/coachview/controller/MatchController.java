@@ -28,11 +28,13 @@ import com.alibaba.fastjson.JSON;
 
 import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.model.Match;
+import indi.xp.coachview.model.MatchTeamDetailInfo;
 import indi.xp.coachview.model.MatchTeamInfo;
 import indi.xp.coachview.model.MatchTeamMemberInfo;
 import indi.xp.coachview.model.vo.SingleTeamMatchDataVo;
 import indi.xp.coachview.model.vo.TeamSingleMatchDataVo;
 import indi.xp.coachview.service.MatchService;
+import indi.xp.coachview.service.MatchTeamDetailInfoService;
 import indi.xp.coachview.service.MatchTeamInfoService;
 import indi.xp.coachview.service.MatchTeamMemberInfoService;
 import indi.xp.common.constants.MediaType;
@@ -56,6 +58,9 @@ public class MatchController {
 
     @Autowired
     private MatchTeamInfoService matchTeamInfoService;
+
+    @Autowired
+    private MatchTeamDetailInfoService matchTeamDetailInfoService;
 
     @Autowired
     private MatchTeamMemberInfoService matchTeamMemberInfoService;
@@ -104,9 +109,10 @@ public class MatchController {
                 return;
             }
             List<MatchTeamInfo> matchTeamInfoList = matchTeamInfoService.findListByMatchId(matchId);
+            List<MatchTeamDetailInfo> matchTeamDetailInfoList = matchTeamDetailInfoService.findListByMatchId(matchId);
             List<MatchTeamMemberInfo> matchTeamMemberInfoList = matchTeamMemberInfoService.findListByMatchId(matchId);
             String fileName = match.getMatchName() + "-match-export.xls";
-            xlsFile = this.createExcelFile(match, matchTeamInfoList, matchTeamMemberInfoList);
+            xlsFile = this.createExcelFile(match, matchTeamInfoList, matchTeamDetailInfoList, matchTeamMemberInfoList);
             ExcelUtil.setResponseHeader(response, fileName);
             out = response.getOutputStream();
             xlsFile.write(out);
@@ -119,7 +125,7 @@ public class MatchController {
     }
 
     private HSSFWorkbook createExcelFile(Match match, List<MatchTeamInfo> matchTeamInfoList,
-        List<MatchTeamMemberInfo> matchTeamMemberInfoList) {
+        List<MatchTeamDetailInfo> matchTeamDetailInfoList, List<MatchTeamMemberInfo> matchTeamMemberInfoList) {
         HSSFWorkbook workBook = null;
         List<List<String>> matchRowList = Match.parseToRowList(new ArrayList<>(Arrays.asList(match)));
         workBook = ExcelUtil.buildHSSFWorkbook(Match.defaultName, Match.defaultHeaderList, matchRowList, workBook);
@@ -127,6 +133,10 @@ public class MatchController {
         List<List<String>> matchTeamRowList = MatchTeamInfo.parseToRowList(matchTeamInfoList);
         workBook = ExcelUtil.buildHSSFWorkbook(MatchTeamInfo.defaultName, MatchTeamInfo.defaultHeaderList,
             matchTeamRowList, workBook);
+
+        List<List<String>> matchTeamDetailRowList = MatchTeamDetailInfo.parseToRowList(matchTeamDetailInfoList);
+        workBook = ExcelUtil.buildHSSFWorkbook(MatchTeamDetailInfo.defaultName, MatchTeamDetailInfo.defaultHeaderList,
+            matchTeamDetailRowList, workBook);
 
         List<List<String>> matchTeamMemberRowList = MatchTeamMemberInfo.parseToRowList(matchTeamMemberInfoList);
         workBook = ExcelUtil.buildHSSFWorkbook(MatchTeamMemberInfo.defaultName, MatchTeamMemberInfo.defaultHeaderList,
@@ -174,6 +184,16 @@ public class MatchController {
                                 }
                             }
                         }
+                        if (resultMap.containsKey(MatchTeamDetailInfo.defaultName)
+                            && CollectionUtils.isNotEmpty(resultMap.get(MatchTeamDetailInfo.defaultName))) {
+                            List<MatchTeamDetailInfo> matchTeamDetailList = MatchTeamDetailInfo
+                                .parseToObjectList(resultMap.get(MatchTeamDetailInfo.defaultName), teamId, matchId);
+                            if (CollectionUtils.isNotEmpty(matchTeamDetailList)) {
+                                for (MatchTeamDetailInfo matchTeamDetail : matchTeamDetailList) {
+                                    matchTeamDetailInfoService.add(matchTeamDetail);
+                                }
+                            }
+                        }
                         if (resultMap.containsKey(MatchTeamMemberInfo.defaultName)
                             && CollectionUtils.isNotEmpty(resultMap.get(MatchTeamMemberInfo.defaultName))) {
                             List<MatchTeamMemberInfo> matchTeamMemberList = MatchTeamMemberInfo
@@ -211,7 +231,7 @@ public class MatchController {
 
         return ResponseResult.buildResult(matchService.statTeamMatchDataInfo(clubId, schoolId, teamId));
     }
-    
+
     @ApiOperation(value = "单个球队对比对手数据：场均控球率、场均跑动距离、场均传球成功率、总进球数、场均进球数、总失球数、场均失球数、 胜场数、平场数、负场数")
     @RequestMapping(value = "team/{teamId}/match-data-stat", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<SingleTeamMatchDataVo> statSingleTeamMatchDataInfo(@PathVariable("teamId") String teamId,
@@ -221,7 +241,7 @@ public class MatchController {
         Map<String, Object> params = new HashMap<String, Object>();
         return ResponseResult.buildResult(matchService.statSingleTeamMatchDataInfo(teamId, details, params));
     }
-    
+
     @ApiOperation(value = "单个球队单场次数据：比赛信息， 球队数据、对手球队数据")
     @RequestMapping(value = "match/{matchId}/team/{teamId}/match-data-stat", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<TeamSingleMatchDataVo> statTeamSingleMatchDataInfo(@PathVariable("matchId") String matchId,
@@ -231,7 +251,7 @@ public class MatchController {
 
         return ResponseResult.buildResult(matchService.statTeamSingleMatchDataInfo(matchId));
     }
-    
+
     @ApiOperation(value = "单个球队每个球员数据：球员基本信息、球员平均数据、球员明细数据")
     @RequestMapping(value = "team/{teamId}/member/match-data-stat", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<Map<String, Object>>> statTeamMemberMatchDataInfo(@PathVariable("teamId") String teamId,

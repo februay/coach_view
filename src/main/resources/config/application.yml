@@ -1,10 +1,10 @@
----
+﻿---
 spring:
   application:
     name: coach-view
   datasource:
     name: coach_view
-    url: jdbc:mysql://127.0.0.1:3306/coach_view
+    url: jdbc:mysql://127.0.0.1:3306/coach_view?useUnicode=true
     username: coach_view
     password: coach_view123!@#
     driver-class-name: com.mysql.jdbc.Driver
@@ -28,7 +28,7 @@ spring:
   profiles: develop
   datasource:
     name: coach_view
-    url: jdbc:mysql://207.148.82.48:3306/coach_view
+    url: jdbc:mysql://207.148.82.48:3306/coach_view?useUnicode=true
     username: coach_view
     password: coach_view123!@#
     driver-class-name: com.mysql.jdbc.Driver

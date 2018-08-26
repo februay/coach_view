@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="indi.xp.coachview.mapper.MatchTeamDetailInfoMapper">
+
+    <resultMap id="defaultResultMap" type="indi.xp.coachview.model.MatchTeamDetailInfo">
+        <id column="uuid" property="uuid" />
+        <result column="match_id" property="matchId" />
+        <result column="team_id" property="teamId" />
+        <result column="time_period" property="timePeriod" />
+        <result column="shoot_count" property="shootCount" />
+        <result column="shoot_target_count" property="shootTargetCount" />
+        <result column="pass_count" property="passCount" />
+        <result column="pass_success_count" property="passSuccessCount" />
+        <result column="pass_success_percentage" property="passSuccessPercentage" />
+        <result column="possession_percentage" property="possessionPercentage" />
+        <result column="running_distance" property="runningDistance" />
+        <result column="steals" property="steals" />
+        <result column="opponent" property="opponent" />
+        <result column="order_number" property="orderNumber" />
+        <result column="create_time" property="createTime" />
+        <result column="delete_status" property="deleteStatus" />
+    </resultMap>
+
+    <sql id="table_name">
+        match_team_detail_info
+    </sql>
+
+    <sql id="pk_column">uuid</sql>
+
+    <sql id="common_where">
+        where delete_status = 0
+        <include refid="auth_filter" />
+    </sql>
+    
+    <sql id="default_order">
+        order by match_id, opponent desc, order_number asc
+    </sql>
+
+    <sql id="query_by_param">
+        <if test="paramMap != null and !paramMap.isEmpty()">
+            <foreach collection="paramMap" item="valueList" index="key">
+                <if test="valueList != null and valueList.length > 0">
+                    and ${key} in
+                    <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                        #{value}
+                    </foreach>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+
+    <sql id="auth_filter">
+        <if test="authFilterMap != null and !authFilterMap.isEmpty()">
+            <foreach collection="authFilterMap" item="valueList" index="key">
+                <if test="valueList != null and valueList.length > 0">
+                    and ${key} in
+                    <foreach collection="valueList" item="value" open="(" separator="," close=")">
+                        #{value}
+                    </foreach>
+                </if>
+            </foreach>
+        </if>
+    </sql>
+
+    <sql id="pk_in">
+        <if test="idList != null and idList.size() > 0">
+            and <include refid="pk_column" /> in
+            <foreach collection="idList" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
+
+    <select id="getById" parameterType="java.lang.String" resultMap="defaultResultMap">
+        select * from <include refid="table_name" />
+        <include refid="common_where" />
+        and <include refid="pk_column" /> = #{id}
+    </select>
+
+    <select id="findByIdList" parameterType="java.util.List" resultMap="defaultResultMap">
+        select * from <include refid="table_name" />
+        <include refid="common_where" />
+        <include refid="pk_in" />
+        <include refid="default_order" />
+    </select>
+
+    <select id="findList" parameterType="java.util.List" resultMap="defaultResultMap">
+        select *
+        from <include refid="table_name" />
+        <include refid="common_where" />
+        <include refid="default_order" />
+    </select>
+
+    <insert id="add">
+        insert into <include refid="table_name" /> (uuid, match_id, team_id, time_period, shoot_count, shoot_target_count, pass_count, pass_success_count, pass_success_percentage, possession_percentage, running_distance, steals, opponent, order_number, create_time, delete_status)
+        values(#{entity.uuid}, #{entity.matchId}, #{entity.teamId}, #{entity.timePeriod}, #{entity.shootCount}, #{entity.shootTargetCount}, #{entity.passCount}, #{entity.passSuccessCount}, #{entity.passSuccessPercentage}, #{entity.possessionPercentage}, #{entity.runningDistance}, #{entity.steals}, #{entity.opponent}, #{entity.orderNumber}, #{entity.createTime}, #{entity.deleteStatus})
+    </insert>
+
+    <update id="update">
+        update
+        <include refid="table_name" />
+        set
+        match_id = #{entity.matchId},
+        team_id = #{entity.teamId},
+        time_period = #{entity.timePeriod},
+        shoot_count = #{entity.shootCount},
+        shoot_target_count = #{entity.shootTargetCount},
+        pass_count = #{entity.passCount},
+        pass_success_count = #{entity.passSuccessCount},
+        pass_success_percentage = #{entity.passSuccessPercentage},
+        possession_percentage = #{entity.possessionPercentage},
+        running_distance = #{entity.runningDistance},
+        steals = #{entity.steals},
+        opponent = #{entity.opponent},
+        order_number = #{entity.orderNumber},
+        create_time = #{entity.createTime},
+        delete_status = #{entity.deleteStatus}
+        where
+        <include refid="pk_column" />
+        = #{entity.uuid}
+    </update>
+
+    <update id="delete">
+        update
+        <include refid="table_name" />
+        set delete_status = 1
+        <include refid="common_where" />
+        and <include refid="pk_column" /> = #{id}
+    </update>
+
+    <update id="batchDelete" parameterType="java.util.List">
+        update
+        <include refid="table_name" />
+        set delete_status = 1
+        <include refid="common_where" />
+        <include refid="pk_in" />
+    </update>
+
+    <select id="getByWhere" parameterType="java.util.Map" resultMap="defaultResultMap">
+        select * from
+        <include refid="table_name" />
+        <include refid="common_where" />
+        <include refid="query_by_param" />
+        limit 1
+    </select>
+
+    <select id="findByWhere" parameterType="java.util.Map" resultMap="defaultResultMap">
+        select * from
+        <include refid="table_name" />
+        <include refid="common_where" />
+        <include refid="query_by_param" />
+        <include refid="default_order" />
+    </select>
+
+    <select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(1) from
+        <include refid="table_name" />
+        <include refid="common_where" />
+        <include refid="query_by_param" />
+    </select>
+
+    <update id="updateByWhere" parameterType="java.util.Map">
+        update
+        <include refid="table_name" />
+        set
+        <foreach collection="updateMap" item="value" index="key" separator=",">
+            ${key} = #{value}
+        </foreach>
+        <include refid="common_where" />
+        <include refid="query_by_param" />
+    </update>
+
+</mapper>

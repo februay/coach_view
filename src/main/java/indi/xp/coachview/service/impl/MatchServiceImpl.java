@@ -11,9 +11,11 @@ import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.dao.MatchDao;
 import indi.xp.coachview.model.Match;
 import indi.xp.coachview.model.MatchTeamInfo;
+import indi.xp.coachview.model.vo.MatchTeamInfoVo;
 import indi.xp.coachview.model.vo.SingleTeamMatchDataVo;
 import indi.xp.coachview.model.vo.TeamSingleMatchDataVo;
 import indi.xp.coachview.service.MatchService;
+import indi.xp.coachview.service.MatchTeamDetailInfoService;
 import indi.xp.coachview.service.MatchTeamInfoService;
 import indi.xp.coachview.service.MatchTeamMemberInfoService;
 import indi.xp.coachview.session.SessionConext;
@@ -29,6 +31,9 @@ public class MatchServiceImpl implements MatchService {
 
     @Autowired
     private MatchTeamInfoService matchTeamInfoService;
+
+    @Autowired
+    private MatchTeamDetailInfoService matchTeamDetailInfoService;
 
     @Autowired
     private MatchTeamMemberInfoService matchTeamMemberInfoService;
@@ -99,6 +104,7 @@ public class MatchServiceImpl implements MatchService {
 
             // 级联删除
             matchTeamInfoService.deleteByMatchId(id);
+            matchTeamDetailInfoService.deleteByMatchId(id);
             matchTeamMemberInfoService.deleteByMatchId(id);
         }
     }
@@ -122,12 +128,17 @@ public class MatchServiceImpl implements MatchService {
     public TeamSingleMatchDataVo statTeamSingleMatchDataInfo(String matchId) {
         Match matchInfo = this.getById(matchId);
         MatchTeamInfo teamInfo = matchTeamInfoService.getByMatchId(matchId, false);
+        MatchTeamInfoVo teamInfoVo = new MatchTeamInfoVo(teamInfo);
+        teamInfoVo.setDetails(matchTeamDetailInfoService.findListByMatchId(matchId, false));
+
         MatchTeamInfo opponentTeamInfo = matchTeamInfoService.getByMatchId(matchId, true);
+        MatchTeamInfoVo opponentTeamInfoVo = new MatchTeamInfoVo(opponentTeamInfo);
+        opponentTeamInfoVo.setDetails(matchTeamDetailInfoService.findListByMatchId(matchId, true));
 
         TeamSingleMatchDataVo vo = new TeamSingleMatchDataVo();
         vo.setMatchInfo(matchInfo);
-        vo.setTeamInfo(teamInfo);
-        vo.setOpponentTeamInfo(opponentTeamInfo);
+        vo.setTeamInfo(teamInfoVo);
+        vo.setOpponentTeamInfo(opponentTeamInfoVo);
         return vo;
     }
 
