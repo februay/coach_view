@@ -12,10 +12,12 @@ import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 import indi.xp.coachview.model.vo.TeamVo;
 import indi.xp.coachview.service.TeamCoachService;
 import indi.xp.coachview.service.TeamMemberService;
 import indi.xp.coachview.service.TeamService;
+import indi.xp.coachview.service.UserService;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.UuidUtils;
@@ -31,6 +33,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Autowired
     private TeamCoachService teamCoachService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public TeamVo getById(String id, boolean withMember) {
@@ -140,10 +145,11 @@ public class TeamServiceImpl implements TeamService {
                 dbTeam.setStreetName(team.getStreetName());
             }
             teamDao.updateTeam(dbTeam);
-            
-            if(syncRelatedEntityInfo) {
+
+            if (syncRelatedEntityInfo) {
                 teamMemberService.syncTeamMemberTeamInfo(dbTeam);
                 teamCoachService.syncTeamCoachTeamInfo(dbTeam);
+                userService.syncUserTeamInfo(dbTeam);
             }
         }
         return dbTeam;
@@ -154,7 +160,7 @@ public class TeamServiceImpl implements TeamService {
         Team dbTeam = teamDao.getTeamById(id);
         if (dbTeam != null) {
             teamDao.delete(id);
-            
+
             // 级联删除teamMember、teamCoach
             teamMemberService.deleteByTeamId(id);
             teamCoachService.deleteByTeamId(id);
@@ -208,6 +214,11 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public void syncTeamUserInfo(User user) {
         teamDao.syncTeamUserInfo(user);
+    }
+
+    @Override
+    public List<ManageOrganizationVo> findManageTeamList(String uid) {
+        return teamDao.findManageTeamList(uid);
     }
 
 }

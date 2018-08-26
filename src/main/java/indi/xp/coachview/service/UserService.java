@@ -2,6 +2,9 @@ package indi.xp.coachview.service;
 
 import java.util.List;
 
+import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.School;
+import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.UserVo;
 
@@ -24,4 +27,10 @@ public interface UserService {
     public List<ListItemVo> findUserItemList(String clubId, String schoolId, String teamId);
 
     public boolean checkUserPhoneExists(String phoneNumber, String uid);
+
+    public void syncUserClubInfo(Club club);
+
+    public void syncUserSchoolInfo(School school);
+
+    public void syncUserTeamInfo(Team team);
 }

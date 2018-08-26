@@ -5,6 +5,7 @@
     <resultMap id="sysUserRoleResultMap" type="indi.xp.coachview.model.SysUserRole">
         <result column="uid" property="uid" />
         <result column="role_id" property="roleId" />
+        <result column="role_code" property="roleCode" />
         <result column="delete_status" property="deleteStatus" />
     </resultMap>
 
@@ -29,8 +30,8 @@
     </select>
 
     <insert id="add">
-        insert into sys_user_role (uid, role_id, delete_status)
-        values(#{entity.uid}, #{entity.roleId}, #{entity.deleteStatus})
+        insert into sys_user_role (uid, role_id, role_code, delete_status)
+        values(#{entity.uid}, #{entity.roleId}, #{entity.roleCode}, #{entity.deleteStatus})
     </insert>
     
     <select id="findByWhere" parameterType="java.util.Map" resultMap="sysUserRoleResultMap">

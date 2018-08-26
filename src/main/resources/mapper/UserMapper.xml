@@ -18,8 +18,11 @@
         <result column="create_time" property="createTime" />
         <result column="delete_status" property="deleteStatus" />
         <result column="club_id" property="clubId" />
+        <result column="club_name" property="clubName" />
         <result column="school_id" property="schoolId" />
+        <result column="school_name" property="schoolName" />
         <result column="team_id" property="teamId" />
+        <result column="team_name" property="teamName" />
     </resultMap>
 
     <sql id="table_name">
@@ -97,15 +100,13 @@
 
     <insert id="addUser">
         insert into user(uid, user_name, user_email,
-        user_password, name, phone, company, department,
-        title, status, club_id, school_id, team_id,
+        user_password, name, phone, company, department, title, status,
+        club_id, club_name, school_id, school_name, team_id, team_name
         active_time, creator_id, create_time, delete_status)
-        values(#{user.uid},
-        #{user.userName}, #{user.userEmail},
-        #{user.userPassword},
-        #{user.name}, #{user.phone}, #{user.company},
-        #{user.department}, #{user.title},
-        #{user.status},#{user.clubId},#{user.schoolId},#{user.teamId},
+        values(#{user.uid}, #{user.userName}, #{user.userEmail}, #{user.userPassword},
+        #{user.name}, #{user.phone}, #{user.company}, #{user.department}, #{user.title},
+        #{user.status}, #{user.clubId}, #{user.clubName}, #{user.schoolId}, #{user.schoolName}, 
+        #{user.teamId}, #{user.teamName},
         #{user.activeTime}, #{user.creatorId}, #{user.createTime}, #{user.deleteStatus})
     </insert>
 
@@ -121,8 +122,11 @@
         title = #{user.title},
         status = #{user.status},
         club_id = #{user.clubId},
+        club_name = #{user.clubName},
         school_id = #{user.schoolId},
+        school_name = #{user.schoolName},
         team_id = #{user.teamId},
+        team_name = #{user.teamName},
         active_time = #{user.activeTime},
         creator_id = #{user.creatorId},
         create_time = #{user.createTime},

@@ -21,8 +21,11 @@ public class User implements Serializable {
     private String createTime;
     private Boolean deleteStatus; // 是否删除
     private String clubId;
+    private String clubName;
     private String schoolId;
+    private String schoolName;
     private String teamId;
+    private String teamName;
 
     public String getUid() {
         return uid;
@@ -144,6 +147,14 @@ public class User implements Serializable {
         this.clubId = clubId;
     }
 
+    public String getClubName() {
+        return clubName;
+    }
+
+    public void setClubName(String clubName) {
+        this.clubName = clubName;
+    }
+
     public String getSchoolId() {
         return schoolId;
     }
@@ -152,12 +163,28 @@ public class User implements Serializable {
         this.schoolId = schoolId;
     }
 
+    public String getSchoolName() {
+        return schoolName;
+    }
+
+    public void setSchoolName(String schoolName) {
+        this.schoolName = schoolName;
+    }
+
     public String getTeamId() {
         return teamId;
     }
 
     public void setTeamId(String teamId) {
         this.teamId = teamId;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
     }
 
     @Override

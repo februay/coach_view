@@ -8,6 +8,7 @@ public class SysUserRole implements Serializable {
 
     private String uid;
     private String roleId;
+    private String roleCode;
     private Boolean deleteStatus; // 是否删除
 
     public String getUid() {
@@ -24,6 +25,14 @@ public class SysUserRole implements Serializable {
 
     public void setRoleId(String roleId) {
         this.roleId = roleId;
+    }
+
+    public String getRoleCode() {
+        return roleCode;
+    }
+
+    public void setRoleCode(String roleCode) {
+        this.roleCode = roleCode;
     }
 
     public Boolean getDeleteStatus() {

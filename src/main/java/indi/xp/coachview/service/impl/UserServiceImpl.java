@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 import indi.xp.coachview.common.BusinessErrorCodeEnum;
 import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.UserDao;
+import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.SysRole;
 import indi.xp.coachview.model.SysUserRole;
+import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 import indi.xp.coachview.model.vo.UserVo;
 import indi.xp.coachview.service.ClubService;
 import indi.xp.coachview.service.SchoolService;
@@ -32,6 +38,8 @@ import indi.xp.common.utils.UuidUtils;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserDao userDao;
@@ -116,6 +124,7 @@ public class UserServiceImpl implements UserService {
                 roleList.forEach(role -> {
                     SysUserRole sysUserRole = new SysUserRole();
                     sysUserRole.setRoleId(role.getRoleId());
+                    sysUserRole.setRoleCode(role.getCode());
                     sysUserRole.setUid(uid);
                     sysUserRole.setDeleteStatus(false);
                     sysUserRoleService.add(sysUserRole);
@@ -174,11 +183,20 @@ public class UserServiceImpl implements UserService {
             if (userVo.getClubId() != null) {
                 user.setClubId(userVo.getClubId());
             }
+            if (userVo.getClubName() != null) {
+                user.setClubName(userVo.getClubName());
+            }
             if (userVo.getSchoolId() != null) {
                 user.setSchoolId(userVo.getSchoolId());
             }
+            if (userVo.getSchoolName() != null) {
+                user.setSchoolName(userVo.getSchoolName());
+            }
             if (userVo.getTeamId() != null) {
                 user.setTeamId(userVo.getTeamId());
+            }
+            if (userVo.getTeamName() != null) {
+                user.setTeamName(userVo.getTeamName());
             }
             userDao.update(user);
 
@@ -192,21 +210,20 @@ public class UserServiceImpl implements UserService {
             String uid = user.getUid();
             List<String> newRoles = userVo.getRoles();
             if (newRoles != null) {
-                List<SysRole> dbRoleList = new ArrayList<SysRole>();
-                List<SysUserRole> userRoleList = sysUserRoleService.findListByUid(uid);
-                if (CollectionUtils.isNotEmpty(userRoleList)) {
-                    List<String> roleIdList = userRoleList.stream().map(userRole -> userRole.getRoleId())
+                List<String> dbRoleCodeList = new ArrayList<String>();
+                List<SysUserRole> dbUserRoleList = sysUserRoleService.findListByUid(uid);
+                if (CollectionUtils.isNotEmpty(dbUserRoleList)) {
+                    dbRoleCodeList = dbUserRoleList.stream().map(userRole -> userRole.getRoleCode())
                         .collect(Collectors.toList());
-                    dbRoleList = sysRoleService.findListByIdList(roleIdList);
                 }
 
                 List<String> addRoleCodeList = new ArrayList<String>();
                 List<String> deleteRoleIdList = new ArrayList<String>();
                 for (String newRole : newRoles) {
                     boolean isNew = true;
-                    if (CollectionUtils.isNotEmpty(dbRoleList)) {
-                        for (SysRole role : dbRoleList) {
-                            if (role.getCode().equals(newRole)) {
+                    if (CollectionUtils.isNotEmpty(dbRoleCodeList)) {
+                        for (String role : dbRoleCodeList) {
+                            if (role.equals(newRole)) {
                                 isNew = false;
                             }
                         }
@@ -215,10 +232,10 @@ public class UserServiceImpl implements UserService {
                         addRoleCodeList.add(newRole);
                     }
                 }
-                if (CollectionUtils.isNotEmpty(dbRoleList)) {
-                    for (SysRole role : dbRoleList) {
-                        if (!newRoles.contains(role.getCode())) {
-                            deleteRoleIdList.add(role.getRoleId());
+                if (CollectionUtils.isNotEmpty(dbUserRoleList)) {
+                    for (SysUserRole dbUserRole : dbUserRoleList) {
+                        if (!newRoles.contains(dbUserRole.getRoleCode())) {
+                            deleteRoleIdList.add(dbUserRole.getRoleId());
                         }
                     }
                 }
@@ -229,6 +246,7 @@ public class UserServiceImpl implements UserService {
                         addRoleList.forEach(role -> {
                             SysUserRole sysUserRole = new SysUserRole();
                             sysUserRole.setRoleId(role.getRoleId());
+                            sysUserRole.setRoleCode(role.getCode());
                             sysUserRole.setUid(uid);
                             sysUserRole.setDeleteStatus(false);
                             sysUserRoleService.add(sysUserRole);
@@ -260,27 +278,41 @@ public class UserServiceImpl implements UserService {
             String uid = user.getUid();
             List<SysUserRole> userRoleList = sysUserRoleService.findListByUid(uid);
             if (CollectionUtils.isNotEmpty(userRoleList)) {
-                List<String> roleIdList = userRoleList.stream().map(userRole -> userRole.getRoleId())
+                List<String> roleCodeList = userRoleList.stream().map(userRole -> userRole.getRoleCode())
                     .collect(Collectors.toList());
-                List<SysRole> roleList = sysRoleService.findListByIdList(roleIdList);
-                if (CollectionUtils.isNotEmpty(roleList)) {
-                    List<String> roleCodeList = roleList.stream().map(role -> role.getCode())
-                        .collect(Collectors.toList());
-                    userVo.setRoles(roleCodeList);
-                }
+                userVo.setRoles(roleCodeList);
             }
 
+            List<ManageOrganizationVo> manageOrganizationList = new ArrayList<>();
+            List<ManageOrganizationVo> manageClubList = clubService.findManageClubList(uid);
+            List<ManageOrganizationVo> manageSchoolList = schoolService.findManageSchoolList(uid);
+            List<ManageOrganizationVo> manageTeamList = teamService.findManageTeamList(uid);
+            if (manageClubList != null) {
+                manageOrganizationList.addAll(manageClubList);
+            }
+            if (manageSchoolList != null) {
+                manageOrganizationList.addAll(manageSchoolList);
+            }
+            if (manageTeamList != null) {
+                manageOrganizationList.addAll(manageTeamList);
+            }
+            userVo.setManageOrganizationList(manageOrganizationList);
+            userVo.setUserPassword(null);
             return userVo;
         }
         return null;
+
     }
 
     private List<UserVo> parseToUserVoList(List<User> userList) {
+        long start = System.currentTimeMillis();
         List<UserVo> userVoList = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(userList)) {
             for (User user : userList) {
                 userVoList.add(this.parseToUserVo(user));
             }
+            long end = System.currentTimeMillis();
+            logger.warn(">>> parse to user vo list : count = " + userList.size() + ", time=" + (end - start) + "ms");
         }
         return userVoList;
     }
@@ -288,6 +320,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<ListItemVo> findUserItemList(String clubId, String schoolId, String teamId) {
         return userDao.findUserItemList(clubId, schoolId, teamId);
+    }
+
+    @Override
+    public void syncUserClubInfo(Club club) {
+        userDao.syncUserClubInfo(club);
+    }
+
+    @Override
+    public void syncUserSchoolInfo(School school) {
+        userDao.syncUserSchoolInfo(school);
+    }
+
+    @Override
+    public void syncUserTeamInfo(Team team) {
+        userDao.syncUserTeamInfo(team);
     }
 
 }

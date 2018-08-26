@@ -7,6 +7,7 @@ import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 import indi.xp.coachview.model.vo.TeamVo;
 
 public interface TeamService {
@@ -36,5 +37,7 @@ public interface TeamService {
     public void syncTeamSchoolInfo(School school);
 
     public void syncTeamUserInfo(User user);
+
+    public List<ManageOrganizationVo> findManageTeamList(String uid);
 
 }

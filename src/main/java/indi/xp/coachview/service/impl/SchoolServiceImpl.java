@@ -12,9 +12,11 @@ import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 import indi.xp.coachview.model.vo.SchoolVo;
 import indi.xp.coachview.service.SchoolService;
 import indi.xp.coachview.service.TeamService;
+import indi.xp.coachview.service.UserService;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.UuidUtils;
@@ -27,6 +29,9 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Autowired
     private TeamService teamService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public SchoolVo getById(String id, boolean withTeam) {
@@ -127,9 +132,10 @@ public class SchoolServiceImpl implements SchoolService {
                 dbSchool.setStreetName(school.getStreetName());
             }
             schoolDao.updateSchool(dbSchool);
-            
-            if(syncRelatedEntityInfo) {
+
+            if (syncRelatedEntityInfo) {
                 teamService.syncTeamSchoolInfo(dbSchool);
+                userService.syncUserSchoolInfo(dbSchool);
             }
         }
         return dbSchool;
@@ -140,7 +146,7 @@ public class SchoolServiceImpl implements SchoolService {
         School dbSchool = schoolDao.getSchoolById(id);
         if (dbSchool != null) {
             schoolDao.delete(id);
-            
+
             // 级联删除team
             teamService.deleteBySchoolId(id);
         }
@@ -181,6 +187,11 @@ public class SchoolServiceImpl implements SchoolService {
     @Override
     public void syncSchoolUserInfo(User user) {
         schoolDao.syncSchoolUserInfo(user);
+    }
+
+    @Override
+    public List<ManageOrganizationVo> findManageSchoolList(String uid) {
+        return schoolDao.findManageSchoolList(uid);
     }
 
 }

@@ -6,6 +6,7 @@ import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ClubVo;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 
 public interface ClubService {
 
@@ -24,5 +25,7 @@ public interface ClubService {
     public List<ListItemVo> findClubItemList();
 
     public void syncSchoolUserInfo(User user);
+
+    public List<ManageOrganizationVo> findManageClubList(String uid);
 
 }

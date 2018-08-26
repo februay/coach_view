@@ -61,7 +61,7 @@ public class SessionFilter implements Filter {
         String requestMethod = req.getMethod();
         String requestUri = req.getRequestURI();
         String requestUrl = req.getRequestURL().toString();
-        logger.info(requestUrl);
+        logger.info(requestMethod + "|" + requestUrl);
 
         for (String path : skipPaths) {
             String[] url = path.split("\\|");

@@ -7,6 +7,7 @@ import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 
 public interface TeamDao {
 
@@ -52,5 +53,7 @@ public interface TeamDao {
     public void syncTeamSchoolInfo(School school);
 
     public void syncTeamUserInfo(User user);
+
+    public List<ManageOrganizationVo> findManageTeamList(String uid);
 
 }

@@ -21,6 +21,7 @@ import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.StringUtils;
@@ -210,5 +211,26 @@ public class TeamDaoImpl implements TeamDao {
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("admin_name", user.getName());
         teamMapper.updateByWhere(updateMap, paramMap, null);
+    }
+
+    @Override
+    public List<ManageOrganizationVo> findManageTeamList(String uid) {
+        List<ManageOrganizationVo> manageTeamList = null;
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        if (StringUtils.isNotBlank(uid)) {
+            paramMap.put("admin_id", new String[] { uid });
+        }
+        List<Team> teamList = teamMapper.findByWhere(paramMap, null);
+        if (CollectionUtils.isNotEmpty(teamList)) {
+            manageTeamList = new ArrayList<>();
+            for (Team team : teamList) {
+                ManageOrganizationVo manageTeam = new ManageOrganizationVo();
+                manageTeam.setType(ManageOrganizationVo.TYPE_TEAM);
+                manageTeam.setId(team.getTeamId());
+                manageTeam.setName(team.getTeamName());
+                manageTeamList.add(manageTeam);
+            }
+        }
+        return manageTeamList;
     }
 }

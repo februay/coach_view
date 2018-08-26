@@ -20,6 +20,7 @@ import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.School;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.StringUtils;
@@ -192,6 +193,27 @@ public class SchoolDaoImpl implements SchoolDao {
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("admin_name", user.getName());
         schoolMapper.updateByWhere(updateMap, paramMap, null);
+    }
+
+    @Override
+    public List<ManageOrganizationVo> findManageSchoolList(String uid) {
+        List<ManageOrganizationVo> manageSchoolList = null;
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        if (StringUtils.isNotBlank(uid)) {
+            paramMap.put("admin_id", new String[] { uid });
+        }
+        List<School> schoolList = schoolMapper.findByWhere(paramMap, null);
+        if (CollectionUtils.isNotEmpty(schoolList)) {
+            manageSchoolList = new ArrayList<>();
+            for (School school : schoolList) {
+                ManageOrganizationVo manageSchool = new ManageOrganizationVo();
+                manageSchool.setType(ManageOrganizationVo.TYPE_SCHOOL);
+                manageSchool.setId(school.getSchoolId());
+                manageSchool.setName(school.getSchoolName());
+                manageSchoolList.add(manageSchool);
+            }
+        }
+        return manageSchoolList;
     }
 
 }

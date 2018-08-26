@@ -12,9 +12,11 @@ import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ClubVo;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 import indi.xp.coachview.service.ClubService;
 import indi.xp.coachview.service.SchoolService;
 import indi.xp.coachview.service.TeamService;
+import indi.xp.coachview.service.UserService;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.DateUtils;
 import indi.xp.common.utils.UuidUtils;
@@ -30,6 +32,9 @@ public class ClubServiceImpl implements ClubService {
     
     @Autowired
     private TeamService teamService;
+    
+    @Autowired
+    private UserService userService;
 
     @Override
     public ClubVo getById(String id, boolean withSchool) {
@@ -128,6 +133,7 @@ public class ClubServiceImpl implements ClubService {
             if(syncRelatedEntityInfo) {
                 schoolService.syncSchoolClubInfo(dbClub);
                 teamService.syncTeamClubInfo(dbClub);
+                userService.syncUserClubInfo(dbClub);
             }
         }
         return dbClub;
@@ -153,6 +159,11 @@ public class ClubServiceImpl implements ClubService {
     @Override
     public void syncSchoolUserInfo(User user) {
         clubDao.syncSchoolUserInfo(user);
+    }
+
+    @Override
+    public List<ManageOrganizationVo> findManageClubList(String uid) {
+        return clubDao.findManageClubList(uid);
     }
 
 }

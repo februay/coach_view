@@ -15,6 +15,9 @@ import com.alibaba.fastjson.JSON;
 import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.UserDao;
 import indi.xp.coachview.mapper.UserMapper;
+import indi.xp.coachview.model.Club;
+import indi.xp.coachview.model.School;
+import indi.xp.coachview.model.Team;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.session.SessionConext;
@@ -47,7 +50,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<User> findUserList(String clubId, String schoolId, String teamId) {
         Map<String, Object[]> filterMap = this.buildAuthFilterMap();
-        if(filterMap == null) {
+        if (filterMap == null) {
             filterMap = new HashMap<>();
         }
         if (StringUtils.isNotBlank(clubId)) {
@@ -77,7 +80,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public List<ListItemVo> findUserItemList(String clubId, String schoolId, String teamId) {
         Map<String, Object[]> filterMap = this.buildAuthFilterMap();
-        if(filterMap == null) {
+        if (filterMap == null) {
             filterMap = new HashMap<>();
         }
         if (StringUtils.isNotBlank(clubId)) {
@@ -133,6 +136,33 @@ public class UserDaoImpl implements UserDao {
 
     private List<String> findClubUserAuthorizedUidList(String uid) {
         return userMapper.findClubUserAuthorizedUidList(uid);
+    }
+
+    @Override
+    public void syncUserClubInfo(Club club) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("club_id", new String[] { club.getClubId() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("team_name", club.getClubName());
+        userMapper.updateByWhere(updateMap, paramMap, null);
+    }
+
+    @Override
+    public void syncUserSchoolInfo(School school) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("school_id", new String[] { school.getSchoolId() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("school_name", school.getSchoolName());
+        userMapper.updateByWhere(updateMap, paramMap, null);
+    }
+
+    @Override
+    public void syncUserTeamInfo(Team team) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("team_id", new String[] { team.getTeamId() });
+        Map<String, Object> updateMap = new HashMap<>();
+        updateMap.put("team_name", team.getTeamName());
+        userMapper.updateByWhere(updateMap, paramMap, null);
     }
 
 }

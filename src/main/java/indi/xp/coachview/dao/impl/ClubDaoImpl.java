@@ -18,6 +18,7 @@ import indi.xp.coachview.mapper.ClubMapper;
 import indi.xp.coachview.model.Club;
 import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
+import indi.xp.coachview.model.vo.ManageOrganizationVo;
 import indi.xp.coachview.session.SessionConext;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.StringUtils;
@@ -132,7 +133,7 @@ public class ClubDaoImpl implements ClubDao {
         }
         return authFilterMap;
     }
-    
+
     /**
      * 获取Club角色用户有权限的clubId列表
      */
@@ -161,6 +162,27 @@ public class ClubDaoImpl implements ClubDao {
         Map<String, Object> updateMap = new HashMap<>();
         updateMap.put("admin_name", user.getName());
         clubMapper.updateByWhere(updateMap, paramMap, null);
+    }
+
+    @Override
+    public List<ManageOrganizationVo> findManageClubList(String uid) {
+        List<ManageOrganizationVo> manageClubList = null;
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        if (StringUtils.isNotBlank(uid)) {
+            paramMap.put("admin_id", new String[] { uid });
+        }
+        List<Club> clubList = clubMapper.findByWhere(paramMap, null);
+        if (CollectionUtils.isNotEmpty(clubList)) {
+            manageClubList = new ArrayList<>();
+            for (Club club : clubList) {
+                ManageOrganizationVo manageClub = new ManageOrganizationVo();
+                manageClub.setType(ManageOrganizationVo.TYPE_CLUB);
+                manageClub.setId(club.getClubId());
+                manageClub.setName(club.getClubName());
+                manageClubList.add(manageClub);
+            }
+        }
+        return manageClubList;
     }
 
 }
