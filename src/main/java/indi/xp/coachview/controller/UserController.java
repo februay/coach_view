@@ -23,6 +23,7 @@ import indi.xp.coachview.service.SysRoleService;
 import indi.xp.coachview.service.UserService;
 import indi.xp.coachview.session.Session;
 import indi.xp.coachview.session.SessionManager;
+import indi.xp.coachview.system.VerificationCodeManager;
 import indi.xp.common.constants.MediaType;
 import indi.xp.common.exception.BusinessException;
 import indi.xp.common.restful.ResponseResult;
@@ -33,7 +34,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private SysRoleService sysRoleService;
 
@@ -41,15 +42,14 @@ public class UserController {
     private SessionManager sessionManager;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
-    public ResponseResult<List<UserVo>> findUserList(
-        @RequestParam(value = "clubId", required = false) String clubId,
+    public ResponseResult<List<UserVo>> findUserList(@RequestParam(value = "clubId", required = false) String clubId,
         @RequestParam(value = "schoolId", required = false) String schoolId,
         @RequestParam(value = "teamId", required = false) String teamId,
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(userService.findUserList(clubId, schoolId, teamId));
     }
-    
+
     @RequestMapping(value = "list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<ListItemVo>> findUserItemList(
         @RequestParam(value = "clubId", required = false) String clubId,
@@ -81,7 +81,7 @@ public class UserController {
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
         return ResponseResult.buildResult(userService.getUserByPhone(phone));
     }
-    
+
     @RequestMapping(value = "check/{phone}/by-phone", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<Boolean> checkUserByPhone(@PathVariable(value = "phone") String phone,
         @RequestHeader(value = Constants.Header.TRACE_ID, required = false) String traceId) {
@@ -110,7 +110,7 @@ public class UserController {
         Session session = null;
         if (userSignInVo != null && UserSignInVo.TYPE_PHONE.equals(userSignInVo.getType())) {
             String phone = userSignInVo.getKey();
-            passed = PublicController.validateVerificationCode(phone, userSignInVo.getValue());
+            passed = VerificationCodeManager.validateVerificationCode(phone, userSignInVo.getValue());
             user = userService.getUserByPhone(phone);
         }
         if (!passed) {
@@ -131,7 +131,7 @@ public class UserController {
 
         sessionManager.clearSession(token);
     }
-    
+
     @RequestMapping(value = "roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<SysRole>> findSysRoleList(
         @RequestHeader(value = Constants.Header.TOKEN, required = true) String token,
