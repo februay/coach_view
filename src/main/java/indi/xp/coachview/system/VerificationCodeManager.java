@@ -93,10 +93,11 @@ public class VerificationCodeManager {
             if (result) {
                 // 验证通过，清除验证码
                 verificationCodeMap.remove(key);
+            } else {
+                // for test
+                result = StringUtils.isNotBlank(key, value) && value.equals(verificationCodeTempMap.get(key));
             }
         }
-        // for test
-        result = StringUtils.isNotBlank(key, value) && value.equals(verificationCodeTempMap.get(key));
         return result;
     }
 
