@@ -22,6 +22,14 @@ store:
     visit-domain: http://127.0.0.1:5556
     local-strategy:
       path: d:/data/coach-view/files
+sms:
+  enabled: true
+  aliyun-dysms:
+    access-key-id: xxxxxxxxxxx
+    access-key-secret: xxxxxxxxxxxxxxxxx
+    login-verification-code:
+      sign: Coachview
+      template: SMS_140690149
 ...
 ---
 spring:

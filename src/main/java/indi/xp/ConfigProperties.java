@@ -9,7 +9,7 @@ public class ConfigProperties {
 
     private String name;
     private Jdbc jdbc;
-
+    
     public static class Jdbc {
         private String username;
         private String password;

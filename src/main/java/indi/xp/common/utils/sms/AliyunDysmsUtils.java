@@ -20,6 +20,9 @@ import com.aliyuncs.http.MethodType;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 
+import indi.xp.common.utils.SpringContextUtil;
+import indi.xp.config.AliyunDysmsConfig;
+
 /**
  * 
  * 阿里云短信API工具类
@@ -35,10 +38,12 @@ public class AliyunDysmsUtils {
     private static final String product = "Dysmsapi";
     // 产品域名（请勿修改）
     private static final String domain = "dysmsapi.aliyuncs.com";
+    
+    private static final AliyunDysmsConfig smsConfig = SpringContextUtil.getBean("aliyunDysmsConfig");
 
     // 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
-    private static final String accessKeyId = "LTAI6ssfadfNzjcFvYBOm";
-    private static final String accessKeySecret = "sVI7QpXU8fadafaQ52Gz0lFvfadsfa6V6fadsfa4kUm8b3O";
+    private static final String accessKeyId = smsConfig.getAccessKeyId();
+    private static final String accessKeySecret = smsConfig.getAccessKeySecret();
 
     public static SendSmsResponse sendSms(String phoneNumber, String signName, String templateCode,
         Map<String, String> templateParamMap) {
@@ -82,16 +87,20 @@ public class AliyunDysmsUtils {
             SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
             if (sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
                 // 请求成功
-                logger.info(">>> send sms success: signName=" + signName + ", templateCode=" + templateCode
-                    + ", templateParam=" + templateParam + ", response" + JSON.toJSONString(sendSmsResponse));
+                logger.info(
+                    ">>> send sms<{}> success: signName=" + signName + ", templateCode=" + templateCode
+                        + ", templateParam=" + templateParam + ", response" + JSON.toJSONString(sendSmsResponse),
+                    phoneNumber);
             } else {
-                logger.info(">>> send sms failed: signName=" + signName + ", templateCode=" + templateCode
-                    + ", templateParam=" + templateParam + ", response" + JSON.toJSONString(sendSmsResponse));
+                logger.info(
+                    ">>> send sms<{}> failed: signName=" + signName + ", templateCode=" + templateCode
+                        + ", templateParam=" + templateParam + ", response" + JSON.toJSONString(sendSmsResponse),
+                    phoneNumber);
             }
             return sendSmsResponse;
         } catch (ClientException e) {
-            logger.info(">>> send sms error: signName=" + signName + ", templateCode=" + templateCode
-                + ", templateParam=" + templateParam, e);
+            logger.info(">>> send sms<{}> error: signName=" + signName + ", templateCode=" + templateCode
+                + ", templateParam=" + templateParam, phoneNumber, e);
         }
         return null;
     }

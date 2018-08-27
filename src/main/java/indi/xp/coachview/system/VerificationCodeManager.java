@@ -14,15 +14,19 @@ import com.alibaba.fastjson.JSON;
 
 import indi.xp.coachview.model.VerificationCode;
 import indi.xp.common.utils.CollectionUtils;
+import indi.xp.common.utils.SpringContextUtil;
 import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.UuidUtils;
 import indi.xp.common.utils.sms.AliyunDysmsUtils;
+import indi.xp.config.AliyunDysmsConfig;
 
 public class VerificationCodeManager {
 
-    private static final boolean sendSmsOn = true;
-
     private static final Logger logger = LoggerFactory.getLogger(VerificationCodeManager.class);
+
+    private static final AliyunDysmsConfig smsConfig = SpringContextUtil.getBean("aliyunDysmsConfig");
+
+    private static final boolean sendSmsOn = !Boolean.FALSE.equals(smsConfig.getEnabled()); // 不设置关闭则开启
 
     private static final Map<String, VerificationCode> verificationCodeMap = new HashMap<String, VerificationCode>();
     // for test
@@ -115,8 +119,8 @@ public class VerificationCodeManager {
 
     private static void sendLoginVerificationCode(String phoneNumber, String verificationCode) {
         if (sendSmsOn) {
-            String signName = "Coachview";
-            String templateCode = "SMS_140690149"; // 登录验证码模板
+            String signName = smsConfig.getLoginVerificationCodeSign(); // 短信签名
+            String templateCode = smsConfig.getLoginVerificationCodeTemplate(); // 短信模板
             Map<String, String> templateParamMap = new HashMap<String, String>();
             templateParamMap.put("code", verificationCode);
             AliyunDysmsUtils.sendSms(phoneNumber, signName, templateCode, templateParamMap);
