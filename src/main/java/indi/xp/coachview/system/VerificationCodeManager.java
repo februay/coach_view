@@ -53,7 +53,7 @@ public class VerificationCodeManager {
                         logger.error("checkVerificationCodeMap error:" + e.getMessage(), e);
                     }
                 }
-            }, 1, 1, TimeUnit.MINUTES);
+            }, 5, 10, TimeUnit.MINUTES);
             isActive = true;
         }
     }
