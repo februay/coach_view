@@ -31,7 +31,7 @@
         where delete_status = 0
         <include refid="auth_filter" />
     </sql>
-
+    
     <sql id="query_by_param">
         <if test="paramMap != null and !paramMap.isEmpty()">
             <foreach collection="paramMap" item="valueList" index="key">

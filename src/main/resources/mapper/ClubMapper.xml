@@ -31,6 +31,10 @@
         where delete_status = 0
         <include refid="auth_filter" />
     </sql>
+    
+    <sql id="default_order">
+        order by club_name asc
+    </sql>
 
     <sql id="query_by_param">
         <if test="paramMap != null and !paramMap.isEmpty()">
@@ -79,12 +83,14 @@
         from club
         <include refid="common_where" />
         <include refid="id_in" />
+        <include refid="default_order" />
     </select>
 
     <select id="findClubList" parameterType="java.util.List" resultMap="clubResultMap">
         select *
         from club
         <include refid="common_where" />
+        <include refid="default_order" />
     </select>
 
     <insert id="addClub">
@@ -148,6 +154,7 @@
         select * from <include refid="table_name" />
         <include refid="common_where" />
         <include refid="query_by_param" />
+        <include refid="default_order" />
     </select>
     
     <select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Integer">

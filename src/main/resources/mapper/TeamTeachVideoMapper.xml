@@ -24,6 +24,10 @@
         where delete_status = 0
         <include refid="auth_filter" />
     </sql>
+    
+    <sql id="default_order">
+        order by name asc
+    </sql>
 
     <sql id="query_by_param">
         <if test="paramMap != null and !paramMap.isEmpty()">
@@ -114,6 +118,7 @@
         <include refid="table_name" />
         <include refid="common_where" />
         <include refid="query_by_param" />
+        <include refid="default_order" />
     </select>
 
     <select id="queryCount" parameterType="java.util.Map" resultType="java.lang.Integer">
