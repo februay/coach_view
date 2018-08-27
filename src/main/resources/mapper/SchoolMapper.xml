@@ -32,7 +32,7 @@
     <sql id="pk_column">school_id</sql>
     
     <sql id="default_order">
-        order school_name asc
+        order by school_name asc
     </sql>
     
     <sql id="common_where">
