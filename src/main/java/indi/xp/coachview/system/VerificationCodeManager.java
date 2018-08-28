@@ -29,19 +29,6 @@ public class VerificationCodeManager {
     private static final boolean sendSmsOn = !Boolean.FALSE.equals(smsConfig.getEnabled()); // 不设置关闭则开启
 
     private static final Map<String, VerificationCode> verificationCodeMap = new HashMap<String, VerificationCode>();
-    // for test
-    private static final Map<String, String> verificationCodeTempMap = new HashMap<String, String>();
-    static {
-        verificationCodeTempMap.put("13426233960", "1342"); // admin
-        verificationCodeTempMap.put("13000000001", "5210"); // 俱乐部权限
-        verificationCodeTempMap.put("13000000002", "8425"); // 学校权限
-        verificationCodeTempMap.put("13000000003", "3397"); // 队权限
-
-        verificationCodeTempMap.put("12345678901", "8901"); // admin
-        verificationCodeTempMap.put("12345678902", "8902"); // 俱乐部权限
-        verificationCodeTempMap.put("12345678903", "8903"); // 学校权限
-        verificationCodeTempMap.put("12345678904", "8904"); // 队权限
-    }
 
     private static boolean isActive = false; // 启动后标记为active状态，避免初始化多次
     private static ScheduledExecutorService scheduledThreadPool = Executors.newScheduledThreadPool(3);
@@ -97,9 +84,6 @@ public class VerificationCodeManager {
             if (result) {
                 // 验证通过，清除验证码
                 verificationCodeMap.remove(key);
-            } else {
-                // for test
-                result = StringUtils.isNotBlank(key, value) && value.equals(verificationCodeTempMap.get(key));
             }
         }
         return result;
