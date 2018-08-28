@@ -27,6 +27,7 @@ import indi.xp.coachview.system.VerificationCodeManager;
 import indi.xp.common.constants.MediaType;
 import indi.xp.common.exception.BusinessException;
 import indi.xp.common.restful.ResponseResult;
+import indi.xp.common.utils.StringUtils;
 
 @RestController("userController")
 @RequestMapping("/user")
@@ -112,6 +113,10 @@ public class UserController {
             String phone = userSignInVo.getKey();
             passed = VerificationCodeManager.validateVerificationCode(phone, userSignInVo.getValue());
             user = userService.getUserByPhone(phone);
+            if(!passed && user != null && StringUtils.isNotBlank(user.getUserPassword())) {
+                // 校验用户密码
+                passed = user.getUserPassword().equals(userSignInVo.getValue());
+            }
         }
         if (!passed) {
             throw new BusinessException(BusinessErrorCodeEnum.USER_VERIFICATION_CODE_ERROR);
