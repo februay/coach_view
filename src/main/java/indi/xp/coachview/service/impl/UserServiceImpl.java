@@ -337,4 +337,9 @@ public class UserServiceImpl implements UserService {
         userDao.syncUserTeamInfo(team);
     }
 
+    @Override
+    public User getById(String uid) {
+        return userDao.getUserByUid(uid);
+    }
+
 }

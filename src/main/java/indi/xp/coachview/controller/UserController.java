@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import indi.xp.coachview.common.BusinessErrorCodeEnum;
 import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.model.SysRole;
+import indi.xp.coachview.model.User;
 import indi.xp.coachview.model.vo.ListItemVo;
 import indi.xp.coachview.model.vo.UserSignInVo;
 import indi.xp.coachview.model.vo.UserVo;
@@ -109,15 +110,20 @@ public class UserController {
         boolean passed = false;
         UserVo user = null;
         Session session = null;
-        if (userSignInVo != null && UserSignInVo.TYPE_PHONE.equals(userSignInVo.getType())) {
+        if (userSignInVo != null && StringUtils.isNotBlank(userSignInVo.getValue()) 
+            && UserSignInVo.TYPE_PHONE.equals(userSignInVo.getType()) ) {
             String phone = userSignInVo.getKey();
             passed = VerificationCodeManager.validateVerificationCode(phone, userSignInVo.getValue());
             user = userService.getUserByPhone(phone);
-            if(!passed && user != null && StringUtils.isNotBlank(user.getUserPassword())) {
-                // 校验用户密码
-                passed = user.getUserPassword().equals(userSignInVo.getValue());
-            }
         }
+        
+        // 校验用户密
+        String password = userSignInVo.getValue();
+        if(!passed && user != null && StringUtils.isNotBlank(password) ) {
+            User dbUser = userService.getById(user.getUid()); // userVo中没有密码, 所以需要从数据库中重新查
+            passed = password.equals(dbUser.getUserPassword());
+        }
+        
         if (!passed) {
             throw new BusinessException(BusinessErrorCodeEnum.USER_VERIFICATION_CODE_ERROR);
         } else if (user == null) {
