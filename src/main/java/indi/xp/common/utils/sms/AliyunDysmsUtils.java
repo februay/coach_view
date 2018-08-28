@@ -92,14 +92,14 @@ public class AliyunDysmsUtils {
                         + ", templateParam=" + templateParam + ", response" + JSON.toJSONString(sendSmsResponse),
                     phoneNumber);
             } else {
-                logger.info(
+                logger.warn(
                     ">>> send sms<{}> failed: signName=" + signName + ", templateCode=" + templateCode
                         + ", templateParam=" + templateParam + ", response" + JSON.toJSONString(sendSmsResponse),
                     phoneNumber);
             }
             return sendSmsResponse;
         } catch (ClientException e) {
-            logger.info(">>> send sms<{}> error: signName=" + signName + ", templateCode=" + templateCode
+            logger.error(">>> send sms<{}> error: signName=" + signName + ", templateCode=" + templateCode
                 + ", templateParam=" + templateParam, phoneNumber, e);
         }
         return null;
