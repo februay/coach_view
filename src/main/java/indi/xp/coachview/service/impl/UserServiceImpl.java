@@ -312,7 +312,7 @@ public class UserServiceImpl implements UserService {
                 userVoList.add(this.parseToUserVo(user));
             }
             long end = System.currentTimeMillis();
-            logger.warn(">>> parse to user vo list : count = " + userList.size() + ", time=" + (end - start) + "ms");
+            logger.info(">>> parse to user vo list : count = " + userList.size() + ", time=" + (end - start) + "ms");
         }
         return userVoList;
     }

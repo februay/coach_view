@@ -15,6 +15,11 @@ cros:
   allow-domain: null
 logging:
   file: d:/data/${spring.application.name}/logs
+  level:
+    org.springframework: INFO
+    indi.xp.Application: INFO
+    indi.xp.coachview.session: INFO
+    root : INFO
 swagger:
   base-package: indi.xp.coachview.controller
 store:
