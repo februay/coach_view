@@ -2,6 +2,7 @@ package indi.xp.coachview.common;
 
 public enum BusinessErrorCodeEnum {
 
+    TEAM_MEMBER_EXISTS("TEAM_MEMBER_EXISTS", "球队成员已存在"),
     IMPORT_FILE_NOT_MATCH_OBJECT("IMPORT_FILE_NOT_MATCH_OBJECT", "导入文件不匹配"),
     USER_EXISTS("USER_EXISTS", "用户已存在"),
     USER_PHONE_NUMBER_IS_BLANK("USER_PHONE_NUMBER_IS_BLANK", "用户手机号为空"),

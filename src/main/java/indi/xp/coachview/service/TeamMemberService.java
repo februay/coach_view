@@ -28,4 +28,8 @@ public interface TeamMemberService {
 
     public void syncTeamMemberTeamInfo(Team team);
 
+    public boolean checkTeamMemberExists(TeamMember teamMember);
+
+    public TeamMember getByNumber(String teamId, String number);
+
 }

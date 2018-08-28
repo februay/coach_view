@@ -30,4 +30,6 @@ public interface TeamMemberDao {
 
     public void syncTeamMemberTeamInfo(Team team);
 
+    public TeamMember getByNumber(String teamId, String number);
+
 }

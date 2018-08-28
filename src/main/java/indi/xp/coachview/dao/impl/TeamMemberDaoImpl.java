@@ -165,4 +165,12 @@ public class TeamMemberDaoImpl implements TeamMemberDao {
         teamMemberMapper.updateByWhere(updateMap, paramMap, null);
     }
 
+    @Override
+    public TeamMember getByNumber(String teamId, String number) {
+        Map<String, Object[]> paramMap = new HashMap<String, Object[]>();
+        paramMap.put("team_id", new String[] { teamId });
+        paramMap.put("number", new String[] { number });
+        return teamMemberMapper.getByWhere(paramMap, null);
+    }
+
 }

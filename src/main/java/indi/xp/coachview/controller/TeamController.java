@@ -17,6 +17,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -45,6 +46,7 @@ import indi.xp.common.exception.BusinessException;
 import indi.xp.common.restful.ResponseResult;
 import indi.xp.common.utils.CollectionUtils;
 import indi.xp.common.utils.ObjectUtils;
+import indi.xp.common.utils.StringUtils;
 import indi.xp.common.utils.excel.CsvBuilderUtils;
 import indi.xp.common.utils.excel.ExcelUtil;
 import indi.xp.common.utils.excel.FileAnalysisUtils;
@@ -233,6 +235,7 @@ public class TeamController {
     /**
      * 球队队员导入
      */
+    @Transactional
     @RequestMapping(value = "{teamId}/import-members", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON)
     public ResponseResult<List<TeamMember>> importTeamMemberList(@RequestBody MultipartFile file,
         HttpServletRequest request, HttpServletResponse response, @PathVariable("teamId") String teamId,
@@ -252,8 +255,23 @@ public class TeamController {
                     if (CollectionUtils.isNotEmpty(entry.getValue())) {
                         List<TeamMember> memberList = TeamMember.parseToObjectList(entry.getValue(), teamId,
                             team.getTeamName());
+                        List<TeamMember> dbMemberList = teamMemberService.findTeamMemberListByTeamId(teamId);
                         for (TeamMember member : memberList) {
-                            teamMemberService.add(member);
+                            if(StringUtils.isBlank(member.getNumber())) {
+                                continue;
+                            }
+                            boolean exists = false;
+                            if (CollectionUtils.isNotEmpty(dbMemberList)) {
+                                for (TeamMember dbMember : dbMemberList) {
+                                    if (member.getNumber().equals(dbMember.getNumber())) {
+                                        exists = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if(!exists) {
+                                teamMemberService.add(member);
+                            }
                         }
                         break;
                     }
