@@ -30,6 +30,9 @@ import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
 
+import indi.xp.coachview.common.BusinessErrorCodeEnum;
+import indi.xp.common.exception.BusinessException;
+
 /**
  * change this template use File | Settings | File Templates.
  */
@@ -1202,6 +1205,7 @@ public final class ObjectUtils {
     public static <T> List<T> parseToObjectList(List<List<String>> rowList, Map<String, String> nameToPropertyMapping,
         Class<T> beanClass) {
         List<T> objList = new ArrayList<>();
+        boolean mismatch = true; // 不匹配： 没有列能够匹配上
         if (CollectionUtils.isNotEmpty(rowList) && rowList.size() > 1) {
             // 第一行为表头信息
             List<String> headerList = rowList.get(0);
@@ -1211,9 +1215,13 @@ public final class ObjectUtils {
                     Map<String, Object> objMap = new HashMap<String, Object>();
                     for (int j = 0; j < headerList.size(); j++) {
                         String header = headerList.get(j);
-                        String property = nameToPropertyMapping.get(header);
-                        if (StringUtils.isNotBlank(property)) {
-                            objMap.put(property, StringUtils.isNotBlank(row.get(j)) ? row.get(j) : null);
+                        header = header != null ? header.trim() : null;
+                        if (nameToPropertyMapping.containsKey(header)) {
+                            mismatch = false;
+                            String property = nameToPropertyMapping.get(header);
+                            if (StringUtils.isNotBlank(property)) {
+                                objMap.put(property, StringUtils.isNotBlank(row.get(j)) ? row.get(j) : null);
+                            }
                         }
                     }
                     // T obj = ObjectUtils.mapToObject(objMap, beanClass);
@@ -1224,6 +1232,9 @@ public final class ObjectUtils {
                         e);
                 }
             }
+        }
+        if (mismatch) {
+            throw new BusinessException(BusinessErrorCodeEnum.IMPORT_FILE_NOT_MATCH_OBJECT);
         }
         return objList;
     }

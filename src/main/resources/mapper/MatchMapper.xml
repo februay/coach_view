@@ -161,15 +161,16 @@
     </update>
 
     <select id="statTeamMatchDataInfo" resultType="java.util.Map">
+        <bind name="defaultDecimalPlaces" value="@indi.xp.coachview.common.Constants@DEFAULT_DECIMAL_PLACES"/>
         select t.team_id as teamId, t.team_name as teamName,
-            avg(mt.possession_percentage) as avgPossessionPercentage,
-            avg(mt.running_distance) as avgRunningDistance,
-            avg(mt.pass_success_percentage) as avgPassSuccessPercentage,
-            avg(mt.pass_count) as avgPassCount, avg(mt.pass_success_count) as avgPassSuccessCount,
-            avg(mt.shoot_count) as avgShootCount, avg(mt.shoot_target_count) as avgShootTargetCount,
-            sum(mt.goals) as sumGoals, avg(mt.goals) as avgGoals,
-            sum(mt.losses) as sumLosses, avg(mt.losses) as avgLosses,
-            avg(mt.steals) as avgSteals,
+            round(avg(mt.possession_percentage), #{defaultDecimalPlaces}) as avgPossessionPercentage,
+            round(avg(mt.running_distance), #{defaultDecimalPlaces}) as avgRunningDistance,
+            round(avg(mt.pass_success_percentage), #{defaultDecimalPlaces}) as avgPassSuccessPercentage,
+            round(avg(mt.pass_count), #{defaultDecimalPlaces}) as avgPassCount, avg(mt.pass_success_count) as avgPassSuccessCount,
+            round(avg(mt.shoot_count), #{defaultDecimalPlaces}) as avgShootCount, avg(mt.shoot_target_count) as avgShootTargetCount,
+            sum(mt.goals) as sumGoals, round(avg(mt.goals), #{defaultDecimalPlaces}) as avgGoals,
+            sum(mt.losses) as sumLosses, round(avg(mt.losses), #{defaultDecimalPlaces}) as avgLosses,
+            round(avg(mt.steals), #{defaultDecimalPlaces}) as avgSteals,
             sum(if(mt.match_result = '胜', 1 , 0)) as countWin,
             sum(if(mt.match_result = '平', 1 , 0)) as countDraw,
             sum(if(mt.match_result = '负', 1 , 0)) as countDefeat
@@ -191,13 +192,18 @@
     </select>
     
     <select id="statTeamMemberAvgMatchDataInfo" resultType="java.util.Map">
+        <bind name="defaultDecimalPlaces" value="@indi.xp.coachview.common.Constants@DEFAULT_DECIMAL_PLACES"/>
         select tm.team_id as teamId, tm.member_id as memberId, tm.name, tm.number as number,
             tm.age, tm.weight, tm.height, tm.photo, tm.first_position as firstPosition, tm.second_position as secondPosition,
             tm.attack, tm.speed, tm.technology, tm.defense, tm.team, tm.endurance,
-            avg(mtm.pass_count) as avgPassCount, avg(mtm.pass_success_count) as avgPassSuccessCount,
-            avg(mtm.pass_success_percentage) as avgPassSuccessPercentage, avg(mtm.shoot_count) as avgShootCount, 
-            avg(mtm.shoot_target_count) as avgShootTargetCount,
-            avg(mtm.running_distance) as avgRunningDistance, avg(mtm.steals) as avgSteals, avg(mtm.goals) as avgGoals
+            round(avg(mtm.pass_count), #{defaultDecimalPlaces}) as avgPassCount, 
+            round(avg(mtm.pass_success_count) , #{defaultDecimalPlaces})as avgPassSuccessCount,
+            round(avg(mtm.pass_success_percentage), #{defaultDecimalPlaces}) as avgPassSuccessPercentage, 
+            round(avg(mtm.shoot_count), #{defaultDecimalPlaces}) as avgShootCount, 
+            round(avg(mtm.shoot_target_count), #{defaultDecimalPlaces}) as avgShootTargetCount,
+            round(avg(mtm.running_distance), #{defaultDecimalPlaces}) as avgRunningDistance, 
+            round(avg(mtm.steals), #{defaultDecimalPlaces}) as avgSteals, 
+            round(avg(mtm.goals), #{defaultDecimalPlaces}) as avgGoals
         from team_member tm left join team t on tm.team_id = t.team_id left join match_team_member_info mtm on mtm.team_id = tm.team_id and mtm.member_number = tm.number 
             left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = '否'
             left join `match` m on mt.match_id = m.match_id 
@@ -223,15 +229,20 @@
     </select>
 
     <select id="statSingleTeamAvgMatchDataInfo" resultType="java.util.Map">
+        <bind name="defaultDecimalPlaces" value="@indi.xp.coachview.common.Constants@DEFAULT_DECIMAL_PLACES"/>
         select t.team_id as teamId, t.team_name as teamName, mt.opponent,
-            avg(mt.possession_percentage) as avgPossessionPercentage,
-            avg(mt.running_distance) as avgRunningDistance,
-            avg(mt.pass_success_percentage) as avgPassSuccessPercentage,
-            avg(mt.pass_count) as avgPassCount, avg(mt.pass_success_count) as avgPassSuccessCount,
-            avg(mt.shoot_count) as avgShootCount, avg(mt.shoot_target_count) as avgShootTargetCount,
-            sum(mt.goals) as sumGoals, avg(mt.goals) as avgGoals,
-            sum(mt.losses) as sumLosses, avg(mt.losses) as avgLosses,
-            avg(mt.steals) as avgSteals,
+            round(avg(mt.possession_percentage), #{defaultDecimalPlaces}) as avgPossessionPercentage,
+            round(avg(mt.running_distance), #{defaultDecimalPlaces}) as avgRunningDistance,
+            round(avg(mt.pass_success_percentage), #{defaultDecimalPlaces}) as avgPassSuccessPercentage,
+            round(avg(mt.pass_count), #{defaultDecimalPlaces}) as avgPassCount, 
+            round(avg(mt.pass_success_count), #{defaultDecimalPlaces}) as avgPassSuccessCount,
+            round(avg(mt.shoot_count), #{defaultDecimalPlaces}) as avgShootCount, 
+            round(avg(mt.shoot_target_count), #{defaultDecimalPlaces}) as avgShootTargetCount,
+            round(sum(mt.goals), #{defaultDecimalPlaces}) as sumGoals, 
+            round(avg(mt.goals), #{defaultDecimalPlaces}) as avgGoals,
+            round(sum(mt.losses), #{defaultDecimalPlaces}) as sumLosses, 
+            round(avg(mt.losses), #{defaultDecimalPlaces}) as avgLosses,
+            round(avg(mt.steals), #{defaultDecimalPlaces}) as avgSteals,
             sum(if(mt.match_result = '胜', 1 , 0)) as countWin,
             sum(if(mt.match_result = '平', 1 , 0)) as countDraw,
             sum(if(mt.match_result = '负', 1 , 0)) as countDefeat

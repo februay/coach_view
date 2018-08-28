@@ -7,6 +7,8 @@ public class Constants {
 
     public static final String VALIDATE = "1";
     public static final String INVALIDATE = "0";
+    
+    public static final int DEFAULT_DECIMAL_PLACES = 2; // 默认小数点位数
 
     /**
      * http请求header变量名
