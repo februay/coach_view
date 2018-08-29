@@ -107,7 +107,7 @@
     <insert id="addUser">
         insert into user(uid, user_name, user_email,
         user_password, name, phone, company, department, title, status,
-        club_id, club_name, school_id, school_name, team_id, team_name
+        club_id, club_name, school_id, school_name, team_id, team_name,
         active_time, creator_id, create_time, delete_status)
         values(#{user.uid}, #{user.userName}, #{user.userEmail}, #{user.userPassword},
         #{user.name}, #{user.phone}, #{user.company}, #{user.department}, #{user.title},
