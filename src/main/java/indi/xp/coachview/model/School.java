@@ -7,6 +7,7 @@ public class School implements Serializable {
     private static final long serialVersionUID = 6980231063128526163L;
     private String schoolId;
     private String schoolName;
+    private String schoolLogo;
     private String clubId;
     private String clubName;
     private String adminId;
@@ -184,6 +185,14 @@ public class School implements Serializable {
 
     public void setDeleteStatus(Boolean deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+    
+    public String getSchoolLogo() {
+        return schoolLogo;
+    }
+
+    public void setSchoolLogo(String schoolLogo) {
+        this.schoolLogo = schoolLogo;
     }
 
     @Override

@@ -17,7 +17,7 @@ public class MatchTeamMemberInfo implements Serializable {
     public static final String defaultName = "球员数据";
 
     public static final List<String> defaultHeaderList = new ArrayList<String>(Arrays.asList("球员编号", "射门次数（次）",
-        "射正次数（次）", "传球次数（脚）", "传球成功次数（脚）", "传球成功率（%）", "跑动距离（km）", "抢断次数", "进球数", "位置"));
+        "射正次数（次）", "传球次数（脚）", "传球成功次数（脚）", "传球成功率（%）", "跑动距离（km）", "抢断次数", "进球数", "助攻数", "位置"));
 
     public static final Map<String, String> nameToPropertyMapping = new HashMap<>();
     static {
@@ -30,6 +30,7 @@ public class MatchTeamMemberInfo implements Serializable {
         nameToPropertyMapping.put("跑动距离（km）", "runningDistance");
         nameToPropertyMapping.put("抢断次数", "steals");
         nameToPropertyMapping.put("进球数", "goals");
+        nameToPropertyMapping.put("助攻数", "assist");
         nameToPropertyMapping.put("位置", "position");
     }
 
@@ -46,6 +47,7 @@ public class MatchTeamMemberInfo implements Serializable {
     private Double runningDistance; // 跑动距离(km)
     private Integer steals; // 抢断次数
     private Integer goals; // 进球数
+    private Integer assist; // 助攻数
     private String position; // 位置
     private String createTime;
     private Boolean deleteStatus; // 是否删除
@@ -152,6 +154,14 @@ public class MatchTeamMemberInfo implements Serializable {
 
     public void setGoals(Integer goals) {
         this.goals = goals;
+    }
+
+    public Integer getAssist() {
+        return assist;
+    }
+
+    public void setAssist(Integer assist) {
+        this.assist = assist;
     }
 
     public String getPosition() {

@@ -92,6 +92,9 @@ public class ClubServiceImpl implements ClubService {
                 syncRelatedEntityInfo = true;
                 dbClub.setClubName(club.getClubName());
             }
+            if (club.getClubLogo() != null) {
+                dbClub.setClubLogo(club.getClubLogo());
+            }
             if (club.getProvince() != null) {
                 dbClub.setProvince(club.getProvince());
             }

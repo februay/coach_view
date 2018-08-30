@@ -89,6 +89,9 @@ public class SchoolServiceImpl implements SchoolService {
                 syncRelatedEntityInfo = true;
                 dbSchool.setSchoolName(school.getSchoolName());
             }
+            if (school.getSchoolLogo() != null) {
+                dbSchool.setSchoolLogo(school.getSchoolLogo());
+            }
             if (school.getClubId() != null) {
                 dbSchool.setClubId(school.getClubId());
             }

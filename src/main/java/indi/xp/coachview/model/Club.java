@@ -10,6 +10,7 @@ public class Club implements Serializable {
     private String clubName;
     private String adminId;
     private String adminName;
+    private String clubLogo;
     private String province;
     private String provinceName;
     private String city;
@@ -167,6 +168,14 @@ public class Club implements Serializable {
 
     public void setDeleteStatus(Boolean deleteStatus) {
         this.deleteStatus = deleteStatus;
+    }
+
+    public String getClubLogo() {
+        return clubLogo;
+    }
+
+    public void setClubLogo(String clubLogo) {
+        this.clubLogo = clubLogo;
     }
 
     @Override

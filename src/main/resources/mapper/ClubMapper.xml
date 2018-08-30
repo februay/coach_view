@@ -5,6 +5,7 @@
     <resultMap id="clubResultMap" type="indi.xp.coachview.model.Club">
         <id column="club_id" property="clubId" />
         <result column="club_name" property="clubName" />
+        <result column="club_logo" property="clubLogo" />
         <result column="admin_id" property="adminId" />
         <result column="admin_name" property="adminName" />
         <result column="province" property="province" />
@@ -94,11 +95,11 @@
     </select>
 
     <insert id="addClub">
-        insert into club(club_id, club_name, admin_id,
+        insert into club(club_id, club_name, club_logo, admin_id,
             admin_name, province, province_name, city, city_name, region,
             region_name, county, county_name, street, street_name, status,
             create_time, active_time, delete_status)
-        values(#{club.clubId}, #{club.clubName}, #{club.adminId},
+        values(#{club.clubId}, #{club.clubName}, #{club.clubLogo}, #{club.adminId},
             #{club.adminName}, #{club.province}, #{club.provinceName},
             #{club.city}, #{club.cityName}, #{club.region}, #{club.regionName},
             #{club.county}, #{club.countyName}, #{club.street}, #{club.streetName},
@@ -108,6 +109,7 @@
     <update id="updateClub">
         update club set
             club_name = #{club.clubName},
+            club_logo = #{club.clubLogo},
             admin_id = #{club.adminId},
             admin_name = #{club.adminName},
             province = #{club.province},

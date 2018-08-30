@@ -5,6 +5,7 @@
     <resultMap id="schoolResultMap" type="indi.xp.coachview.model.School">
         <id column="school_id" property="schoolId" />
         <result column="school_name" property="schoolName" />
+        <result column="school_logo" property="schoolLogo" />
         <result column="club_id" property="clubId" />
         <result column="club_name" property="clubName" />
         <result column="admin_id" property="adminId" />
@@ -98,11 +99,11 @@
     </select>
 
     <insert id="addSchool">
-        insert into school(school_id, school_name,
+        insert into school(school_id, school_name, school_logo,
             club_id, club_name, admin_id, admin_name, province, province_name, city,
             city_name, region, region_name, county, county_name,
             street, street_name, status, create_time, active_time, delete_status)
-        values(#{school.schoolId}, #{school.schoolName},
+        values(#{school.schoolId}, #{school.schoolName}, #{school.schoolLogo},
             #{school.clubId}, #{school.clubName}, #{school.adminId}, #{school.adminName},
             #{school.province}, #{school.provinceName}, #{school.city}, #{school.cityName}, 
             #{school.region}, #{school.regionName}, #{school.county},
@@ -116,6 +117,7 @@
     <update id="updateSchool">
         update school set
             school_name = #{school.schoolName},
+            school_logo = #{school.schoolLogo},
             club_id = #{school.clubId},
             club_name = #{school.clubName},
             admin_id = #{school.adminId},
