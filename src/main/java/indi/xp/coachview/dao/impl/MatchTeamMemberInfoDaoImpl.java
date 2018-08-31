@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.alibaba.druid.util.FnvHash.Constants;
 import com.alibaba.fastjson.JSON;
 
+import indi.xp.coachview.common.Constants;
 import indi.xp.coachview.common.SysRoleEnum;
 import indi.xp.coachview.dao.MatchTeamMemberInfoDao;
 import indi.xp.coachview.dao.TeamDao;
