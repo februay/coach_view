@@ -1232,10 +1232,10 @@ public final class ObjectUtils {
                         e);
                 }
             }
-        }
-        if (mismatch) {
-            throw new BusinessException(BusinessErrorCodeEnum.IMPORT_FILE_NOT_MATCH_OBJECT);
-        }
+            if (mismatch) {
+                throw new BusinessException(BusinessErrorCodeEnum.IMPORT_FILE_NOT_MATCH_OBJECT);
+            }
+        } 
         return objList;
     }
 
