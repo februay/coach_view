@@ -202,8 +202,11 @@
             round(avg(mtm.shoot_count), #{defaultDecimalPlaces}) as avgShootCount, 
             round(avg(mtm.shoot_target_count), #{defaultDecimalPlaces}) as avgShootTargetCount,
             round(avg(mtm.running_distance), #{defaultDecimalPlaces}) as avgRunningDistance, 
+            round(sum(mtm.steals), #{defaultDecimalPlaces}) as sumSteals, 
             round(avg(mtm.steals), #{defaultDecimalPlaces}) as avgSteals, 
+            round(sum(mtm.goals), #{defaultDecimalPlaces}) as sumGoals,
             round(avg(mtm.goals), #{defaultDecimalPlaces}) as avgGoals,
+            round(sum(mtm.assist), #{defaultDecimalPlaces}) as sumAssist,
             round(avg(mtm.assist), #{defaultDecimalPlaces}) as avgAssist
         from team_member tm left join team t on tm.team_id = t.team_id left join match_team_member_info mtm on mtm.team_id = tm.team_id and mtm.member_number = tm.number 
             left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = '否'
