@@ -203,7 +203,8 @@
             round(avg(mtm.shoot_target_count), #{defaultDecimalPlaces}) as avgShootTargetCount,
             round(avg(mtm.running_distance), #{defaultDecimalPlaces}) as avgRunningDistance, 
             round(avg(mtm.steals), #{defaultDecimalPlaces}) as avgSteals, 
-            round(avg(mtm.goals), #{defaultDecimalPlaces}) as avgGoals
+            round(avg(mtm.goals), #{defaultDecimalPlaces}) as avgGoals,
+            round(avg(mtm.assist), #{defaultDecimalPlaces}) as avgAssist
         from team_member tm left join team t on tm.team_id = t.team_id left join match_team_member_info mtm on mtm.team_id = tm.team_id and mtm.member_number = tm.number 
             left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = '否'
             left join `match` m on mt.match_id = m.match_id 
@@ -220,7 +221,7 @@
             mt.match_session as matchSession, mt.match_result as matchResult,
             mtm.pass_count as passCount, mtm.pass_success_count as passSuccessCount, mtm.pass_success_percentage as passSuccessPercentage, 
             mtm.shoot_count as shootCount, mtm.shoot_target_count as shootTargetCount, mtm.running_distance as runningDistance, 
-            mtm.steals as steals, mtm.goals as goals, mtm.position as position
+            mtm.steals as steals, mtm.goals as goals, mtm.assist as assist, mtm.position as position
         from team_member tm left join team t on tm.team_id = t.team_id left join match_team_member_info mtm on mtm.team_id = tm.team_id and mtm.member_number = tm.number 
             left join match_team_info mt on mtm.match_id = mt.match_id and mt.opponent = '否' 
             left join `match` m on mt.match_id = m.match_id
